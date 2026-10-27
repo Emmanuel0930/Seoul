@@ -1,0 +1,31 @@
+# Capa Bronce (Archivos crudos descargados sin procesar - Privacidad y peso)
+lago/raw/*
+!lago/raw/.gitkeep
+*.raw
+*.tmp
+
+# Entornos virtuales y dependencias
+.venv/
+env/
+venv/
+node_modules/
+
+# Archivos de entorno y credenciales (Regla de oro: cero llaves en Git)
+.env
+*.env
+.env.local
+
+# Caché de Python
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+
+# Archivos temporales de bases de datos locales / DuckDB del laboratorio
+*.duckdb
+*.duckdb.wal
+
+# Archivos del sistema operativo
+.DS_Store
+Thumbs.db
+desktop.ini
