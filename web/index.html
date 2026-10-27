@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>서울 (Seúl) · Centro de Información Urbana y Gobernanza de Datos</title>
+  <meta name="description" content="Sistema de información urbana y observatorio territorial para los 25 distritos de Seúl. Trazabilidad a 1 clic, privacidad por diseño y datos abiertos.">
+  
+  <!-- Estilos MapLibre GL JS -->
+  <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.css" />
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+
+  <!-- Barra Superior / Header de Navegación -->
+  <header class="navbar" id="barra-superior">
+    <div class="nav-container">
+      <div class="brand">
+        <span class="hangul-badge">서울</span>
+        <div class="brand-text">
+          <h1>CEREBRO SEÚL <span class="edition-tag">2026</span></h1>
+          <p class="brand-sub">Sistema de Información Territorial · Taller de Datos</p>
+        </div>
+      </div>
+
+      <nav class="nav-menu">
+        <a href="#preguntas" class="nav-link">Preguntas Clave</a>
+        <a href="#territorio" class="nav-link">Mapa Territorial (25 Gu)</a>
+        <a href="#tiempo-real" class="nav-link">Monitor Urbano</a>
+        <a href="#catalogo" class="nav-link">Catálogo y Fuentes</a>
+        <a href="#equipo" class="nav-link team-highlight">Equipo y Roles</a>
+      </nav>
+
+      <div class="nav-actions">
+        <button id="btn-compuerta" class="btn btn-outline" title="Acceso a funciones protegidas">
+          <span class="icon-lock">🔒</span> Compuerta
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Banner de Gobernanza y Créditos del Grupo (Siempre visible en móvil y desktop) -->
+  <section class="banner-grupo" id="equipo">
+    <div class="container">
+      <div class="banner-inner">
+        <div class="banner-lead">
+          <span class="badge-status live-dot"></span>
+          <strong>Sistema en Producción · Entrega 2</strong> | Ciudad: <strong>Seúl (서울, Corea del Sur)</strong>
+        </div>
+        <div class="roles-grid">
+          <div class="rol-card">
+            <span class="rol-title">Curaduría (Data Steward)</span>
+            <span class="rol-name">Gabriela Martinez</span>
+            <span class="rol-desc">Catálogo, semáforo de licencias KOGL y trazabilidad.</span>
+          </div>
+          <div class="rol-card">
+            <span class="rol-title">Datos (Custodia Técnica)</span>
+            <span class="rol-name">Gabriela Sanabria</span>
+            <span class="rol-desc">Contrato de datos, pipeline de ingesta y verificación.</span>
+          </div>
+          <div class="rol-card">
+            <span class="rol-title">Interfaz (Consumo)</span>
+            <span class="rol-name">Juan Ramon</span>
+            <span class="rol-desc">Visualización móvil-first, MapLibre GL y trazabilidad a 1 clic.</span>
+          </div>
+          <div class="rol-card">
+            <span class="rol-title">Seguridad (Privacidad)</span>
+            <span class="rol-name">Emmanuel Alvarez</span>
+            <span class="rol-desc">Compuerta, agregación ética de zonas y control de PII.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Hero / Contexto Operativo -->
+  <section class="hero-section">
+    <div class="container">
+      <div class="hero-content">
+        <div class="target-user-badge">
+          <span>🎯 Usuario Objetivo:</span> Secretaría de Planeación Distrital (ej. Gwanak-gu / Gangnam-gu) y Ciudadanía
+        </div>
+        <h2 class="hero-title">Monitoreo Metropolitano de Seúl: Datos Vivos, Territorio y Privacidad Garantizada</h2>
+        <p class="hero-subtitle">
+          Todas las cifras provienen de fuentes oficiales abiertas (<strong>F01 Seoul Open Data Plaza</strong>, 
+          <strong>F02 Real-time City Data</strong>, <strong>F03 KOSIS</strong> y <strong>F11 Wikimedia API</strong>).
+          Haga clic en cualquier cifra o badge para inspeccionar su vigencia, licencia y fecha de prueba.
+        </p>
+
+        <!-- Barra de búsqueda rápida de distritos -->
+        <div class="search-bar-wrap">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="buscador-distrito" placeholder="Buscar distrito de Seúl (ej. Gwanak, Gangnam, Jongno, Mapo)..." autocomplete="off">
+          <div id="search-results" class="search-results-dropdown" style="display: none;"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCIÓN 1: Tarjetas de Cifras Vivas y Respuestas a Preguntas Clave -->
+  <section class="section-cards" id="preguntas">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Preguntas Centrales</span>
+        <h3>Respuestas con Cifras Vivientes del Lago</h3>
+        <p>Las cifras se leen dinámicamente de los archivos contractuales del lago de datos.</p>
+      </div>
+
+      <div class="cards-grid">
+        <!-- Tarjeta 1: Pregunta 1 (Respondida) -->
+        <article class="stat-card card-primary" id="card-poblacion">
+          <div class="card-status answered">✔ Respondida (Entrega 1)</div>
+          <h4>Población Total de Seúl</h4>
+          <div class="stat-number-wrap">
+            <span class="stat-value" id="val-poblacion">Cargando...</span>
+            <span class="stat-unit">habitantes</span>
+          </div>
+          <p class="stat-context">
+            Desglosada en los 25 distritos (*gu*). Mayor concentración en <strong>Songpa-gu</strong> (658,400) 
+            y menor en <strong>Jung-gu</strong> (122,800).
+          </p>
+          <div class="provenance-pill" data-source="F01" data-metric="total_population">
+            <span class="prov-icon">ℹ️</span>
+            <span class="prov-text">F01 · Vigencia: 2025-12 · Probado: 2026-10-06</span>
+          </div>
+        </article>
+
+        <!-- Tarjeta 2: Hogares Unipersonales (Respondida) -->
+        <article class="stat-card" id="card-unipersonales">
+          <div class="card-status answered">✔ Respondida (Pregunta 1)</div>
+          <h4>Hogares Unipersonales</h4>
+          <div class="stat-number-wrap">
+            <span class="stat-value" id="val-unipersonales">Cargando...</span>
+            <span class="stat-unit">% promedio</span>
+          </div>
+          <p class="stat-context">
+            Pico en <strong>Gwanak-gu (61.2%)</strong> debido a población universitaria y jóvenes profesionales cerca de SNU, 
+            seguido por <strong>Jung-gu (53.4%)</strong>.
+          </p>
+          <div class="provenance-pill" data-source="F01" data-metric="single_households_rate">
+            <span class="prov-icon">ℹ️</span>
+            <span class="prov-text">F01 · Vigencia: 2025-12 · Probado: 2026-10-06</span>
+          </div>
+        </article>
+
+        <!-- Tarjeta 3: Adultos Mayores Solos (Respondida) -->
+        <article class="stat-card" id="card-adultos">
+          <div class="card-status answered">✔ Respondida (Pregunta 1)</div>
+          <h4>Adultos Mayores que Viven Solos</h4>
+          <div class="stat-number-wrap">
+            <span class="stat-value" id="val-adultos">Cargando...</span>
+            <span class="stat-unit">% distrital</span>
+          </div>
+          <p class="stat-context">
+            Fuerte disparidad norte-sur: <strong>Gangbuk-gu (13.5%)</strong> y <strong>Dobong-gu (12.7%)</strong> duplican 
+            a <strong>Seocho-gu (7.2%)</strong>.
+          </p>
+          <div class="provenance-pill" data-source="F01" data-metric="elderly_alone_rate">
+            <span class="prov-icon">ℹ️</span>
+            <span class="prov-text">F01 · Vigencia: 2025-12 · Probado: 2026-10-06</span>
+          </div>
+        </article>
+
+        <!-- Tarjeta 4: Precio Vivienda (Respondida Pregunta 2) -->
+        <article class="stat-card" id="card-vivienda">
+          <div class="card-status answered">✔ Respondida (Pregunta 2)</div>
+          <h4>Precio Promedio de Vivienda</h4>
+          <div class="stat-number-wrap">
+            <span class="stat-value" id="val-vivienda">Cargando...</span>
+            <span class="stat-unit">KRW</span>
+          </div>
+          <p class="stat-context">
+            Promedio Seúl: 650M KRW. <strong>Gangnam-gu (+123.1%)</strong> y <strong>Seocho-gu (+103.1%)</strong> 
+            frente a distritos del norte (-30.8%).
+          </p>
+          <div class="provenance-pill" data-source="F03" data-metric="avg_housing_price">
+            <span class="prov-icon">ℹ️</span>
+            <span class="prov-text">F03 · Vigencia: 2025-12 · Probado: 2026-10-06</span>
+          </div>
+        </article>
+
+        <!-- Tarjeta 5: Tasa de Desempleo (Respondida Pregunta 3) -->
+        <article class="stat-card" id="card-desempleo">
+          <div class="card-status answered">✔ Monitoreada (Pregunta 3)</div>
+          <h4>Tasa de Desempleo</h4>
+          <div class="stat-number-wrap">
+            <span class="stat-value" id="val-desempleo">Cargando...</span>
+            <span class="stat-unit">%</span>
+          </div>
+          <p class="stat-context">
+            Tasa metropolitana estable en 3.2%, con menor desempleo en los polos corporativos del sur (Gangnam 2.7%).
+          </p>
+          <div class="provenance-pill" data-source="F03" data-metric="unemployment_rate">
+            <span class="prov-icon">ℹ️</span>
+            <span class="prov-text">F03 · Vigencia: 2025-12 · Probado: 2026-10-06</span>
+          </div>
+        </article>
+
+        <!-- Tarjeta 6: Escucha Wikipedia (Línea Base F11) -->
+        <article class="stat-card" id="card-escucha">
+          <div class="card-status base">🌐 Línea Base (Taller)</div>
+          <h4>Interés Global en Seúl (Wikipedia)</h4>
+          <div class="stat-number-wrap">
+            <span class="stat-value" id="val-vistas">Cargando...</span>
+            <span class="stat-unit">vistas/mes</span>
+          </div>
+          <p class="stat-context">
+            Consultas al artículo «Seúl» en español durante el último mes completo registrado por Wikimedia Analytics.
+          </p>
+          <div class="provenance-pill" data-source="F11" data-metric="vistas_ultimo_mes">
+            <span class="prov-icon">ℹ️</span>
+            <span class="prov-text">F11 · Vigencia: 2026-09 · Probado: 2026-10-06</span>
+          </div>
+        </article>
+      </div>
+
+      <!-- Declaración de Preguntas Pendientes (Exigencia del Taller) -->
+      <div class="pending-questions-box">
+        <div class="pending-header">
+          <span class="badge-pending">⏳ Estado de Preguntas: Resueltas vs Pendientes</span>
+        </div>
+        <div class="pending-content">
+          <p>
+            <strong>Preguntas Resueltas:</strong> La <strong>Pregunta 1</strong> (demografía, hogares unipersonales y adultos solos en 25 *gu*) 
+            y la <strong>Pregunta 2</strong> (brecha de precios de vivienda en KRW frente al promedio de Seúl) están totalmente respondidas 
+            con datos territoriales integrados. La <strong>Pregunta 3</strong> (dinámica urbana y transporte) está cubierta en el monitor en tiempo real.
+          </p>
+          <p>
+            <strong>Pregunta que Queda Pendiente (Hueco Estructural de Datos):</strong> La medición en tiempo real del estado de salud mental 
+            y prevención de suicidio a nivel de micro-barrio (antigua Pregunta 6). Las leyes de privacidad de la República de Corea (PIPA) 
+            prohíben la geolocalización o publicación abierta de datos clínicos o de emergencias psiquiátricas. No existe API pública abierta para este fin.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCIÓN 2: Territorio - Mapa de los 25 Gu con MapLibre GL JS -->
+  <section class="section-map" id="territorio">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Vista sobre el Territorio (F09 + F01 + F03)</span>
+        <h3>Mapa Interactivo de los 25 Distritos (*Gu*) de Seúl</h3>
+        <p>Seleccione una dimensión territorial o ajuste los pesos del Índice de Prioridad para colorear el mapa en vivo.</p>
+      </div>
+
+      <div class="map-layout">
+        <!-- Panel de Control y Sliders -->
+        <div class="map-controls">
+          <div class="control-group">
+            <label for="metric-selector"><strong>Capa Activa:</strong></label>
+            <select id="metric-selector" class="form-select">
+              <option value="single_households_pct">Hogares Unipersonales (%)</option>
+              <option value="elderly_alone_pct">Adultos Mayores Solos (%)</option>
+              <option value="total_population">Población Total (Habitantes)</option>
+              <option value="avg_housing_price">Precio Promedio de Vivienda (KRW)</option>
+              <option value="composite_index">Índice Compuesto de Prioridad Distrital (Sliders)</option>
+            </select>
+          </div>
+
+          <!-- Sliders de Índice Compuesto -->
+          <div id="sliders-panel" class="sliders-box" style="display: none;">
+            <div class="slider-title">Ponderación de Vulnerabilidad y Demanda:</div>
+            
+            <div class="slider-item">
+              <div class="slider-label">
+                <span>Hogares Unipersonales (Jóvenes/Estudiantes)</span>
+                <span id="label-peso-unipersonales" class="slider-val">40%</span>
+              </div>
+              <input type="range" id="peso-unipersonales" min="0" max="100" value="40" class="range-slider">
+            </div>
+
+            <div class="slider-item">
+              <div class="slider-label">
+                <span>Adultos Mayores Solos (Cuidado Social)</span>
+                <span id="label-peso-adultos" class="slider-val">40%</span>
+              </div>
+              <input type="range" id="peso-adultos" min="0" max="100" value="40" class="range-slider">
+            </div>
+
+            <div class="slider-item">
+              <div class="slider-label">
+                <span>Presión de Vivienda (Costo Económico)</span>
+                <span id="label-peso-vivienda" class="slider-val">20%</span>
+              </div>
+              <input type="range" id="peso-vivienda" min="0" max="100" value="20" class="range-slider">
+            </div>
+            
+            <button id="btn-reset-sliders" class="btn btn-sm btn-outline">Restablecer Pesos</button>
+          </div>
+
+          <!-- Ficha de Distrito Seleccionado -->
+          <div class="district-detail-card" id="district-info-card">
+            <div class="card-hint">Toque o pase el cursor sobre un distrito para ver su ficha técnica:</div>
+            <h4 id="detail-gu-name" class="detail-name">Seleccione un Gu</h4>
+            <div id="detail-gu-kor" class="detail-kor">서울특별시</div>
+            <div class="detail-grid">
+              <div class="detail-item">
+                <span class="d-label">Código MOIS:</span>
+                <span class="d-val" id="detail-code">-</span>
+              </div>
+              <div class="detail-item">
+                <span class="d-label">Población:</span>
+                <span class="d-val" id="detail-pop">-</span>
+              </div>
+              <div class="detail-item">
+                <span class="d-label">Hogar Unipersonal:</span>
+                <span class="d-val" id="detail-single">-</span>
+              </div>
+              <div class="detail-item">
+                <span class="d-label">Adultos Solos:</span>
+                <span class="d-val" id="detail-elderly">-</span>
+              </div>
+              <div class="detail-item">
+                <span class="d-label">Vivienda Promedio:</span>
+                <span class="d-val" id="detail-price">-</span>
+              </div>
+              <div class="detail-item">
+                <span class="d-label">Dif. vs Seúl:</span>
+                <span class="d-val" id="detail-diff">-</span>
+              </div>
+            </div>
+            <div class="detail-footer">
+              <span class="badge-source" data-source="F01" title="Ver procedencia">Fuente: F01 / F03</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contenedor del Mapa MapLibre GL -->
+        <div class="map-wrapper">
+          <div id="mapa-seul" class="mapa-container"></div>
+          <div class="map-legend" id="map-legend">
+            <span class="legend-title" id="legend-label">Escala</span>
+            <div class="legend-bar" id="legend-bar"></div>
+            <div class="legend-scale">
+              <span id="legend-min">Bajo</span>
+              <span id="legend-mid">Medio</span>
+              <span id="legend-max">Alto</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCIÓN 3: Monitor Urbano en Tiempo Real (Agregado y Protegido - F02) -->
+  <section class="section-realtime" id="tiempo-real">
+    <div class="container">
+      <div class="section-header">
+        <div class="tag-with-status">
+          <span class="section-tag">Monitor en Vivo (F02 Seoul Real-Time)</span>
+          <span class="live-indicator"><span class="live-pulse"></span> Actualización cada 5 min</span>
+        </div>
+        <h3>Dinámica Urbana en Puntos Neurálgicos de Seúl</h3>
+        <p>Datos oficiales de afluencia, velocidad vehicular, clima y calidad del aire en tiempo real.</p>
+      </div>
+
+      <!-- Alerta Ética de Privacidad por Diseño (Pregunta 5) -->
+      <div class="privacy-notice-box">
+        <div class="privacy-icon">🛡️</div>
+        <div class="privacy-text">
+          <strong>Decisión Ética de Privacidad por Diseño (Pregunta 5):</strong>
+          Para proteger la privacidad de los transeúntes y evitar riesgos de perfilamiento, vigilancia o seguimiento de manifestaciones, 
+          los datos de afluencia no se muestran a nivel de individuo ni en coordenadas exactas en vivo. 
+          Se presentan <strong>agregados por zona neurálgica y franja horaria</strong>.
+        </div>
+      </div>
+
+      <!-- Grid de Zonas en Tiempo Real -->
+      <div class="realtime-grid" id="realtime-zones-container">
+        <!-- Renderizado dinámico desde app.js -->
+        <div class="loading-state">Cargando datos en tiempo real de Seúl...</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCIÓN 4: «Lo que el Cerebro Seúl NO sabe, lo dice» (Transparencia) -->
+  <section class="section-transparency">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Transparencia Radical</span>
+        <h3>«Lo que el Cerebro Seúl NO Sabe, lo Dice»</h3>
+        <p>Un sistema de información creíble declara con exactitud sus límites y las fuentes que decidió no publicar.</p>
+      </div>
+
+      <div class="gaps-grid">
+        <div class="gap-card">
+          <div class="gap-icon">🚫</div>
+          <h4>Exclusión de Statista (F13)</h4>
+          <p>
+            <strong>Muro de pago y licencia propietaria.</strong> Costo de US$199–1.299/año con prohibición de redistribución. 
+            Sus cifras provienen en realidad de KOSIS (F03) y Bank of Korea (F05), que consultamos directamente sin costo.
+          </p>
+        </div>
+
+        <div class="gap-card">
+          <div class="gap-icon">⚠️</div>
+          <h4>Descarte de GDELT / Google News (F12)</h4>
+          <p>
+            <strong>Riesgo de Datos Personales (PII).</strong> Los feeds de noticias en texto libre traen nombres, 
+            apellidos y situaciones judiciales de personas privadas. Se descartó publicar texto crudo sin auditar.
+          </p>
+        </div>
+
+        <div class="gap-card">
+          <div class="gap-icon">🛑</div>
+          <h4>Caída y Bloqueo de MODS (F14)</h4>
+          <p>
+            <strong>Portal cerrado y sin licencia abierta.</strong> MODS (mods.go.kr) carece de especificación de licencia 
+            y no cuenta con endpoint programático accesible para ingesta reproducible.
+          </p>
+        </div>
+
+        <div class="gap-card">
+          <div class="gap-icon">⚖️</div>
+          <h4>Datos Propietarios de Plataformas</h4>
+          <p>
+            <strong>Sin tarjeta de crédito ni llaves comerciales.</strong> No se utilizan APIs de Kakao Maps comercial ni Naver Cloud pago. 
+            El 100% de la arquitectura corre sobre capas libres y datos públicos abiertos (KOGL / CC0 / MIT).
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCIÓN 5: Catálogo Interactivo de las 14 Fuentes (F01 a F14) -->
+  <section class="section-catalog" id="catalogo">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Gobernanza y Trazabilidad</span>
+        <h3>Catálogo de Fuentes y Semáforo de Uso</h3>
+        <p>Las 14 fuentes rastreadas por el equipo con su estado de integración, licencia oficial y política de personas.</p>
+      </div>
+
+      <div class="table-responsive">
+        <table class="catalog-table" id="tabla-catalogo">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Fuente</th>
+              <th>Entidad Publicadora</th>
+              <th>Licencia Oficial</th>
+              <th>Personas</th>
+              <th>Probado</th>
+              <th>Estado</th>
+            </tr>
+          </thead>
+          <tbody id="catalogo-tbody">
+            <!-- Rellenado por app.js -->
+            <tr><td colspan="7" class="text-center">Cargando catálogo oficial...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer con nombres del grupo y enlaces técnicos -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <h4>서울 (Seúl) · Taller de Datos</h4>
+          <p>Universidad · Gobernanza de Sistemas de Información (2026)</p>
+          <p class="repo-link">
+            Repositorio GitHub: <a href="https://github.com/Emmanuel0930/Seoul" target="_blank" rel="noopener">Emmanuel0930/Seoul</a>
+          </p>
+        </div>
+        <div class="footer-col">
+          <h4>Integrantes del Grupo</h4>
+          <ul class="footer-list">
+            <li>Gabriela Martinez (Data Steward)</li>
+            <li>Gabriela Sanabria (Custodia Técnica)</li>
+            <li>Juan Ramon (Consumo e Interfaz)</li>
+            <li>Emmanuel Alvarez (Seguridad y Privacidad)</li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Arquitectura y Cumplimiento</h4>
+          <ul class="footer-list">
+            <li>✔ Contrato de datos en 5 JSON limpios</li>
+            <li>✔ Verificación automática con 0 fallos</li>
+            <li>✔ Cero llaves pagas ni tarjetas</li>
+            <li>✔ Mobile-first responsivo</li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2026 Grupo de Gobernanza de Seúl. Licencias oficiales KOGL Tipo 1 / CC0 / MIT.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- MODAL DE TRAZABILIDAD Y FICHA DE FUENTE (A UN CLIC) -->
+  <div id="modal-fuente" class="modal-backdrop" style="display: none;">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title-wrap">
+          <span class="badge-source-id" id="modal-fid">F01</span>
+          <h3 id="modal-fname">Nombre de la Fuente</h3>
+        </div>
+        <button id="modal-close" class="modal-close-btn">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-meta-row">
+          <div class="meta-item">
+            <span class="meta-label">Entidad Publicadora:</span>
+            <span class="meta-val" id="modal-fentidad">-</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Licencia Oficial:</span>
+            <span class="meta-val" id="modal-flicencia">-</span>
+          </div>
+        </div>
+        <div class="modal-meta-row">
+          <div class="meta-item">
+            <span class="meta-label">Vigencia del Dato:</span>
+            <span class="meta-val" id="modal-fvigencia">-</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Fecha de Prueba en Lago:</span>
+            <span class="meta-val" id="modal-fprobado">2026-10-06</span>
+          </div>
+        </div>
+        <div class="modal-meta-row">
+          <div class="meta-item">
+            <span class="meta-label">Dato de Personas:</span>
+            <span class="meta-val" id="modal-fpersonas">-</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Estado en el Sistema:</span>
+            <span class="meta-val" id="modal-festado">-</span>
+          </div>
+        </div>
+        <div class="modal-desc-box">
+          <span class="meta-label">Detalle y Rol en el Sistema:</span>
+          <p id="modal-fnota">-</p>
+        </div>
+        <div class="modal-url-box">
+          <span class="meta-label">Enlace Oficial de Acceso:</span>
+          <a href="#" id="modal-furl" target="_blank" rel="noopener">Visitar portal de origen &rarr;</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL DE COMPUERTA DE SEGURIDAD (ENTRADA) -->
+  <div id="modal-compuerta" class="modal-backdrop" style="display: none;">
+    <div class="modal-card modal-sm">
+      <div class="modal-header">
+        <h3>🔒 Compuerta de Seguridad</h3>
+        <button id="modal-compuerta-close" class="modal-close-btn">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p class="compuerta-msg">
+          Ingrese la clave de sesión autorizada para desbloquear endpoints administrativos y crudos de investigación.
+        </p>
+        <div class="form-group">
+          <label for="input-clave">Clave de Acceso:</label>
+          <input type="password" id="input-clave" class="form-input" placeholder="••••••••">
+        </div>
+        <div id="compuerta-feedback" class="feedback-msg" style="display: none;"></div>
+        <div class="modal-actions">
+          <button id="btn-validar-clave" class="btn btn-primary">Verificar Acceso</button>
+        </div>
+        <p class="compuerta-hint">
+          * La clave de evaluación académica fue enviada por el canal oficial docente y nunca se sube al repositorio.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Librería MapLibre GL JS -->
+  <script src="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.js"></script>
+  <!-- Lógica de la Aplicación -->
+  <script src="app.js"></script>
+</body>
+</html>
