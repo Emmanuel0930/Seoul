@@ -1,0 +1,341 @@
+{
+  "tema": "Demografía, Hogares Unipersonales y Adultos Mayores en Seúl",
+  "probado": "2026-10-06",
+  "fuentes": [
+    {
+      "id": "F01",
+      "nombre": "Seoul Open Data Plaza (data.seoul.go.kr)",
+      "url": "https://data.seoul.go.kr",
+      "estado": "vivo",
+      "licencia": "KOGL Tipo 1 (libre con atribución)"
+    },
+    {
+      "id": "F03",
+      "nombre": "KOSIS — Korean Statistical Information Service",
+      "url": "https://kosis.kr/eng/",
+      "estado": "vivo",
+      "licencia": "KOGL Tipo 1 (libre con atribución)"
+    }
+  ],
+  "cifras": {
+    "total_population": {
+      "valor": 9508500,
+      "unidad": "Personas",
+      "vigencia": "2025-12",
+      "fuente": "F01"
+    },
+    "single_households_rate": {
+      "valor": 43.8,
+      "unidad": "%",
+      "vigencia": "2025-12",
+      "fuente": "F01"
+    },
+    "elderly_alone_rate": {
+      "valor": 10.1,
+      "unidad": "%",
+      "vigencia": "2025-12",
+      "fuente": "F01"
+    }
+  },
+  "series": {
+    "distribucion_etaria": [
+      {
+        "age_group": "0-9",
+        "personas": 562100,
+        "porcentaje": 6.0
+      },
+      {
+        "age_group": "10-19",
+        "personas": 745300,
+        "porcentaje": 7.9
+      },
+      {
+        "age_group": "20-29",
+        "personas": 1412000,
+        "porcentaje": 15.0
+      },
+      {
+        "age_group": "30-39",
+        "personas": 1515200,
+        "porcentaje": 16.1
+      },
+      {
+        "age_group": "40-49",
+        "personas": 1428300,
+        "porcentaje": 15.2
+      },
+      {
+        "age_group": "50-59",
+        "personas": 1476100,
+        "porcentaje": 15.7
+      },
+      {
+        "age_group": "60-69",
+        "personas": 1289500,
+        "porcentaje": 13.7
+      },
+      {
+        "age_group": "70-79",
+        "personas": 651200,
+        "porcentaje": 6.9
+      },
+      {
+        "age_group": "80+",
+        "personas": 304812,
+        "porcentaje": 3.2
+      }
+    ]
+  },
+  "registros": [
+    {
+      "district_code": "11110",
+      "district_name": "Jongno-gu",
+      "district_name_kor": "종로구",
+      "total_population": 145200,
+      "single_households_pct": 52.1,
+      "elderly_alone_pct": 11.8,
+      "area_km2": 23.91,
+      "density_hab_km2": 6072.8
+    },
+    {
+      "district_code": "11140",
+      "district_name": "Jung-gu",
+      "district_name_kor": "중구",
+      "total_population": 122800,
+      "single_households_pct": 53.4,
+      "elderly_alone_pct": 12.2,
+      "area_km2": 9.96,
+      "density_hab_km2": 12329.3
+    },
+    {
+      "district_code": "11170",
+      "district_name": "Yongsan-gu",
+      "district_name_kor": "용산구",
+      "total_population": 223400,
+      "single_households_pct": 48.2,
+      "elderly_alone_pct": 9.6,
+      "area_km2": 21.87,
+      "density_hab_km2": 10214.9
+    },
+    {
+      "district_code": "11200",
+      "district_name": "Seongdong-gu",
+      "district_name_kor": "성동구",
+      "total_population": 281500,
+      "single_households_pct": 44.5,
+      "elderly_alone_pct": 8.7,
+      "area_km2": 16.86,
+      "density_hab_km2": 16696.3
+    },
+    {
+      "district_code": "11215",
+      "district_name": "Gwangjin-gu",
+      "district_name_kor": "광진구",
+      "total_population": 341200,
+      "single_households_pct": 47.8,
+      "elderly_alone_pct": 8.1,
+      "area_km2": 17.06,
+      "density_hab_km2": 20000.0
+    },
+    {
+      "district_code": "11230",
+      "district_name": "Dongdaemun-gu",
+      "district_name_kor": "동대문구",
+      "total_population": 348900,
+      "single_households_pct": 49.7,
+      "elderly_alone_pct": 10.4,
+      "area_km2": 14.22,
+      "density_hab_km2": 24535.9
+    },
+    {
+      "district_code": "11260",
+      "district_name": "Jungnang-gu",
+      "district_name_kor": "중랑구",
+      "total_population": 386400,
+      "single_households_pct": 43.1,
+      "elderly_alone_pct": 11.9,
+      "area_km2": 18.5,
+      "density_hab_km2": 20886.5
+    },
+    {
+      "district_code": "11290",
+      "district_name": "Seongbuk-gu",
+      "district_name_kor": "성북구",
+      "total_population": 432100,
+      "single_households_pct": 41.6,
+      "elderly_alone_pct": 10.1,
+      "area_km2": 24.58,
+      "density_hab_km2": 17579.3
+    },
+    {
+      "district_code": "11305",
+      "district_name": "Gangbuk-gu",
+      "district_name_kor": "강북구",
+      "total_population": 294300,
+      "single_households_pct": 42.3,
+      "elderly_alone_pct": 13.5,
+      "area_km2": 23.6,
+      "density_hab_km2": 12470.3
+    },
+    {
+      "district_code": "11320",
+      "district_name": "Dobong-gu",
+      "district_name_kor": "도봉구",
+      "total_population": 311700,
+      "single_households_pct": 38.1,
+      "elderly_alone_pct": 12.7,
+      "area_km2": 20.66,
+      "density_hab_km2": 15087.1
+    },
+    {
+      "district_code": "11350",
+      "district_name": "Nowon-gu",
+      "district_name_kor": "노원구",
+      "total_population": 503800,
+      "single_households_pct": 35.4,
+      "elderly_alone_pct": 11.5,
+      "area_km2": 35.44,
+      "density_hab_km2": 14215.6
+    },
+    {
+      "district_code": "11380",
+      "district_name": "Eunpyeong-gu",
+      "district_name_kor": "은평구",
+      "total_population": 468200,
+      "single_households_pct": 39.2,
+      "elderly_alone_pct": 11.6,
+      "area_km2": 29.71,
+      "density_hab_km2": 15759.0
+    },
+    {
+      "district_code": "11410",
+      "district_name": "Seodaemun-gu",
+      "district_name_kor": "서대문구",
+      "total_population": 310900,
+      "single_households_pct": 48.9,
+      "elderly_alone_pct": 9.8,
+      "area_km2": 17.63,
+      "density_hab_km2": 17634.7
+    },
+    {
+      "district_code": "11440",
+      "district_name": "Mapo-gu",
+      "district_name_kor": "마포구",
+      "total_population": 368100,
+      "single_households_pct": 49.3,
+      "elderly_alone_pct": 8.3,
+      "area_km2": 23.85,
+      "density_hab_km2": 15434.0
+    },
+    {
+      "district_code": "11470",
+      "district_name": "Yangcheon-gu",
+      "district_name_kor": "양천구",
+      "total_population": 441300,
+      "single_households_pct": 32.1,
+      "elderly_alone_pct": 8.9,
+      "area_km2": 17.41,
+      "density_hab_km2": 25347.5
+    },
+    {
+      "district_code": "11500",
+      "district_name": "Gangseo-gu",
+      "district_name_kor": "강서구",
+      "total_population": 566400,
+      "single_households_pct": 43.6,
+      "elderly_alone_pct": 9.7,
+      "area_km2": 41.44,
+      "density_hab_km2": 13668.0
+    },
+    {
+      "district_code": "11530",
+      "district_name": "Guro-gu",
+      "district_name_kor": "구로구",
+      "total_population": 396200,
+      "single_households_pct": 39.8,
+      "elderly_alone_pct": 10.2,
+      "area_km2": 20.12,
+      "density_hab_km2": 19691.8
+    },
+    {
+      "district_code": "11545",
+      "district_name": "Geumcheon-gu",
+      "district_name_kor": "금천구",
+      "total_population": 229800,
+      "single_households_pct": 51.2,
+      "elderly_alone_pct": 11.4,
+      "area_km2": 13.02,
+      "density_hab_km2": 17649.8
+    },
+    {
+      "district_code": "11560",
+      "district_name": "Yeongdeungpo-gu",
+      "district_name_kor": "영등포구",
+      "total_population": 376500,
+      "single_households_pct": 47.6,
+      "elderly_alone_pct": 9.1,
+      "area_km2": 24.55,
+      "density_hab_km2": 15336.0
+    },
+    {
+      "district_code": "11590",
+      "district_name": "Dongjak-gu",
+      "district_name_kor": "동작구",
+      "total_population": 389100,
+      "single_households_pct": 46.8,
+      "elderly_alone_pct": 9.5,
+      "area_km2": 16.35,
+      "density_hab_km2": 23798.2
+    },
+    {
+      "district_code": "11620",
+      "district_name": "Gwanak-gu",
+      "district_name_kor": "관악구",
+      "total_population": 497300,
+      "single_households_pct": 61.2,
+      "elderly_alone_pct": 10.9,
+      "area_km2": 29.57,
+      "density_hab_km2": 16817.7
+    },
+    {
+      "district_code": "11650",
+      "district_name": "Seocho-gu",
+      "district_name_kor": "서초구",
+      "total_population": 408500,
+      "single_households_pct": 33.2,
+      "elderly_alone_pct": 7.2,
+      "area_km2": 46.98,
+      "density_hab_km2": 8695.2
+    },
+    {
+      "district_code": "11680",
+      "district_name": "Gangnam-gu",
+      "district_name_kor": "강남구",
+      "total_population": 537200,
+      "single_households_pct": 36.8,
+      "elderly_alone_pct": 7.5,
+      "area_km2": 39.5,
+      "density_hab_km2": 13600.0
+    },
+    {
+      "district_code": "11710",
+      "district_name": "Songpa-gu",
+      "district_name_kor": "송파구",
+      "total_population": 658400,
+      "single_households_pct": 34.1,
+      "elderly_alone_pct": 8.1,
+      "area_km2": 33.87,
+      "density_hab_km2": 19439.0
+    },
+    {
+      "district_code": "11740",
+      "district_name": "Gangdong-gu",
+      "district_name_kor": "강동구",
+      "total_population": 469300,
+      "single_households_pct": 34.9,
+      "elderly_alone_pct": 9.3,
+      "area_km2": 24.59,
+      "density_hab_km2": 19085.0
+    }
+  ]
+}

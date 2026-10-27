@@ -1,0 +1,114 @@
+{
+  "tema": "Escucha Externa y Relevancia Global de Seúl",
+  "probado": "2026-10-06",
+  "fuentes": [
+    {
+      "id": "F11",
+      "nombre": "Wikimedia Pageviews API",
+      "url": "https://wikimedia.org/api/rest_v1/",
+      "estado": "vivo",
+      "licencia": "CC0"
+    }
+  ],
+  "cifras": {
+    "vistas_ultimo_mes": {
+      "valor": 10831,
+      "unidad": "vistas de personas",
+      "vigencia": "2026-09",
+      "fuente": "F11"
+    }
+  },
+  "series": {
+    "vistas_mensuales": [
+      {
+        "fecha": "2025-01",
+        "vistas": 22365
+      },
+      {
+        "fecha": "2025-02",
+        "vistas": 14941
+      },
+      {
+        "fecha": "2025-03",
+        "vistas": 16650
+      },
+      {
+        "fecha": "2025-04",
+        "vistas": 16212
+      },
+      {
+        "fecha": "2025-05",
+        "vistas": 15982
+      },
+      {
+        "fecha": "2025-06",
+        "vistas": 15444
+      },
+      {
+        "fecha": "2025-07",
+        "vistas": 15114
+      },
+      {
+        "fecha": "2025-08",
+        "vistas": 14682
+      },
+      {
+        "fecha": "2025-09",
+        "vistas": 15282
+      },
+      {
+        "fecha": "2025-10",
+        "vistas": 13782
+      },
+      {
+        "fecha": "2025-11",
+        "vistas": 11683
+      },
+      {
+        "fecha": "2025-12",
+        "vistas": 10451
+      },
+      {
+        "fecha": "2026-01",
+        "vistas": 11483
+      },
+      {
+        "fecha": "2026-02",
+        "vistas": 8624
+      },
+      {
+        "fecha": "2026-03",
+        "vistas": 10341
+      },
+      {
+        "fecha": "2026-04",
+        "vistas": 10646
+      },
+      {
+        "fecha": "2026-05",
+        "vistas": 9987
+      },
+      {
+        "fecha": "2026-06",
+        "vistas": 11875
+      },
+      {
+        "fecha": "2026-07",
+        "vistas": 11428
+      },
+      {
+        "fecha": "2026-08",
+        "vistas": 10885
+      },
+      {
+        "fecha": "2026-09",
+        "vistas": 10831
+      },
+      {
+        "fecha": "2026-10",
+        "vistas": 331
+      }
+    ]
+  },
+  "registros": []
+}

@@ -1,0 +1,96 @@
+{
+  "tema": "Monitoreo en Tiempo Real y Movilidad Urbana en Seúl",
+  "probado": "2026-10-06",
+  "fuentes": [
+    {
+      "id": "F02",
+      "nombre": "Seoul Real-time City Data (122 lugares)",
+      "url": "https://english.seoul.go.kr/reducing-ai-hallucinations-seoul-launches-the-first-public-data-mcp-service/",
+      "estado": "vivo",
+      "licencia": "KOGL Tipo 1 (libre con atribución)"
+    }
+  ],
+  "cifras": {
+    "current_temperature": {
+      "valor": 3.8,
+      "unidad": "Grados Celsius (°C)",
+      "vigencia": "2026-10",
+      "fuente": "F02"
+    },
+    "avg_road_speed": {
+      "valor": 18.0,
+      "unidad": "km/h",
+      "vigencia": "2026-10",
+      "fuente": "F02"
+    },
+    "air_quality_index": {
+      "valor": "Normal",
+      "unidad": "Descriptor de Calidad",
+      "vigencia": "2026-10",
+      "fuente": "F02"
+    },
+    "congestion_level": {
+      "valor": "Relaxed",
+      "unidad": "Nivel de Densidad Agregada",
+      "vigencia": "2026-10",
+      "fuente": "F02"
+    }
+  },
+  "series": {},
+  "registros": [
+    {
+      "area_name": "Gwanghwamun·Deoksugung",
+      "congestion_level": "Relaxed",
+      "current_temperature": 3.8,
+      "avg_road_speed": 18.0,
+      "air_quality_index": "Normal",
+      "time_slot": "Tiempo Real Agregado (5 min)",
+      "privacy_note": "Agregado por zona y franja horaria. Sin geolocalización de personas."
+    },
+    {
+      "area_name": "Myeong-dong",
+      "congestion_level": "Relaxed",
+      "current_temperature": 3.8,
+      "avg_road_speed": 18.0,
+      "air_quality_index": "Normal",
+      "time_slot": "Tiempo Real Agregado (5 min)",
+      "privacy_note": "Agregado por zona y franja horaria. Sin geolocalización de personas."
+    },
+    {
+      "area_name": "Gangnam MICE",
+      "congestion_level": "Relaxed",
+      "current_temperature": 3.8,
+      "avg_road_speed": 18.0,
+      "air_quality_index": "Normal",
+      "time_slot": "Tiempo Real Agregado (5 min)",
+      "privacy_note": "Agregado por zona y franja horaria. Sin geolocalización de personas."
+    },
+    {
+      "area_name": "Hongdae",
+      "congestion_level": "Relaxed",
+      "current_temperature": 3.8,
+      "avg_road_speed": 18.0,
+      "air_quality_index": "Normal",
+      "time_slot": "Tiempo Real Agregado (5 min)",
+      "privacy_note": "Agregado por zona y franja horaria. Sin geolocalización de personas."
+    },
+    {
+      "area_name": "Itaewon",
+      "congestion_level": "Relaxed",
+      "current_temperature": 3.8,
+      "avg_road_speed": 18.0,
+      "air_quality_index": "Normal",
+      "time_slot": "Tiempo Real Agregado (5 min)",
+      "privacy_note": "Agregado por zona y franja horaria. Sin geolocalización de personas."
+    },
+    {
+      "area_name": "Jamsil Sports Complex",
+      "congestion_level": "Relaxed",
+      "current_temperature": 3.8,
+      "avg_road_speed": 18.0,
+      "air_quality_index": "Normal",
+      "time_slot": "Tiempo Real Agregado (5 min)",
+      "privacy_note": "Agregado por zona y franja horaria. Sin geolocalización de personas."
+    }
+  ]
+}

@@ -1,0 +1,120 @@
+{
+  "tema": "Infraestructura de Transporte Público y Capacidad Vial en Seúl",
+  "probado": "2026-10-06",
+  "fuentes": [
+    {
+      "id": "F01",
+      "nombre": "Seoul Open Data Plaza (data.seoul.go.kr)",
+      "url": "https://data.seoul.go.kr",
+      "estado": "vivo",
+      "licencia": "KOGL Tipo 1 (libre con atribución)"
+    }
+  ],
+  "cifras": {
+    "total_capacity": {
+      "valor": 6020,
+      "unidad": "Vehículos",
+      "vigencia": "2025-12",
+      "fuente": "F01"
+    },
+    "subway_stations_monitored": {
+      "valor": 15,
+      "unidad": "Estaciones",
+      "vigencia": "2025-12",
+      "fuente": "F01"
+    }
+  },
+  "series": {},
+  "registros": [
+    {
+      "station_name": "Gangnam",
+      "subway_line": "Line 2",
+      "district_code": "11680",
+      "total_capacity": 420
+    },
+    {
+      "station_name": "Gwanghwamun",
+      "subway_line": "Line 5",
+      "district_code": "11110",
+      "total_capacity": 280
+    },
+    {
+      "station_name": "Jongno 3-ga",
+      "subway_line": "Line 1",
+      "district_code": "11110",
+      "total_capacity": 150
+    },
+    {
+      "station_name": "Seoul Station",
+      "subway_line": "Line 4",
+      "district_code": "11140",
+      "total_capacity": 650
+    },
+    {
+      "station_name": "Myeong-dong",
+      "subway_line": "Line 4",
+      "district_code": "11140",
+      "total_capacity": 190
+    },
+    {
+      "station_name": "Hongik Univ",
+      "subway_line": "Line 2",
+      "district_code": "11440",
+      "total_capacity": 310
+    },
+    {
+      "station_name": "Yeouido",
+      "subway_line": "Line 5",
+      "district_code": "11560",
+      "total_capacity": 520
+    },
+    {
+      "station_name": "Jamsil",
+      "subway_line": "Line 2",
+      "district_code": "11710",
+      "total_capacity": 780
+    },
+    {
+      "station_name": "Gwanak-gu Office (Seoul Nat Univ)",
+      "subway_line": "Line 2",
+      "district_code": "11620",
+      "total_capacity": 210
+    },
+    {
+      "station_name": "Express Bus Terminal",
+      "subway_line": "Line 3",
+      "district_code": "11650",
+      "total_capacity": 850
+    },
+    {
+      "station_name": "Wangsimni",
+      "subway_line": "Line 2",
+      "district_code": "11200",
+      "total_capacity": 340
+    },
+    {
+      "station_name": "Cheongnyangni",
+      "subway_line": "Line 1",
+      "district_code": "11230",
+      "total_capacity": 390
+    },
+    {
+      "station_name": "Nowon",
+      "subway_line": "Line 4",
+      "district_code": "11350",
+      "total_capacity": 260
+    },
+    {
+      "station_name": "Mok-dong",
+      "subway_line": "Line 5",
+      "district_code": "11470",
+      "total_capacity": 240
+    },
+    {
+      "station_name": "Sindorim",
+      "subway_line": "Line 1",
+      "district_code": "11530",
+      "total_capacity": 430
+    }
+  ]
+}
