@@ -11,6 +11,7 @@ const Estado = {
   economia: null,
   tiempoReal: null,
   escucha: null,
+  clima: null,
   geoJson: null,
   mapa: null,
   distritoSeleccionado: null,
@@ -29,6 +30,7 @@ const RUTAS = {
   economia: '../lago/economia_vivienda.json',
   tiempoReal: '../lago/tiempo_real.json',
   escucha: '../lago/escucha.json',
+  clima: '../lago/clima.json',
   geoJson: '../territorio/seoul_gu.geojson'
 };
 
@@ -46,6 +48,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   renderizarContextos();
   renderizarProcedencia();
   renderizarZonasTiempoReal();
+  renderizarModuloClima();
   renderizarTablaCatalogo();
   inicializarMapaTerritorial();
   configurarEventosInteractivos();
@@ -54,12 +57,13 @@ document.addEventListener('DOMContentLoaded', async () => {
 // Carga asíncrona de todos los archivos del lago
 async function cargarTodosLosDatos() {
   try {
-    const [resCat, resDemo, resEcon, resRT, resEsc, resGeo] = await Promise.all([
+    const [resCat, resDemo, resEcon, resRT, resEsc, resClima, resGeo] = await Promise.all([
       fetch(RUTAS.catalogo).then(r => r.json()).catch(() => []),
       fetch(RUTAS.demografia).then(r => r.json()).catch(() => null),
       fetch(RUTAS.economia).then(r => r.json()).catch(() => null),
       fetch(RUTAS.tiempoReal).then(r => r.json()).catch(() => null),
       fetch(RUTAS.escucha).then(r => r.json()).catch(() => null),
+      fetch(RUTAS.clima).then(r => r.json()).catch(() => null),
       fetch(RUTAS.geoJson).then(r => r.json()).catch(() => null)
     ]);
 
@@ -68,6 +72,7 @@ async function cargarTodosLosDatos() {
     Estado.economia = resEcon;
     Estado.tiempoReal = resRT;
     Estado.escucha = resEsc;
+    Estado.clima = resClima;
     Estado.geoJson = resGeo;
 
     console.log('✅ Datos del lago cargados exitosamente.');
@@ -258,7 +263,114 @@ function renderizarZonasTiempoReal() {
   });
 }
 
-// 3. Renderizado de Tabla de Catálogo (F01 - F14)
+// 2B. Renderizado del Módulo de Clima en Seúl (Open-Meteo + KMA)
+function renderizarModuloClima() {
+  if (!Estado.clima || !Estado.clima.cifras) return;
+
+  const c = Estado.clima.cifras;
+
+  // Condiciones actuales
+  const elTemp = document.getElementById('clima-hero-temp');
+  if (elTemp && c.current_temperature) elTemp.textContent = c.current_temperature.valor.toFixed(1);
+
+  const elApp = document.getElementById('clima-hero-sensacion');
+  if (elApp && c.apparent_temperature) elApp.textContent = `${c.apparent_temperature.valor.toFixed(1)} °C`;
+
+  const elDesc = document.getElementById('clima-hero-desc');
+  if (elDesc && c.weather_code) elDesc.textContent = c.weather_code.descripcion || 'Variable';
+
+  const elIcon = document.getElementById('clima-hero-icon');
+  if (elIcon && c.weather_code) elIcon.textContent = c.weather_code.icono || '🌤️';
+
+  const elHum = document.getElementById('clima-humedad');
+  if (elHum && c.relative_humidity) elHum.textContent = `${c.relative_humidity.valor} %`;
+
+  const elViento = document.getElementById('clima-viento');
+  if (elViento && c.wind_speed) elViento.textContent = `${c.wind_speed.valor} km/h`;
+
+  const elLluvia = document.getElementById('clima-lluvia');
+  if (elLluvia && c.precipitation) elLluvia.textContent = `${c.precipitation.valor} mm`;
+
+  // Pronóstico horario (24h)
+  const hourlyTrack = document.getElementById('clima-hourly-track');
+  if (hourlyTrack && Estado.clima.pronostico_24h && Estado.clima.pronostico_24h.length) {
+    hourlyTrack.innerHTML = '';
+    Estado.clima.pronostico_24h.forEach(h => {
+      const item = document.createElement('div');
+      item.className = 'hourly-card';
+      item.innerHTML = `
+        <span class="h-time">${h.hora}</span>
+        <span class="h-icon">${h.icono}</span>
+        <span class="h-temp">${h.temperatura}°C</span>
+        <span class="h-rain">${h.prob_lluvia > 0 ? '🌧️ ' + h.prob_lluvia + '%' : '☀️ Seco'}</span>
+      `;
+      hourlyTrack.appendChild(item);
+    });
+  }
+
+  // Pronóstico diario (7 días)
+  const dailyGrid = document.getElementById('clima-daily-grid');
+  if (dailyGrid && Estado.clima.pronostico_7d && Estado.clima.pronostico_7d.length) {
+    dailyGrid.innerHTML = '';
+    Estado.clima.pronostico_7d.forEach(d => {
+      const item = document.createElement('div');
+      item.className = 'daily-card';
+      item.innerHTML = `
+        <div class="daily-header">
+          <span class="daily-day">${d.dia}</span>
+          <span class="daily-date">${d.fecha.slice(5)}</span>
+        </div>
+        <div class="daily-icon">${d.icono}</div>
+        <div class="daily-desc">${d.descripcion}</div>
+        <div class="daily-temps">
+          <span class="d-max">${d.temp_max}°</span>
+          <span class="d-separator">/</span>
+          <span class="d-min">${d.temp_min}°</span>
+        </div>
+        <div class="daily-rain-wrap">
+          <div class="daily-rain-bar" style="width: ${d.prob_lluvia_max}%"></div>
+          <span class="daily-rain-text">${d.prob_lluvia_max}% prob. lluvia</span>
+        </div>
+      `;
+      dailyGrid.appendChild(item);
+    });
+  }
+
+  // Intento de refresco en vivo desde Open-Meteo en cliente si hay conexión
+  refrescarClimaEnVivo();
+}
+
+async function refrescarClimaEnVivo() {
+  try {
+    const url = 'https://api.open-meteo.com/v1/forecast?latitude=37.5665&longitude=126.9780&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,wind_speed_10m,weather_code&hourly=temperature_2m,precipitation_probability,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=Asia%2FSeoul&forecast_days=7';
+    const resp = await fetch(url);
+    if (!resp.ok) return;
+    const data = await resp.json();
+    if (!data.current) return;
+
+    const cur = data.current;
+    if (document.getElementById('clima-hero-temp')) {
+      document.getElementById('clima-hero-temp').textContent = Number(cur.temperature_2m).toFixed(1);
+    }
+    if (document.getElementById('clima-hero-sensacion')) {
+      document.getElementById('clima-hero-sensacion').textContent = `${Number(cur.apparent_temperature).toFixed(1)} °C`;
+    }
+    if (document.getElementById('clima-humedad')) {
+      document.getElementById('clima-humedad').textContent = `${cur.relative_humidity_2m} %`;
+    }
+    if (document.getElementById('clima-viento')) {
+      document.getElementById('clima-viento').textContent = `${Number(cur.wind_speed_10m).toFixed(1)} km/h`;
+    }
+    if (document.getElementById('clima-lluvia')) {
+      document.getElementById('clima-lluvia').textContent = `${Number(cur.precipitation).toFixed(1)} mm`;
+    }
+    console.log('🌤️ Clima de Seúl actualizado en vivo desde Open-Meteo.');
+  } catch (_) {
+    // Si falla o no hay conexión, se mantiene el dato contractual de lago/clima.json
+  }
+}
+
+// 3. Renderizado de Tabla de Catálogo (F01 - F15)
 function renderizarTablaCatalogo() {
   const tbody = document.getElementById('catalogo-tbody');
   if (!tbody || !Estado.catalogo || Estado.catalogo.length === 0) return;

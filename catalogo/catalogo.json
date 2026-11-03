@@ -264,5 +264,24 @@
     "proteccion": "no se publica",
     "como_se_encontro": "Rastreo de portales gubernamentales de monitoreo urbano",
     "nota": "Documentación en coreano, licencia sin declarar y acceso por script no confirmado."
+  },
+  {
+    "id": "F15",
+    "nombre": "Open-Meteo Weather API (Seúl)",
+    "entidad": "Open-Meteo GmbH / Modelos Meteorológicos Abiertos",
+    "tipo_publicador": "Plataforma de datos meteorológicos abiertos",
+    "url": "https://open-meteo.com/en/docs",
+    "formato": "JSON / REST API",
+    "acceso": "Público directo sin API key ni registro",
+    "licencia": "CC-BY 4.0 / Open Data",
+    "personas": "No",
+    "cobertura": "Seúl (Latitud 37.5665, Longitud 126.9780)",
+    "vigencia": "2026-11",
+    "frecuencia": "Horaria / Tiempo real",
+    "probado": "2026-11-03",
+    "estado": "integrado",
+    "proteccion": "abierto",
+    "como_se_encontro": "Portal Open-Meteo de pronósticos meteorológicos de alta precisión para Seúl",
+    "nota": "Provee temperatura actual, sensación térmica, humedad relativa, viento, precipitación y pronóstico horario a 24 horas y diario a 7 días sin requerir clave comercial."
   }
 ]

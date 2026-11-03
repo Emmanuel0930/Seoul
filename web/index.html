@@ -32,6 +32,7 @@
         <a href="#preguntas" class="nav-link">Preguntas Clave</a>
         <a href="#territorio" class="nav-link">Mapa Territorial (25 Gu)</a>
         <a href="#tiempo-real" class="nav-link">Monitor Urbano</a>
+        <a href="#clima" class="nav-link">🌤️ Clima Seúl</a>
         <a href="#catalogo" class="nav-link">Catálogo y Fuentes</a>
         <a href="#descargas" class="nav-link">📥 Descargas</a>
         <a href="#equipo" class="nav-link team-highlight">Equipo y Roles</a>
@@ -405,6 +406,151 @@
     </div>
   </section>
 
+  <!-- SECCIÓN: Monitor Meteorológico de Seúl (Open-Meteo + KMA) -->
+  <section class="section-weather" id="clima">
+    <div class="container">
+      <div class="section-header">
+        <div class="tag-with-status">
+          <span class="section-tag">Meteorología en Vivo (F15 Open-Meteo + KMA)</span>
+          <span class="live-indicator"><span class="live-pulse"></span> Coordenadas 37.5665° N, 126.9780° E</span>
+        </div>
+        <h3>Monitor Meteorológico y Pronóstico de Seúl</h3>
+        <p>Condiciones en tiempo real, sensación térmica, viento, lluvia, pronósticos horarios a 24h y perspectiva a 7 días, comparando las 4 principales APIs climáticas.</p>
+      </div>
+
+      <!-- Tarjeta Principal de Clima Actual -->
+      <div class="weather-current-card" id="weather-current-box">
+        <div class="weather-main-panel">
+          <div class="weather-hero-row">
+            <span class="weather-main-icon" id="clima-hero-icon">🌤️</span>
+            <div class="weather-temp-wrap">
+              <span class="weather-hero-temp" id="clima-hero-temp">--.-</span>
+              <span class="weather-hero-unit">°C</span>
+            </div>
+            <div class="weather-condition-wrap">
+              <h4 id="clima-hero-desc">Cargando clima de Seúl...</h4>
+              <p class="weather-apparent">Sensación térmica: <strong id="clima-hero-sensacion">--.- °C</strong></p>
+              <div class="provenance-pill" data-source="F15" title="Haga clic para auditar procedencia F15 Open-Meteo">
+                <span class="prov-text">F15 Open-Meteo · CC-BY 4.0 · Sin Clave</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="weather-details-grid">
+          <div class="wdetail-item" data-source="F15">
+            <span class="wdetail-icon">💧</span>
+            <div class="wdetail-info">
+              <span class="wdetail-label">Humedad Relativa</span>
+              <span class="wdetail-val" id="clima-humedad">-- %</span>
+            </div>
+          </div>
+          <div class="wdetail-item" data-source="F15">
+            <span class="wdetail-icon">💨</span>
+            <div class="wdetail-info">
+              <span class="wdetail-label">Velocidad del Viento</span>
+              <span class="wdetail-val" id="clima-viento">-- km/h</span>
+            </div>
+          </div>
+          <div class="wdetail-item" data-source="F15">
+            <span class="wdetail-icon">🌧️</span>
+            <div class="wdetail-info">
+              <span class="wdetail-label">Precipitación Actual</span>
+              <span class="wdetail-val" id="clima-lluvia">-- mm</span>
+            </div>
+          </div>
+          <div class="wdetail-item" data-source="F15">
+            <span class="wdetail-icon">📍</span>
+            <div class="wdetail-info">
+              <span class="wdetail-label">Ubicación y Huso</span>
+              <span class="wdetail-val">Seúl (Asia/Seoul KST)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pronóstico Horario (Próximas 24 horas) -->
+      <div class="weather-hourly-section">
+        <div class="sub-header-flex">
+          <h4>⏱️ Pronóstico Horario (Próximas 24 Horas en Seúl)</h4>
+          <span class="scroll-hint">Deslice horizontalmente ↔</span>
+        </div>
+        <div class="hourly-scroll-container" id="clima-hourly-track">
+          <div class="loading-state">Cargando pronóstico horario...</div>
+        </div>
+      </div>
+
+      <!-- Pronóstico Semanal (7 Días) -->
+      <div class="weather-daily-section">
+        <div class="sub-header-flex">
+          <h4>📅 Perspectiva Semanal (Pronóstico a 7 Días)</h4>
+          <span class="sub-badge">Modelos Numéricos Globales</span>
+        </div>
+        <div class="daily-cards-grid" id="clima-daily-grid">
+          <div class="loading-state">Cargando pronóstico a 7 días...</div>
+        </div>
+      </div>
+
+      <!-- Cuadro Comparativo de las 4 APIs Meteorológicas para Seúl -->
+      <div class="weather-benchmarking-box">
+        <div class="benchmarking-header">
+          <span class="badge-bench">⚖️ Gobernanza de APIs Meteorológicas</span>
+          <h4>Evaluación y Benchmarking de las 4 APIs para Seúl</h4>
+          <p>Análisis técnico para justificar la herramienta elegida frente al piso técnico de gobernanza (cero llaves pagas, reproducibilidad y privacidad):</p>
+        </div>
+
+        <div class="table-responsive">
+          <table class="benchmark-table">
+            <thead>
+              <tr>
+                <th>API Evaluada</th>
+                <th>¿Requiere Clave?</th>
+                <th>Datos Históricos</th>
+                <th>Uso Gratuito</th>
+                <th>Cobertura / Precisión</th>
+                <th>Estado y Razón de Elección</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="highlight-row">
+                <td><strong>1. Open-Meteo</strong></td>
+                <td><code>NO</code> (Sin registro)</td>
+                <td>Sí (Desde 1940 a hoy)</td>
+                <td>100% Gratis (no comercial)</td>
+                <td>Global y Seúl (ECMWF, GFS, KMA)</td>
+                <td><span class="status-badge integrado">ELEGIDA (F15)</span><br><small>Cero fricción, JSON nativo, 0 tarjetas, lectura directa desde JS y Python.</small></td>
+              </tr>
+              <tr>
+                <td><strong>2. KMA (Korea Meteorological Admin)</strong></td>
+                <td>Sí (apihub.kma.go.kr)</td>
+                <td>Sí (Estaciones oficiales Seúl)</td>
+                <td>Gratis hasta 20.000 llamadas/día</td>
+                <td>Oficial institucional de Corea</td>
+                <td><span class="status-badge candidato">CANDIDATA OFICIAL</span><br><small>Máxima precisión en Corea, pero con registro gubernamental y portales en coreano.</small></td>
+              </tr>
+              <tr>
+                <td><strong>3. OpenWeather</strong></td>
+                <td>Sí (API Key individual)</td>
+                <td>Solo 5 días en nivel gratuito</td>
+                <td>Tier gratis con límites (1.000/día)</td>
+                <td>Satélites y estaciones globales</td>
+                <td><span class="status-badge descartado">DESCARTADA</span><br><small>Pide tarjeta para funciones avanzadas y corta el histórico en el plan libre.</small></td>
+              </tr>
+              <tr>
+                <td><strong>4. WeatherAPI.com</strong></td>
+                <td>Sí (Key obligatoria)</td>
+                <td>Solo 7 días en plan gratis</td>
+                <td>1.000.000 llamadas/mes con registro</td>
+                <td>Global pronóstico</td>
+                <td><span class="status-badge descartado">DESCARTADA</span><br><small>Mayor fricción operativa frente a la inmediatez reproducible de Open-Meteo.</small></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- SECCIÓN 4: «Lo que el Cerebro Seúl NO sabe, lo dice» (Transparencia) -->
   <section class="section-transparency">
     <div class="container">
@@ -517,6 +663,7 @@
             <a href="../lago/demografia.json" target="_blank" class="dl-link-item">📄 demografia.json</a>
             <a href="../lago/economia_vivienda.json" target="_blank" class="dl-link-item">📄 economia_vivienda.json</a>
             <a href="../lago/tiempo_real.json" target="_blank" class="dl-link-item">📄 tiempo_real.json</a>
+            <a href="../lago/clima.json" target="_blank" class="dl-link-item">📄 clima.json (Open-Meteo)</a>
           </div>
         </div>
 

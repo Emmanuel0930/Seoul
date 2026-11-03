@@ -80,7 +80,8 @@ def main():
         "lago/demografia.json",
         "lago/transporte.json",
         "lago/tiempo_real.json",
-        "lago/economia_vivienda.json"
+        "lago/economia_vivienda.json",
+        "lago/clima.json"
     }
 
     archivos_presentes = set(os.path.normpath(p).replace("\\", "/") for p in archivos_lago)
@@ -202,6 +203,14 @@ def main():
     if temp is None or not (-30.0 <= temp <= 50.0):
         fail(f"Regla de negocio: 'current_temperature' ({temp}) fuera de rango invernal/estival de Seúl (-30 a 50 °C).")
     print(f"  [x] current_temperature = {temp}°C (Válido)")
+
+    # Regla: Humedad relativa entre 0 y 100%
+    checks[0] += 1
+    hum = metricas_detectadas.get("relative_humidity")
+    if hum is not None:
+        if not (0 <= hum <= 100):
+            fail(f"Regla de negocio: 'relative_humidity' ({hum}) fuera de rango 0-100%.")
+        print(f"  [x] relative_humidity = {hum}% (Válido)")
 
     # Regla: Nivel de congestión en valores permitidos
     checks[0] += 1

@@ -250,6 +250,66 @@ CAMPOS_DICCIONARIO = [
         "vigencia": "2025-12",
         "fecha_prueba": "2026-10-06",
         "licencia_fuente": "KOGL Tipo 1 (libre con atribución)"
+    },
+    {
+        "campo": "apparent_temperature",
+        "archivo_lago": "lago/clima.json",
+        "origen_primario": "apparent_temperature",
+        "fuente_id": "F15",
+        "fuente_nombre": "Open-Meteo Weather API",
+        "tipo_dato": "Float",
+        "unidad": "°C",
+        "rango_valores": "-30.0 a 50.0",
+        "clasificacion_privacidad": "Pública",
+        "regla_transformacion": "Cálculo de sensación térmica según viento y humedad para Seúl.",
+        "vigencia": "2026-11",
+        "fecha_prueba": "2026-11-03",
+        "licencia_fuente": "CC-BY 4.0 / Open Data"
+    },
+    {
+        "campo": "relative_humidity",
+        "archivo_lago": "lago/clima.json",
+        "origen_primario": "relative_humidity_2m",
+        "fuente_id": "F15",
+        "fuente_nombre": "Open-Meteo Weather API",
+        "tipo_dato": "Integer",
+        "unidad": "%",
+        "rango_valores": "0 a 100",
+        "clasificacion_privacidad": "Pública",
+        "regla_transformacion": "Porcentaje de humedad relativa a 2 metros del suelo.",
+        "vigencia": "2026-11",
+        "fecha_prueba": "2026-11-03",
+        "licencia_fuente": "CC-BY 4.0 / Open Data"
+    },
+    {
+        "campo": "wind_speed",
+        "archivo_lago": "lago/clima.json",
+        "origen_primario": "wind_speed_10m",
+        "fuente_id": "F15",
+        "fuente_nombre": "Open-Meteo Weather API",
+        "tipo_dato": "Float",
+        "unidad": "km/h",
+        "rango_valores": ">= 0.0",
+        "clasificacion_privacidad": "Pública",
+        "regla_transformacion": "Velocidad del viento a 10 metros sobre el nivel del suelo.",
+        "vigencia": "2026-11",
+        "fecha_prueba": "2026-11-03",
+        "licencia_fuente": "CC-BY 4.0 / Open Data"
+    },
+    {
+        "campo": "precipitation",
+        "archivo_lago": "lago/clima.json",
+        "origen_primario": "precipitation",
+        "fuente_id": "F15",
+        "fuente_nombre": "Open-Meteo Weather API",
+        "tipo_dato": "Float",
+        "unidad": "mm",
+        "rango_valores": ">= 0.0",
+        "clasificacion_privacidad": "Pública",
+        "regla_transformacion": "Lámina acumulada de precipitación líquida en milímetros.",
+        "vigencia": "2026-11",
+        "fecha_prueba": "2026-11-03",
+        "licencia_fuente": "CC-BY 4.0 / Open Data"
     }
 ]
 
@@ -263,7 +323,7 @@ def main():
     output_path = "diccionario_seoul.xlsx"
     with pd.ExcelWriter(output_path, engine="openpyxl") as writer:
         df_campos.to_excel(writer, sheet_name="Diccionario_Datos", index=False)
-        df_fuentes.to_excel(writer, sheet_name="Catalogo_14_Fuentes", index=False)
+        df_fuentes.to_excel(writer, sheet_name="Catalogo_Fuentes", index=False)
 
     print(f"[OK] Archivo Excel generado: {output_path}")
     print(f"     Hoja 1: {len(df_campos)} campos que de verdad están en el lago.")
