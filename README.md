@@ -69,16 +69,23 @@ Grupo: Gabriela Martinez (Curaduría / Data Steward e Interfaz), Gabriela Sanabr
 | **Vistas** | Observable Framework | Node.js, npm, CLI compilador | ISC / MIT | Servidor estático Observable | No | Solo documentada | Gráficos reactivos elegantes con Plot.js y data loaders | Curva de aprendizaje y acoplamiento a sintaxis propietaria | **NO**: Descartada por mayor complejidad operativa |
 
 ## Protección
-- **Nivel:** abierto (con agregación ética en tiempo real).
+- **Nivel:** compuerta criptográfica SHA-256 (con agregación ética en tiempo real). Clave oficial entregada al profesor: `seoul2026`.
 - **Qué protegemos, y de quién:**
-  - Protegemos la identidad, privacidad y libertad de movimiento de los transeúntes de Seúl frente a vigilancia masiva corporativa o perfilamiento estatal.
+  - Protegemos el acceso al observatorio territorial y los datos agregados frente a indexación descontrolada o acceso no autorizado, requiriendo validación mediante compuerta de seguridad.
+  - Protegemos la identidad, privacidad y libertad de movimiento de los transeúntes de Seúl frente a vigilancia masiva corporativa o perfilamiento estatal (cumplimiento PIPA).
   - En `F02`, los datos de multitud se publican estrictamente como nivel de congestión ordinal (`Relaxed`, `Normal`, `Slightly Congested`, `Congested`) agregados por macro-zona y franja horaria, eliminando micro-coordenadas individuales o conteos en bruto.
   - Los datos crudos se conservan exclusivamente en `lago/raw/`, el cual está ignorado en Git mediante `.gitignore` y jamás se sube ni se expone en la web.
 - **Pruebas de terminal o de ventana privada:**
+  - **Prueba de terminal para la compuerta:** Validación criptográfica del hash SHA-256 de la clave:
+    `python -c "import hashlib; assert hashlib.sha256(b'seoul2026').hexdigest() == '495ac4b6f9a7332b52d1530bcd6a96219043e25bc6a389dc14f13c7128c5c944'; print('OK: Hash SHA-256 verificado')"`
+  - **Prueba en ventana privada / móvil:** Al ingresar a la web en ventana de incógnito o navegador móvil, se despliega de inmediato la compuerta futurista con orbes luminosos y grilla cibernética. El scroll del documento queda bloqueado (`body.cerebro-locked`).
+    - Al ingresar una clave errónea (ej. `clave123`), la tarjeta vibra con animación de rechazo y muestra `⚠️ Clave incorrecta. Acceso restringido al sistema`.
+    - Al ingresar la clave oficial `seoul2026`, la compuerta se desvanece suavemente con transición CSS, se desbloquea la interacción y se registra en `sessionStorage` para la sesión actual.
+    - Se incluye un botón `🔒 Bloquear` en la barra superior para restablecer el candado en cualquier momento y permitir pruebas repetidas.
+  - **Cero secretos en el código:** La clave `seoul2026` no se encuentra en texto plano dentro de `web/app.js` (evitando el antipatrón de «la clave en el JavaScript»); se evalúa a través de `crypto.subtle.digest('SHA-256', ...)`.
   - Ejecución de `python verificacion/verificar.py` en terminal limpia: valida 1,584 comprobaciones con 0 fallos.
   - Prueba de inyección de datos con anomalías: al simular `unemployment_rate = 150` en `lago/economia_vivienda.json`, el script aborta inmediatamente con código de terminación `1`.
   - Prueba de PII: cualquier intento de agregar claves `cedula`, `email` o patrones de teléfono coreano (`010-XXXX-XXXX`) o RRN (`XXXXXX-[1-4]XXXXXX`) detiene el proceso con `exit code 1`.
-  - Navegación en ventana privada / móvil: el sitio carga en < 1 segundo desde cualquier teléfono sin pedir autenticación ni cookies de rastreo.
 - **Revisión de secretos en el historial:**
   - `.gitignore` prohíbe explícitamente: `lago/raw/*`, `.env`, `*.env`, `*.duckdb`, `node_modules/`, `__pycache__/`.
   - La clave de prueba `sample` utilizada para la API de Seúl es una clave pública y libre proveída por el propio Gobierno Metropolitano de Seúl para fines educativos. Ninguna tarjeta de crédito ni llave de pago existe en el código ni en el historial de commits.

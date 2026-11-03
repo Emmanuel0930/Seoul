@@ -17,6 +17,71 @@
 </head>
 <body>
 
+  <!-- Compuerta de Acceso Criptográfico / Futuristic Clean Gate -->
+  <div id="pantalla-compuerta" class="gate-overlay">
+    <div class="gate-bg-grid"></div>
+    <div class="gate-glow-orb gate-glow-1"></div>
+    <div class="gate-glow-orb gate-glow-2"></div>
+    
+    <div class="gate-card" id="gate-card">
+      <div class="gate-header">
+        <div class="gate-badge">
+          <span class="gate-pulse-dot"></span>
+          <span>서울특별시 · CONTROL DE ACCESO</span>
+        </div>
+        <div class="gate-icon-container">
+          <svg class="gate-cyber-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+          </svg>
+        </div>
+        <h2 class="gate-title">CEREBRO SEÚL</h2>
+        <p class="gate-subtitle">Sistema de Inteligencia Territorial Urbana · Taller de Datos 2026</p>
+      </div>
+
+      <form id="gate-form" class="gate-form" onsubmit="return false;">
+        <div class="gate-field">
+          <label for="gate-password-input" class="gate-label">CLAVE DE AUTORIZACIÓN</label>
+          <div class="gate-input-wrapper">
+            <span class="gate-input-prefix">🔑</span>
+            <input 
+              type="password" 
+              id="gate-password-input" 
+              class="gate-input" 
+              placeholder="Ingrese clave del sistema..." 
+              autocomplete="current-password" 
+              autofocus 
+              required
+            >
+            <button type="button" id="gate-toggle-visibility" class="gate-eye-btn" title="Mostrar u ocultar clave" aria-label="Mostrar u ocultar clave">
+              👁️
+            </button>
+          </div>
+        </div>
+
+        <div id="gate-error-msg" class="gate-error-box" style="display: none;">
+          <span class="gate-error-icon">⚠️</span>
+          <span class="gate-error-text">Clave incorrecta. Acceso denegado.</span>
+        </div>
+
+        <button type="submit" id="gate-submit-btn" class="gate-btn">
+          <span class="gate-btn-text">DESBLOQUEAR SISTEMA</span>
+          <span class="gate-btn-arrow">→</span>
+        </button>
+      </form>
+
+      <div class="gate-footer">
+        <div class="gate-security-badge">
+          <span class="gate-shield">🛡️</span>
+          <span>Validación Criptográfica SHA-256 · Sin secretos en JavaScript</span>
+        </div>
+        <div class="gate-hint">
+          <span>Clave entregada al profesor para la evaluación del taller</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Barra Superior / Header de Navegación -->
   <header class="navbar" id="barra-superior">
     <div class="nav-container">
@@ -36,6 +101,7 @@
         <a href="#catalogo" class="nav-link">Catálogo y Fuentes</a>
         <a href="#descargas" class="nav-link">📥 Descargas</a>
         <a href="#equipo" class="nav-link team-highlight">Equipo y Roles</a>
+        <button id="btn-bloquear-cerebro" class="nav-lock-btn" title="Bloquear acceso al Cerebro">🔒 Bloquear</button>
       </nav>
     </div>
   </header>

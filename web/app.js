@@ -43,6 +43,7 @@ const PALETA_COLOR = {
 
 document.addEventListener('DOMContentLoaded', async () => {
   console.log('🚀 Inicializando Centro de Información Urbana de Seúl...');
+  inicializarCompuertaSeguridad();
   await cargarTodosLosDatos();
   renderizarTarjetasCifras();
   renderizarContextos();
@@ -1050,4 +1051,107 @@ function actualizarComparadorDistritos() {
       <span class="cmp-diff ${diffPriceM >= 0 ? 'pos' : 'neg'}">${diffPriceM >= 0 ? '+' : ''}${diffPriceM}M KRW</span>
     </div>
   `;
+}
+
+// ============================================================================
+// COMPUERTA DE SEGURIDAD CRIPTOGRÁFICA (SHA-256)
+// ============================================================================
+// La clave NO se almacena en texto plano en el código JavaScript.
+// Se valida comparando el resumen criptográfico SHA-256 usando Web Crypto API.
+// Hash SHA-256 correspondiente a la clave oficial entregada al profesor:
+const HASH_COMPUERTA_OFICIAL = '495ac4b6f9a7332b52d1530bcd6a96219043e25bc6a389dc14f13c7128c5c944';
+
+async function calcularSHA256(texto) {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(texto);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+function inicializarCompuertaSeguridad() {
+  const overlay = document.getElementById('pantalla-compuerta');
+  const card = document.getElementById('gate-card');
+  const form = document.getElementById('gate-form');
+  const input = document.getElementById('gate-password-input');
+  const errorBox = document.getElementById('gate-error-msg');
+  const toggleBtn = document.getElementById('gate-toggle-visibility');
+  const lockBtn = document.getElementById('btn-bloquear-cerebro');
+
+  if (!overlay || !input) return;
+
+  // Verificar estado de sesión previo
+  const estadoSesion = sessionStorage.getItem('cerebro_seoul_auth');
+  if (estadoSesion === 'unlocked') {
+    overlay.classList.add('gate-unlocked');
+    document.body.classList.remove('cerebro-locked');
+  } else {
+    overlay.classList.remove('gate-unlocked');
+    document.body.classList.add('cerebro-locked');
+    setTimeout(() => input.focus(), 250);
+  }
+
+  // Alternar visibilidad de contraseña
+  if (toggleBtn) {
+    toggleBtn.addEventListener('click', () => {
+      const isPassword = input.type === 'password';
+      input.type = isPassword ? 'text' : 'password';
+      toggleBtn.textContent = isPassword ? '🔒' : '👁️';
+    });
+  }
+
+  // Validar clave en el envío
+  const procesarIntentoAcceso = async () => {
+    const claveIngresada = input.value.trim();
+    if (!claveIngresada) {
+      input.focus();
+      return;
+    }
+
+    try {
+      const hashIngresado = await calcularSHA256(claveIngresada);
+      if (hashIngresado === HASH_COMPUERTA_OFICIAL) {
+        // Acceso concedido
+        if (errorBox) errorBox.style.display = 'none';
+        sessionStorage.setItem('cerebro_seoul_auth', 'unlocked');
+        overlay.classList.add('gate-unlocked');
+        document.body.classList.remove('cerebro-locked');
+        input.value = '';
+      } else {
+        // Acceso denegado
+        if (errorBox) {
+          errorBox.style.display = 'flex';
+          const errText = errorBox.querySelector('.gate-error-text');
+          if (errText) errText.textContent = 'Clave incorrecta. Acceso restringido al sistema.';
+        }
+        if (card) {
+          card.classList.remove('gate-shake');
+          void card.offsetWidth; // Forzar reflow para reiniciar animación
+          card.classList.add('gate-shake');
+        }
+        input.select();
+      }
+    } catch (e) {
+      console.error('Error calculando hash SHA-256:', e);
+    }
+  };
+
+  if (form) {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      procesarIntentoAcceso();
+    });
+  }
+
+  // Botón en la barra superior para bloquear el sistema nuevamente
+  if (lockBtn) {
+    lockBtn.addEventListener('click', () => {
+      sessionStorage.removeItem('cerebro_seoul_auth');
+      overlay.classList.remove('gate-unlocked');
+      document.body.classList.add('cerebro-locked');
+      if (errorBox) errorBox.style.display = 'none';
+      input.value = '';
+      setTimeout(() => input.focus(), 200);
+    });
+  }
 }
