@@ -1300,3 +1300,42 @@ a:hover {
     padding: 0 1rem;
   }
 }
+
+/* ============================================================
+   Control de Vista 3D / Ciudad (edificios extruidos)
+   ============================================================ */
+.view3d-group {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.view3d-toggle {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.85rem;
+}
+
+.view3d-btn {
+  flex: 1;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.view3d-btn.active {
+  background: var(--accent-cyan, #38bdf8);
+  color: #0f172a;
+  border-color: var(--accent-cyan, #38bdf8);
+  font-weight: 700;
+}
+
+.view3d-pitch {
+  margin-top: 0.6rem;
+}
+
+.view3d-hint {
+  margin-top: 0.6rem;
+  font-size: 0.68rem;
+  line-height: 1.4;
+  color: var(--text-muted, #94a3b8);
+}

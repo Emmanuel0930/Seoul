@@ -263,6 +263,30 @@
             </select>
           </div>
 
+          <!-- Control de Vista 3D / Edificios -->
+          <div class="control-group view3d-group">
+            <label><strong>Vista del Territorio:</strong></label>
+            <div class="view3d-toggle">
+              <button id="btn-vista-2d" class="btn btn-sm btn-outline view3d-btn">🗺️ 2D Plano</button>
+              <button id="btn-vista-3d" class="btn btn-sm btn-outline view3d-btn active">🏙️ 3D Ciudad</button>
+            </div>
+            <div class="slider-item view3d-pitch">
+              <div class="slider-label">
+                <span>Inclinación de cámara</span>
+                <span id="label-pitch" class="slider-val">55°</span>
+              </div>
+              <input type="range" id="control-pitch" min="0" max="75" value="55" class="range-slider">
+            </div>
+            <div class="slider-item view3d-pitch">
+              <div class="slider-label">
+                <span>Altura de edificios</span>
+                <span id="label-altura" class="slider-val">1.5×</span>
+              </div>
+              <input type="range" id="control-altura" min="5" max="40" value="15" class="range-slider">
+            </div>
+            <p class="view3d-hint">Edificios, calles y casas reales de Seúl (OpenStreetMap vía OpenFreeMap). Los colores de datos se mantienen sobre el terreno.</p>
+          </div>
+
           <!-- Sliders de Índice Compuesto -->
           <div id="sliders-panel" class="sliders-box" style="display: none;">
             <div class="slider-title">Ponderación de Vulnerabilidad y Demanda:</div>

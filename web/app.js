@@ -176,7 +176,11 @@ function renderizarTablaCatalogo() {
   });
 }
 
-// 4. Inicialización del Mapa con MapLibre GL JS
+// 4. Inicialización del Mapa con MapLibre GL JS (Ciudad 3D)
+// Base: estilo vectorial libre "Liberty" de OpenFreeMap (incluye glyphs y edificios con altura).
+// Sobre él se monta la coropleta de datos (protagonista) + edificios 3D grises.
+const ESTILO_3D = 'https://tiles.openfreemap.org/styles/liberty';
+
 function inicializarMapaTerritorial() {
   const mapElement = document.getElementById('mapa-seul');
   if (!mapElement || !Estado.geoJson) return;
@@ -184,108 +188,24 @@ function inicializarMapaTerritorial() {
   // Unir métricas del lago en las propiedades de cada feature GeoJSON
   enriquecerGeoJson();
 
-  // Estilo vector oscuro libre sin API key paga
-  const estiloOscuroLibre = {
-    version: 8,
-    sources: {
-      'osm-tiles': {
-        type: 'raster',
-        tiles: [
-          'https://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png',
-          'https://b.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png'
-        ],
-        tileSize: 256,
-        attribution: '&copy; OpenStreetMap contributors &copy; CARTO'
-      }
-    },
-    layers: [
-      {
-        id: 'osm-tiles-layer',
-        type: 'raster',
-        source: 'osm-tiles',
-        minzoom: 0,
-        maxzoom: 19
-      }
-    ]
-  };
-
   try {
     Estado.mapa = new maplibregl.Map({
       container: 'mapa-seul',
-      style: estiloOscuroLibre,
+      style: ESTILO_3D,
       center: [126.9850, 37.5550], // Centro de Seúl
-      zoom: 10.2,
-      maxZoom: 14,
-      minZoom: 9
+      zoom: 11,
+      pitch: 55,          // Cámara inclinada -> perspectiva 3D
+      bearing: -17.6,
+      maxZoom: 18,
+      minZoom: 9,
+      maxPitch: 75,
+      antialias: true
     });
 
-    Estado.mapa.addControl(new maplibregl.NavigationControl(), 'top-right');
+    Estado.mapa.addControl(new maplibregl.NavigationControl({ visualizePitch: true }), 'top-right');
 
     Estado.mapa.on('load', () => {
-      // Agregar fuente GeoJSON enriquecida
-      Estado.mapa.addSource('seoul-gu', {
-        type: 'geojson',
-        data: Estado.geoJson
-      });
-
-      // Capa de polígonos coloreados (Choropleth)
-      Estado.mapa.addLayer({
-        id: 'seoul-gu-fills',
-        type: 'fill',
-        source: 'seoul-gu',
-        paint: {
-          'fill-color': obtenerExpresionColor(Estado.capaActiva),
-          'fill-opacity': 0.75
-        }
-      });
-
-      // Capa de bordes
-      Estado.mapa.addLayer({
-        id: 'seoul-gu-borders',
-        type: 'line',
-        source: 'seoul-gu',
-        paint: {
-          'line-color': '#38bdf8',
-          'line-width': 1.5,
-          'line-opacity': 0.8
-        }
-      });
-
-      // Capa de etiquetas de distritos
-      Estado.mapa.addLayer({
-        id: 'seoul-gu-labels',
-        type: 'symbol',
-        source: 'seoul-gu',
-        layout: {
-          'text-field': ['get', 'name_eng'],
-          'text-font': ['Open Sans Semibold'],
-          'text-size': 11,
-          'text-anchor': 'center'
-        },
-        paint: {
-          'text-color': '#ffffff',
-          'text-halo-color': '#0f172a',
-          'text-halo-width': 1.5
-        }
-      });
-
-      // Eventos sobre el mapa
-      Estado.mapa.on('mousemove', 'seoul-gu-fills', (e) => {
-        if (e.features.length > 0) {
-          Estado.mapa.getCanvas().style.cursor = 'pointer';
-          mostrarFichaDistrito(e.features[0].properties);
-        }
-      });
-
-      Estado.mapa.on('mouseleave', 'seoul-gu-fills', () => {
-        Estado.mapa.getCanvas().style.cursor = '';
-      });
-
-      Estado.mapa.on('click', 'seoul-gu-fills', (e) => {
-        if (e.features.length > 0) {
-          mostrarFichaDistrito(e.features[0].properties);
-        }
-      });
+      construirCapas3D();
 
       // Seleccionar Gwanak-gu o Gangnam-gu por defecto
       const defFeature = Estado.geoJson.features.find(f => f.properties.district_code === '11620');
@@ -293,6 +213,169 @@ function inicializarMapaTerritorial() {
     });
   } catch (e) {
     console.error('Error al inicializar MapLibre:', e);
+  }
+}
+
+// Construye las capas 3D sobre el estilo base, protegiendo cada paso para no abortar el resto.
+function construirCapas3D() {
+  const mapa = Estado.mapa;
+  if (!mapa) return;
+  Estado.factorAltura = Estado.factorAltura || 1.5;
+
+  const capasBase = (mapa.getStyle().layers || []);
+
+  // 1) Atenuar el mapa base para que la coropleta de datos domine:
+  //    - quitar edificios nativos (los sustituimos por los nuestros en gris)
+  //    - oscurecer calles/parques/landuse de colores vivos
+  capasBase.forEach(l => {
+    try {
+      if (l['source-layer'] === 'building') { mapa.removeLayer(l.id); return; }
+      if (l.type === 'fill' && /landuse|landcover|park|wood|grass/i.test(l.id)) {
+        mapa.setPaintProperty(l.id, 'fill-opacity', 0.12);
+      }
+      if (l.type === 'line' && /road|transportation|bridge|tunnel|highway|street/i.test(l.id)) {
+        mapa.setPaintProperty(l.id, 'line-opacity', 0.25);
+      }
+    } catch (_) { /* ignorar capas que no acepten la propiedad */ }
+  });
+
+  // Insertar la coropleta por debajo de la primera capa de símbolos (etiquetas de calles)
+  const primerSimbolo = (mapa.getStyle().layers || []).find(l => l.type === 'symbol');
+  const antesDe = primerSimbolo ? primerSimbolo.id : undefined;
+
+  // 2) FUENTE de distritos (sin el campo coreano 'name', que rompía la teselación)
+  mapa.addSource('seoul-gu', { type: 'geojson', data: geoJsonParaMapa() });
+
+  // 3) COROPLETA de datos — PROTAGONISTA
+  mapa.addLayer({
+    id: 'seoul-gu-fills',
+    type: 'fill',
+    source: 'seoul-gu',
+    paint: {
+      'fill-color': obtenerExpresionColor(Estado.capaActiva),
+      'fill-opacity': 0.7
+    }
+  }, antesDe);
+
+  // 4) Bordes de distritos
+  mapa.addLayer({
+    id: 'seoul-gu-borders',
+    type: 'line',
+    source: 'seoul-gu',
+    paint: {
+      'line-color': '#38bdf8',
+      'line-width': 1.5,
+      'line-opacity': 0.9
+    }
+  }, antesDe);
+
+  // 5) EDIFICIOS 3D en gris (relieve urbano) por encima de la coropleta
+  mapa.addLayer({
+    id: 'edificios-3d',
+    source: 'openmaptiles',
+    'source-layer': 'building',
+    type: 'fill-extrusion',
+    minzoom: 12,
+    paint: {
+      'fill-extrusion-color': [
+        'interpolate', ['linear'], ['coalesce', ['get', 'render_height'], 6],
+        0, '#3a4660',
+        30, '#4a5a78',
+        80, '#5d6f92',
+        150, '#7286a8'
+      ],
+      'fill-extrusion-height': [
+        '*',
+        ['coalesce', ['get', 'render_height'], 6],
+        ['literal', Estado.factorAltura]
+      ],
+      'fill-extrusion-base': ['coalesce', ['get', 'render_min_height'], 0],
+      'fill-extrusion-opacity': 0.65
+    }
+  }, antesDe);
+
+  // 6) Etiquetas de distritos (usa la fuente de glyphs del estilo Liberty)
+  const fuenteGlyphs = buscarFuenteGlyphs(capasBase);
+  mapa.addLayer({
+    id: 'seoul-gu-labels',
+    type: 'symbol',
+    source: 'seoul-gu',
+    layout: {
+      'text-field': ['get', 'name_eng'],
+      'text-font': fuenteGlyphs,
+      'text-size': 12,
+      'text-anchor': 'center',
+      'text-allow-overlap': false
+    },
+    paint: {
+      'text-color': '#ffffff',
+      'text-halo-color': '#0f172a',
+      'text-halo-width': 1.8
+    }
+  });
+
+  // Eventos sobre los distritos
+  mapa.on('mousemove', 'seoul-gu-fills', (e) => {
+    if (e.features.length > 0) {
+      mapa.getCanvas().style.cursor = 'pointer';
+      mostrarFichaDistrito(e.features[0].properties);
+    }
+  });
+  mapa.on('mouseleave', 'seoul-gu-fills', () => { mapa.getCanvas().style.cursor = ''; });
+  mapa.on('click', 'seoul-gu-fills', (e) => {
+    if (e.features.length > 0) mostrarFichaDistrito(e.features[0].properties);
+  });
+}
+
+// Encuentra una pila de fuentes (text-font) válida del estilo base para reusar sus glyphs.
+function buscarFuenteGlyphs(capas) {
+  for (const l of capas) {
+    const tf = l.layout && l.layout['text-font'];
+    if (Array.isArray(tf) && tf.length && typeof tf[0] === 'string') return tf;
+  }
+  return ['Noto Sans Regular'];
+}
+
+// Copia del GeoJSON para la fuente del mapa, sin el campo 'name' (coreano) que rompía
+// la teselación GeoJSON de MapLibre. El nombre coreano sigue en Estado.geoJson para la ficha.
+function geoJsonParaMapa() {
+  return {
+    type: 'FeatureCollection',
+    features: Estado.geoJson.features.map(f => {
+      const props = Object.assign({}, f.properties);
+      delete props.name;
+      return { type: 'Feature', properties: props, geometry: f.geometry };
+    })
+  };
+}
+
+// Alterna entre vista 2D (cenital) y 3D (cámara inclinada)
+function fijarVista3D(activar) {
+  if (!Estado.mapa) return;
+  const btn2d = document.getElementById('btn-vista-2d');
+  const btn3d = document.getElementById('btn-vista-3d');
+  const sliderPitch = document.getElementById('control-pitch');
+  if (activar) {
+    const pitch = sliderPitch ? parseInt(sliderPitch.value) : 55;
+    Estado.mapa.easeTo({ pitch, bearing: -17.6, duration: 900 });
+    if (Estado.mapa.getLayer('edificios-3d')) Estado.mapa.setLayoutProperty('edificios-3d', 'visibility', 'visible');
+    btn3d && btn3d.classList.add('active');
+    btn2d && btn2d.classList.remove('active');
+  } else {
+    Estado.mapa.easeTo({ pitch: 0, bearing: 0, duration: 900 });
+    if (Estado.mapa.getLayer('edificios-3d')) Estado.mapa.setLayoutProperty('edificios-3d', 'visibility', 'none');
+    btn2d && btn2d.classList.add('active');
+    btn3d && btn3d.classList.remove('active');
+  }
+}
+
+// Ajusta la altura de los edificios extruidos en vivo
+function ajustarAlturaEdificios(factor) {
+  Estado.factorAltura = factor;
+  if (Estado.mapa && Estado.mapa.getLayer('edificios-3d')) {
+    Estado.mapa.setPaintProperty('edificios-3d', 'fill-extrusion-height', [
+      '*', ['coalesce', ['get', 'render_height'], 6], ['literal', factor]
+    ]);
   }
 }
 
@@ -453,7 +536,7 @@ function configurarEventosInteractivos() {
         f.properties.composite_index = calcularIndiceDistrito(f.properties);
       });
       if (Estado.mapa && Estado.mapa.getSource('seoul-gu')) {
-        Estado.mapa.getSource('seoul-gu').setData(Estado.geoJson);
+        Estado.mapa.getSource('seoul-gu').setData(geoJsonParaMapa());
       }
     }
   }
@@ -522,6 +605,33 @@ function configurarEventosInteractivos() {
       dropdown.style.display = 'none';
     }
   });
+
+  // Controles de Vista 3D / Ciudad
+  const btn2d = document.getElementById('btn-vista-2d');
+  const btn3d = document.getElementById('btn-vista-3d');
+  const sliderPitch = document.getElementById('control-pitch');
+  const labelPitch = document.getElementById('label-pitch');
+  const sliderAltura = document.getElementById('control-altura');
+  const labelAltura = document.getElementById('label-altura');
+
+  if (btn3d) btn3d.addEventListener('click', () => fijarVista3D(true));
+  if (btn2d) btn2d.addEventListener('click', () => fijarVista3D(false));
+
+  if (sliderPitch) {
+    sliderPitch.addEventListener('input', (e) => {
+      const p = parseInt(e.target.value);
+      if (labelPitch) labelPitch.textContent = `${p}°`;
+      if (Estado.mapa) Estado.mapa.setPitch(p);
+    });
+  }
+
+  if (sliderAltura) {
+    sliderAltura.addEventListener('input', (e) => {
+      const factor = parseInt(e.target.value) / 10; // 5..40 -> 0.5x .. 4.0x
+      if (labelAltura) labelAltura.textContent = `${factor.toFixed(1)}×`;
+      ajustarAlturaEdificios(factor);
+    });
+  }
 
   // Modal de Trazabilidad a 1 clic
   const modalFuente = document.getElementById('modal-fuente');
