@@ -1,6 +1,6 @@
 # 서울 (Seúl) · Sistema de Información y Observatorio Territorial
 
-Sistema publicado: `<ENLACE>`
+Sistema publicado: https://cerebro-seoul.vercel.app/web
 
 **Curso:** Tópicos de Sistemas de Información / Gobernanza de Datos (Taller de Datos)  
 **Entrega:** Segunda Parte — Sistema Publicado, Trazable y Gobernado  
