@@ -1,0 +1,3 @@
+# Crudos y secretos nunca se despliegan (ver README, sección Protección)
+lago/raw/
+.env*

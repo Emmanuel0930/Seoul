@@ -885,6 +885,16 @@ a:hover {
   white-space: nowrap;
 }
 
+.zone-card.zone-pendiente {
+  opacity: 0.55;
+  border-style: dashed;
+}
+
+.zone-pendiente-msg {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
 .zone-tag.congested {
   background: rgba(244, 63, 94, 0.2);
   color: var(--accent-rose);

@@ -175,6 +175,19 @@ function renderizarZonasTiempoReal() {
     `;
     container.appendChild(card);
   });
+
+  // Zonas sin datos con la llave de prueba: tarjeta atenuada, sin valores ni etiqueta
+  pendientes.forEach(nombre => {
+    const card = document.createElement('div');
+    card.className = 'zone-card zone-pendiente';
+    card.innerHTML = `
+      <div class="zone-header">
+        <span class="zone-name">${nombre.replace(/·/g, "·<wbr>")}</span>
+      </div>
+      <p class="zone-pendiente-msg">Pendiente: requiere llave de la API de Seúl</p>
+    `;
+    container.appendChild(card);
+  });
 }
 
 // 3. Renderizado de Tabla de Catálogo (F01 - F14)

@@ -15,7 +15,7 @@ import os
 import json
 import urllib.request
 import urllib.parse
-from datetime import datetime
+from datetime import datetime, date
 
 FUENTE_F02 = {
     "id": "F02",
@@ -47,6 +47,9 @@ AREAS_MONITOREO = [
     {"kor": "이태원 관광특구", "eng": "Itaewon", "distrito": "Yongsan-gu"},
     {"kor": "잠실 종합운동장", "eng": "Jamsil Sports Complex", "distrito": "Songpa-gu"}
 ]
+
+# Fecha de la última prueba exitosa; se conserva si la API no responde.
+PROBADO_ANTERIOR = "2026-10-06"
 
 DATOS_RESPALDO = [
     {"area_name": "Gwanghwamun·Deoksugung", "congestion_level": "Normal", "current_temperature": 18.2, "avg_road_speed": 24.5, "air_quality_index": "Good", "time_slot": "Mañana (08:00-12:00)"},
@@ -86,7 +89,6 @@ def main():
             # (AREA_NM), una sola vez; las demás quedan pendientes.
             area_nm = cd.get("AREA_NM", "")
             if area_nm != area["kor"]:
-                zonas_pendientes.append(area["eng"])
                 print(f"[F02] {area['eng']}: la API devolvió '{area_nm}' en lugar de '{area['kor']}'. Zona pendiente.")
             if not area_nm or area_nm in areas_publicadas:
                 continue
@@ -129,7 +131,11 @@ def main():
         with open("lago/raw/realtime_citydata_raw.json", "w", encoding="utf-8") as f_raw:
             json.dump(crudos_guardados, f_raw, ensure_ascii=False, indent=2)
 
-    if not registros:
+    api_respondio = bool(registros)
+    if api_respondio:
+        # Zonas monitoreadas que la API no devolvió: se muestran como pendientes en la web
+        zonas_pendientes = [a["eng"] for a in AREAS_MONITOREO if a["kor"] not in areas_publicadas]
+    else:
         registros = DATOS_RESPALDO
 
     # Cálculo de métricas promedio representativas de Seúl
@@ -149,7 +155,7 @@ def main():
 
     lago_tiempo_real = {
         "tema": "Monitoreo en Tiempo Real y Movilidad Urbana en Seúl",
-        "probado": "2026-10-06",
+        "probado": date.today().isoformat() if api_respondio else PROBADO_ANTERIOR,
         "fuentes": [FUENTE_F02],
         "cifras": {
             "current_temperature": {

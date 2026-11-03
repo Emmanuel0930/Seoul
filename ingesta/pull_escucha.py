@@ -9,7 +9,7 @@ import os
 import json
 import urllib.request
 import urllib.parse
-from datetime import datetime
+from datetime import datetime, date
 
 FUENTE_F11 = {
     "id": "F11",
@@ -18,6 +18,9 @@ FUENTE_F11 = {
     "estado": "vivo",
     "licencia": "CC0"
 }
+
+# Fecha de la última prueba exitosa; se conserva si la API no responde.
+PROBADO_ANTERIOR = "2026-10-06"
 
 FALLBACK_SERIES = [
     {"fecha": "2025-10", "vistas": 14210},
@@ -76,7 +79,7 @@ def main():
 
     lago_escucha = {
         "tema": "Escucha Externa y Relevancia Global de Seúl",
-        "probado": "2026-10-06",
+        "probado": date.today().isoformat() if raw_items else PROBADO_ANTERIOR,
         "fuentes": [FUENTE_F11],
         "cifras": {
             "vistas_ultimo_mes": {
