@@ -35,7 +35,7 @@
     "estado": "integrado",
     "proteccion": "solo agregados",
     "como_se_encontro": "Comunicado oficial de Seúl y documentación de Seoul Real-Time City Data",
-    "nota": "Densidad de multitud, transporte, clima y calidad del aire en 122 lugares cada 5 min. Se cataloga la fuente primaria y no el wrapper MCP."
+    "nota": "Densidad de multitud, transporte, clima y calidad del aire en 122 lugares cada 5 min. Se cataloga la fuente primaria y no el wrapper MCP. Llave sample limitada a un área; llave propia no obtenida: el registro exige celular coreano."
   },
   {
     "id": "F03",

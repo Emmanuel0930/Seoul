@@ -179,7 +179,7 @@ El sistema está instrumentado para resistir los siguientes intentos de vulnerac
    *Resultado esperado:* **0 fallos** y código de terminación **0**.
 
 ### Vueltas atrás
-Durante la revisión cruzada encontramos dos problemas en el lago y volvimos atrás para corregirlos:
+Durante la revisión cruzada encontramos estos problemas y volvimos atrás para corregirlos o documentarlos:
 
 1. **Tiempo real (`F02`) con una sola área de muestra.**
    - *Qué encontramos:* Al revisar `lago/raw/realtime_citydata_raw.json`, las 6 zonas consultadas con la llave pública `sample` recibieron la misma respuesta: la API siempre devuelve el área de muestra `광화문·덕수궁` (Gwanghwamun·Deoksugung), sin importar la zona pedida. El lago publicaba 6 tarjetas con datos repetidos como si fueran de zonas distintas.
@@ -187,3 +187,6 @@ Durante la revisión cruzada encontramos dos problemas en el lago y volvimos atr
 2. **Cifras de `F01` y `F03` escritas a mano.**
    - *Qué encontramos:* Las cifras de `ingesta/pull_seoul_open.py` y `ingesta/pull_kosis.py` (población, hogares, adultos mayores, estaciones, vivienda, desempleo, GRDP, visitantes) estaban escritas a mano en el código, no descargadas de la fuente.
    - *Qué cambiamos:* No las borramos. Cada cifra y registro de `lago/demografia.json`, `lago/transporte.json` y `lago/economia_vivienda.json` lleva `"verificado": false`; la web muestra "Pendiente de verificar contra la fuente" en esas tarjetas y en el modal de trazabilidad, y el catálogo indica que la integración de F01 y F03 está pendiente. `verificacion/verificar.py` no se modificó.
+3. **Llave propia de Seoul Open Data Plaza para `F02` no obtenida.**
+   - *Qué encontramos:* Intentamos obtener una llave propia de Seoul Open Data Plaza (data.seoul.go.kr) para que las 6 zonas de `F02` mostraran sus datos. El registro pasa por seoul.go.kr y solo está en coreano; la página tardaba mucho en cargar y en traducirse, y al final exigió un número de celular coreano para verificar la identidad, que no tenemos.
+   - *Qué cambiamos:* Seguimos con la llave pública `sample`, con la que la API devuelve una sola área. Publicamos esa área y dejamos las otras 5 zonas como pendientes. El catálogo de `F02` registra esta limitación.
