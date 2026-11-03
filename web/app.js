@@ -1,7 +1,7 @@
 /**
  * CEREBRO SEÚL · APLICACIÓN PRINCIPAL (web/app.js)
  * Taller de Datos / Gobernanza de Sistemas de Información (2026)
- * Carga dinámica del lago de datos, MapLibre GL JS, trazabilidad a 1 clic y compuerta.
+ * Carga dinámica del lago de datos, MapLibre GL JS y trazabilidad a 1 clic.
  */
 
 // Estado Global de Datos
@@ -650,66 +650,6 @@ function configurarEventosInteractivos() {
     }
   });
 
-  // Modal de Compuerta
-  const modalCompuerta = document.getElementById('modal-compuerta');
-  const btnOpenCompuerta = document.getElementById('btn-compuerta');
-  const btnCloseCompuerta = document.getElementById('modal-compuerta-close');
-  const btnValidarClave = document.getElementById('btn-validar-clave');
-  const inputClave = document.getElementById('input-clave');
-  const compuertaFeedback = document.getElementById('compuerta-feedback');
-
-  btnOpenCompuerta.addEventListener('click', () => {
-    modalCompuerta.style.display = 'flex';
-    inputClave.value = '';
-    compuertaFeedback.style.display = 'none';
-  });
-
-  btnCloseCompuerta.addEventListener('click', () => modalCompuerta.style.display = 'none');
-  modalCompuerta.addEventListener('click', (e) => {
-    if (e.target === modalCompuerta) modalCompuerta.style.display = 'none';
-  });
-
-  btnValidarClave.addEventListener('click', async () => {
-    const clave = inputClave.value.trim();
-    if (!clave) {
-      compuertaFeedback.className = 'feedback-msg error';
-      compuertaFeedback.textContent = 'Por favor ingrese la clave académica.';
-      compuertaFeedback.style.display = 'block';
-      return;
-    }
-
-    try {
-      const resp = await fetch('/api/entrar', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ clave })
-      });
-      const data = await resp.json();
-
-      if (resp.ok && data.autorizada) {
-        compuertaFeedback.className = 'feedback-msg success';
-        compuertaFeedback.textContent = '✔ Acceso Autorizado. Token emitido.';
-        compuertaFeedback.style.display = 'block';
-        setTimeout(() => modalCompuerta.style.display = 'none', 1200);
-      } else {
-        compuertaFeedback.className = 'feedback-msg error';
-        compuertaFeedback.textContent = data.mensaje || 'Clave denegada por la compuerta.';
-        compuertaFeedback.style.display = 'block';
-      }
-    } catch (err) {
-      // Si corre puramente en local estático sin servidor Node
-      if (clave === 'seoul2026') {
-        compuertaFeedback.className = 'feedback-msg success';
-        compuertaFeedback.textContent = '✔ Clave verificada en entorno local.';
-        compuertaFeedback.style.display = 'block';
-        setTimeout(() => modalCompuerta.style.display = 'none', 1200);
-      } else {
-        compuertaFeedback.className = 'feedback-msg error';
-        compuertaFeedback.textContent = 'Clave incorrecta.';
-        compuertaFeedback.style.display = 'block';
-      }
-    }
-  });
 }
 
 // Abrir Modal de Trazabilidad

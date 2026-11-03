@@ -1,5 +1,7 @@
 # 서울 (Seúl) · Sistema de Información y Observatorio Territorial
 
+Sistema publicado: `<ENLACE>`
+
 **Curso:** Tópicos de Sistemas de Información / Gobernanza de Datos (Taller de Datos)  
 **Entrega:** Segunda Parte — Sistema Publicado, Trazable y Gobernado  
 **Ciudad Analizada:** 서울특별시 (Gobierno Metropolitano de Seúl, República de Corea)  
@@ -12,7 +14,7 @@
 2. **Datos (Custodia Técnica):** Gabriela Sanabria  
    *Responsabilidad:* Contrato de datos estricto, pipeline de ingesta en Python estándar (`ingesta/`), reproducibilidad y validación automática (`verificacion/verificar.py`).
 3. **Seguridad (Privacidad y Protección):** Emmanuel Alvarez  
-   *Responsabilidad:* Compuerta de acceso (`api/entrar.js`), protección de datos sensibles (agregación de `congestion_level` por zona/franja horaria), reglas en `.gitignore` y auditoría de ataque autorizado.
+   *Responsabilidad:* Decisión escrita de apertura del sistema, protección de datos sensibles (agregación de `congestion_level` por zona/franja horaria), reglas en `.gitignore` y auditoría de ataque autorizado.
 
 ---
 
@@ -103,25 +105,9 @@ El equipo evaluó al menos dos herramientas por cada tramo técnico con los mism
 ## 5. Protección y Seguridad de Datos
 
 ### Nivel de Protección Elegido
-* **Nivel 2: Solo Agregados (con Compuerta para Vistas Restringidas):**
-  - **Decisión de Agregación Ética (`F02`):** La afluencia y densidad urbana de multitud (`congestion_level`) se agrega exclusivamente por zona neurálgica y franja horaria. Los datos crudos se conservan en `lago/raw/realtime_citydata_raw.json` y están estrictamente ignorados en Git mediante `.gitignore`.
-  - **Compuerta de Seguridad (`api/entrar.js`):** Implementada mediante serverless function que valida la clave contra la variable de entorno `process.env.CEREBRO_SEUL_KEY` (sin exponerla en el repositorio). Emite un token de sesión seguro para consultar `/api/datos`.
-
-### Comandos `curl` de Prueba
-```bash
-# 1. Probar compuerta con clave errónea (debe responder 401 Unauthorized)
-curl -X POST http://localhost:3000/api/entrar \
-  -H "Content-Type: application/json" \
-  -d '{"clave": "clave_falsa"}'
-
-# 2. Probar compuerta con clave autorizada (responde 200 con token)
-curl -X POST http://localhost:3000/api/entrar \
-  -H "Content-Type: application/json" \
-  -d '{"clave": "seoul2026"}'
-
-# 3. Consumir dataset servido por la API
-curl http://localhost:3000/api/datos?dataset=demografia
-```
+* **Abierto por decisión escrita:**
+  - **Razón:** Solo publicamos agregados por zona y franja horaria (`congestion_level` de `F02`), sin datos de personas, con licencias KOGL Tipo 1 / CC0. No hay nada que requiera restringir el acceso.
+  - **Crudos fuera del sistema:** Los datos crudos se conservan en `lago/raw/` y están ignorados en Git mediante `.gitignore`, por lo que nunca se publican.
 
 ### Auditoría de Secretos en Git
 El archivo `.gitignore` prohíbe explícitamente:
@@ -129,6 +115,8 @@ El archivo `.gitignore` prohíbe explícitamente:
 - `.env`, `*.env` (claves de entorno).
 - `*.duckdb`, `node_modules/`, `__pycache__/`.
 Ninguna clave comercial ni tarjeta de crédito ha sido introducida en el historial de commits.
+
+**Nota:** La clave de prueba `seoul2026` de la antigua compuerta quedó en el historial de git. Como ya es pública, no protege nada; por eso se eliminó la compuerta y el sistema se declaró abierto por decisión escrita.
 
 ---
 
@@ -176,7 +164,7 @@ Para los evaluadores o compañeros que realicen la revisión cruzada, verifiquen
 ### Instrucciones para el Ataque Autorizado en Clase
 El sistema está instrumentado para resistir los siguientes intentos de vulneración:
 1. **Intento de Inyección de PII:** Si un usuario o evaluador intenta insertar un correo electrónico, cédula, celular o RRN coreano en cualquier archivo del lago, `python verificacion/verificar.py` aborta inmediatamente con `exit code 1` indicando la clave y el archivo infractor.
-2. **Intento de Acceso No Autorizado a la Compuerta:** Si se consulta la compuerta con una clave errónea o vacía, la API responde `401 Unauthorized` y deniega la emisión del token.
+2. **Intento de Acceso a Datos Crudos:** `lago/raw/` está ignorado en Git, así que los crudos no existen en el repositorio ni en el despliegue; solo se sirven agregados.
 3. **Prueba de Reproducibilidad Total (Comando de Auditoría):**
    ```bash
    # Reconstrucción total desde cero
