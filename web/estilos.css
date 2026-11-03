@@ -1542,3 +1542,87 @@ a:hover {
   background: rgba(56, 189, 248, 0.2);
   text-decoration: none;
 }
+
+/* ============================================================
+   SECCIONES NUEVAS: Economía, Vivienda histórica y Transporte
+   ============================================================ */
+.section-econ, .section-vivienda, .section-transporte {
+  padding: 3.5rem 0;
+  border-top: 1px solid var(--border-subtle, rgba(255,255,255,0.08));
+}
+
+/* Indicadores económicos */
+.econ-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+.econ-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: var(--bg-card, #111827);
+  border: 1px solid var(--border-subtle, rgba(255,255,255,0.1));
+  border-radius: 14px;
+  padding: 1.1rem 1.25rem;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+.econ-card:hover { transform: translateY(-3px); border-color: var(--accent-cyan, #38bdf8); }
+.econ-icon { font-size: 2rem; line-height: 1; }
+.econ-body { display: flex; flex-direction: column; gap: 0.15rem; }
+.econ-label { font-size: 0.75rem; color: var(--text-muted, #94a3b8); text-transform: uppercase; letter-spacing: 0.03em; }
+.econ-value { font-size: 1.5rem; font-weight: 800; color: #fff; font-family: var(--font-mono, monospace); }
+.econ-note { font-size: 0.72rem; color: var(--text-muted, #94a3b8); }
+
+/* Gráfico de evolución de vivienda */
+.chart-wrapper {
+  margin-top: 1.5rem;
+  background: var(--bg-card, #111827);
+  border: 1px solid var(--border-subtle, rgba(255,255,255,0.1));
+  border-radius: 16px;
+  padding: 1.25rem;
+}
+.chart-svg { width: 100%; height: auto; display: block; }
+.svg-x-label { fill: #cbd5e1; font-size: 13px; font-family: var(--font-sans, sans-serif); }
+.svg-y-label { fill: #94a3b8; font-size: 11px; font-family: var(--font-mono, monospace); }
+.svg-bar-value { fill: #fff; font-size: 12px; font-weight: 700; font-family: var(--font-mono, monospace); }
+
+/* Transporte: tarjetas de estaciones */
+.transit-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+.transit-card {
+  background: var(--bg-card, #111827);
+  border: 1px solid var(--border-subtle, rgba(255,255,255,0.1));
+  border-radius: 12px;
+  padding: 1rem 1.1rem;
+}
+.transit-head { display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; margin-bottom: 0.7rem; }
+.transit-name { font-weight: 600; color: #fff; font-size: 0.92rem; }
+.transit-line { font-size: 0.7rem; background: rgba(56,189,248,0.15); color: #38bdf8; padding: 0.15rem 0.5rem; border-radius: 999px; white-space: nowrap; }
+.transit-bar-track { height: 8px; background: rgba(255,255,255,0.08); border-radius: 999px; overflow: hidden; }
+.transit-bar-fill { height: 100%; background: linear-gradient(90deg, #38bdf8, #6366f1); border-radius: 999px; }
+.transit-foot { display: flex; justify-content: space-between; margin-top: 0.55rem; font-size: 0.72rem; color: var(--text-muted, #94a3b8); }
+.transit-code { font-family: var(--font-mono, monospace); }
+
+/* Subtítulo dentro de una sección (contexto macro) */
+.section-subhead {
+  margin-top: 2.5rem;
+  margin-bottom: 0.25rem;
+  padding-top: 1.5rem;
+  border-top: 1px dashed rgba(255,255,255,0.1);
+}
+.section-subhead h4 {
+  font-size: 1.15rem;
+  color: #fff;
+  margin: 0 0 0.3rem 0;
+}
+.section-subhead p {
+  font-size: 0.85rem;
+  color: var(--text-muted, #94a3b8);
+  margin: 0;
+}

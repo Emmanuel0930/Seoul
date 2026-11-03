@@ -11,6 +11,9 @@ const Estado = {
   economia: null,
   tiempoReal: null,
   escucha: null,
+  transporte: null,
+  viviendaCrecimiento: null,
+  macroBok: null,
   geoJson: null,
   mapa: null,
   distritoSeleccionado: null,
@@ -21,6 +24,7 @@ const Estado = {
     vivienda: 0.20
   }
 };
+if (typeof window !== 'undefined') { window.Estado = Estado; }
 
 // Rutas a los datos (soporta tanto servidor local/Vercel como rutas relativas directas)
 const RUTAS = {
@@ -29,6 +33,9 @@ const RUTAS = {
   economia: '../lago/economia_vivienda.json',
   tiempoReal: '../lago/tiempo_real.json',
   escucha: '../lago/escucha.json',
+  transporte: '../lago/transporte.json',
+  viviendaCrecimiento: '../lago/vivienda_crecimiento.json',
+  macroBok: '../lago/macro_bok.json',
   geoJson: '../territorio/seoul_gu.geojson'
 };
 
@@ -47,6 +54,10 @@ document.addEventListener('DOMContentLoaded', async () => {
   renderizarProcedencia();
   renderizarZonasTiempoReal();
   renderizarTablaCatalogo();
+  renderizarEvolucionVivienda();
+  renderizarTransporte();
+  renderizarIndicadoresEconomicos();
+  renderizarMacroBok();
   inicializarMapaTerritorial();
   configurarEventosInteractivos();
 });
@@ -54,12 +65,15 @@ document.addEventListener('DOMContentLoaded', async () => {
 // Carga asíncrona de todos los archivos del lago
 async function cargarTodosLosDatos() {
   try {
-    const [resCat, resDemo, resEcon, resRT, resEsc, resGeo] = await Promise.all([
+    const [resCat, resDemo, resEcon, resRT, resEsc, resTrans, resVivCrec, resMacro, resGeo] = await Promise.all([
       fetch(RUTAS.catalogo).then(r => r.json()).catch(() => []),
       fetch(RUTAS.demografia).then(r => r.json()).catch(() => null),
       fetch(RUTAS.economia).then(r => r.json()).catch(() => null),
       fetch(RUTAS.tiempoReal).then(r => r.json()).catch(() => null),
       fetch(RUTAS.escucha).then(r => r.json()).catch(() => null),
+      fetch(RUTAS.transporte).then(r => r.json()).catch(() => null),
+      fetch(RUTAS.viviendaCrecimiento).then(r => r.json()).catch(() => null),
+      fetch(RUTAS.macroBok).then(r => r.json()).catch(() => null),
       fetch(RUTAS.geoJson).then(r => r.json()).catch(() => null)
     ]);
 
@@ -68,6 +82,9 @@ async function cargarTodosLosDatos() {
     Estado.economia = resEcon;
     Estado.tiempoReal = resRT;
     Estado.escucha = resEsc;
+    Estado.transporte = resTrans;
+    Estado.viviendaCrecimiento = resVivCrec;
+    Estado.macroBok = resMacro;
     Estado.geoJson = resGeo;
 
     console.log('✅ Datos del lago cargados exitosamente.');
@@ -504,10 +521,19 @@ function enriquecerGeoJson() {
     });
   }
 
+  // F06: crecimiento de precio de vivienda 2020-2025 por distrito
+  const crecMap = {};
+  if (Estado.viviendaCrecimiento && Estado.viviendaCrecimiento.registros) {
+    Estado.viviendaCrecimiento.registros.forEach(r => {
+      crecMap[r.district_code] = r;
+    });
+  }
+
   Estado.geoJson.features.forEach(feat => {
     const code = feat.properties.district_code || feat.properties.code;
     const demo = demoMap[code] || {};
     const econ = econMap[code] || {};
+    const crec = crecMap[code] || {};
 
     feat.properties.single_households_pct = demo.single_households_pct || 40.0;
     feat.properties.elderly_alone_pct = demo.elderly_alone_pct || 10.0;
@@ -516,6 +542,9 @@ function enriquecerGeoJson() {
     feat.properties.density_hab_km2 = demo.density_hab_km2 || 15000;
     feat.properties.avg_housing_price = econ.avg_housing_price || 650000000;
     feat.properties.diff_pct_vs_seoul_avg = econ.diff_pct_vs_seoul_avg || 0.0;
+    feat.properties.growth_pct = (crec.growth_pct !== undefined) ? crec.growth_pct : 0.0;
+    feat.properties.price_2020 = crec.price_2020 || null;
+    feat.properties.price_2025 = crec.price_2025 || null;
 
     // Cálculo inicial de índice compuesto
     feat.properties.composite_index = calcularIndiceDistrito(feat.properties);
@@ -570,6 +599,16 @@ function obtenerExpresionColor(metrica) {
       1000000000, '#8b5cf6',
       1450000000, '#f43f5e'
     ];
+  } else if (metrica === 'growth_pct') {
+    // Crecimiento del precio de vivienda 2020->2025 (F06): verde=poco, rojo=mucho
+    return [
+      'interpolate', ['linear'], ['get', 'growth_pct'],
+      5, '#064e3b',
+      15, '#15803d',
+      25, '#eab308',
+      35, '#f97316',
+      42, '#dc2626'
+    ];
   } else {
     // composite_index
     return [
@@ -602,6 +641,13 @@ function mostrarFichaDistrito(props) {
     const sign = props.diff_pct_vs_seoul_avg >= 0 ? '+' : '';
     document.getElementById('detail-diff').textContent = `${sign}${props.diff_pct_vs_seoul_avg}%`;
     document.getElementById('detail-diff').style.color = props.diff_pct_vs_seoul_avg >= 0 ? '#f43f5e' : '#38bdf8';
+  }
+
+  // Crecimiento de vivienda 2020-2025 (F06)
+  const elGrowth = document.getElementById('detail-growth');
+  if (elGrowth && props.growth_pct !== undefined) {
+    elGrowth.textContent = `+${props.growth_pct}%`;
+    elGrowth.style.color = props.growth_pct >= 30 ? '#dc2626' : (props.growth_pct >= 18 ? '#f59e0b' : '#22c55e');
   }
 
   actualizarComparadorDistritos();
@@ -938,4 +984,141 @@ function actualizarComparadorDistritos() {
       <span class="cmp-diff ${diffPriceM >= 0 ? 'pos' : 'neg'}">${diffPriceM >= 0 ? '+' : ''}${diffPriceM}M KRW</span>
     </div>
   `;
+}
+
+
+// ============================================================
+// SECCIONES NUEVAS (datos ya presentes en el lago: F01 / F03)
+// ============================================================
+
+// A. Evolución histórica del precio de vivienda (serie 2020-2025, fuente F03)
+function renderizarEvolucionVivienda() {
+  const cont = document.getElementById('evolucion-vivienda-chart');
+  if (!cont || !Estado.economia || !Estado.economia.series) return;
+  const serie = Estado.economia.series.evolucion_precio_vivienda;
+  if (!serie || !serie.length) return;
+
+  const valores = serie.map(s => s.precio_krw);
+  const maxVal = Math.max(...valores);
+  const minVal = Math.min(...valores);
+
+  // Barras SVG responsivas
+  const W = 680, H = 300, padL = 56, padB = 36, padT = 20;
+  const innerW = W - padL - 16;
+  const innerH = H - padB - padT;
+  const bw = innerW / serie.length;
+
+  let barras = '';
+  serie.forEach((s, i) => {
+    const h = ((s.precio_krw - minVal) / (maxVal - minVal || 1)) * (innerH - 30) + 30;
+    const x = padL + i * bw + bw * 0.18;
+    const y = padT + innerH - h;
+    const w = bw * 0.64;
+    const millones = (s.precio_krw / 1000000).toFixed(0);
+    barras += `
+      <rect x="${x}" y="${y}" width="${w}" height="${h}" rx="4" fill="url(#gradViv)">
+        <title>${s.anio}: ${millones}M KRW</title>
+      </rect>
+      <text x="${x + w / 2}" y="${padT + innerH + 22}" text-anchor="middle" class="svg-x-label">${s.anio}</text>
+      <text x="${x + w / 2}" y="${y - 7}" text-anchor="middle" class="svg-bar-value">${millones}M</text>
+    `;
+  });
+
+  cont.innerHTML = `
+    <svg viewBox="0 0 ${W} ${H}" class="chart-svg" role="img" aria-label="Evolución del precio promedio de vivienda en Seúl 2020-2025">
+      <defs>
+        <linearGradient id="gradViv" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#38bdf8"/>
+          <stop offset="100%" stop-color="#6366f1"/>
+        </linearGradient>
+      </defs>
+      <line x1="${padL}" y1="${padT + innerH}" x2="${W - 16}" y2="${padT + innerH}" stroke="rgba(255,255,255,0.15)"/>
+      <text x="16" y="${padT + 6}" class="svg-y-label">${(maxVal / 1000000).toFixed(0)}M</text>
+      <text x="16" y="${padT + innerH}" class="svg-y-label">${(minVal / 1000000).toFixed(0)}M</text>
+      ${barras}
+    </svg>
+  `;
+}
+
+// B. Transporte público: estaciones de metro y capacidad (fuente F01)
+function renderizarTransporte() {
+  const cont = document.getElementById('transporte-container');
+  if (!cont || !Estado.transporte || !Estado.transporte.registros) return;
+  const regs = [...Estado.transporte.registros].sort((a, b) => b.total_capacity - a.total_capacity);
+  const maxCap = Math.max(...regs.map(r => r.total_capacity));
+
+  cont.innerHTML = regs.map(r => {
+    const pct = Math.round((r.total_capacity / maxCap) * 100);
+    return `
+      <div class="transit-card">
+        <div class="transit-head">
+          <span class="transit-name">🚇 ${r.station_name}</span>
+          <span class="transit-line">${r.subway_line}</span>
+        </div>
+        <div class="transit-bar-track"><div class="transit-bar-fill" style="width:${pct}%"></div></div>
+        <div class="transit-foot">
+          <span>${r.total_capacity.toLocaleString('es-CO')} vehículos</span>
+          <span class="transit-code">MOIS ${r.district_code}</span>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+// C. Indicadores económicos clave (PIB regional, turismo, empleo — fuente F03)
+function renderizarIndicadoresEconomicos() {
+  const cont = document.getElementById('indicadores-econ-container');
+  if (!cont || !Estado.economia || !Estado.economia.cifras) return;
+  const c = Estado.economia.cifras;
+
+  const tarjetas = [];
+  if (c.regional_gdp) {
+    const billones = (c.regional_gdp.valor / 1000000).toFixed(1);
+    tarjetas.push({ icon: '🏦', label: 'PIB Regional (GRDP)', valor: `${billones} B KRW`, nota: `Vigencia ${c.regional_gdp.vigencia}` });
+  }
+  if (c.foreign_visitors) {
+    tarjetas.push({ icon: '✈️', label: 'Turistas Internacionales', valor: c.foreign_visitors.valor.toLocaleString('es-CO'), nota: `Mensuales · ${c.foreign_visitors.vigencia}` });
+  }
+  if (c.unemployment_rate) {
+    tarjetas.push({ icon: '💼', label: 'Tasa de Desempleo', valor: `${c.unemployment_rate.valor}%`, nota: `Metropolitano · ${c.unemployment_rate.vigencia}` });
+  }
+  if (c.avg_housing_price) {
+    tarjetas.push({ icon: '🏠', label: 'Vivienda Promedio', valor: `${(c.avg_housing_price.valor / 1000000).toFixed(0)}M KRW`, nota: `Seúl · ${c.avg_housing_price.vigencia}` });
+  }
+
+  cont.innerHTML = tarjetas.map(t => `
+    <div class="econ-card">
+      <div class="econ-icon">${t.icon}</div>
+      <div class="econ-body">
+        <span class="econ-label">${t.label}</span>
+        <span class="econ-value">${t.valor}</span>
+        <span class="econ-note">${t.nota}</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+
+// D. Indicadores macroeconómicos nacionales (Bank of Korea · ECOS, fuente F05)
+function renderizarMacroBok() {
+  const cont = document.getElementById('macro-bok-container');
+  if (!cont || !Estado.macroBok || !Estado.macroBok.cifras) return;
+  const c = Estado.macroBok.cifras;
+
+  const items = [];
+  if (c.base_rate) items.push({ icon: '🏛️', label: 'Tasa Base BOK', valor: `${c.base_rate.valor}%`, nota: c.base_rate.vigencia });
+  if (c.cpi_inflation) items.push({ icon: '📈', label: 'Inflación (IPC)', valor: `${c.cpi_inflation.valor}%`, nota: `Interanual · ${c.cpi_inflation.vigencia}` });
+  if (c.exchange_rate_usd) items.push({ icon: '💱', label: 'Tipo de Cambio', valor: `₩${c.exchange_rate_usd.valor.toLocaleString('es-CO')}`, nota: `por 1 USD · ${c.exchange_rate_usd.vigencia}` });
+  if (c.gdp_growth) items.push({ icon: '🌐', label: 'Crecimiento PIB', valor: `${c.gdp_growth.valor}%`, nota: `Anual · ${c.gdp_growth.vigencia}` });
+
+  cont.innerHTML = items.map(t => `
+    <div class="econ-card">
+      <div class="econ-icon">${t.icon}</div>
+      <div class="econ-body">
+        <span class="econ-label">${t.label}</span>
+        <span class="econ-value">${t.valor}</span>
+        <span class="econ-note">${t.nota}</span>
+      </div>
+    </div>
+  `).join('');
 }

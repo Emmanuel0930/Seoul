@@ -32,6 +32,8 @@
         <a href="#preguntas" class="nav-link">Preguntas Clave</a>
         <a href="#territorio" class="nav-link">Mapa Territorial (25 Gu)</a>
         <a href="#tiempo-real" class="nav-link">Monitor Urbano</a>
+        <a href="#economia" class="nav-link">Economía</a>
+        <a href="#transporte" class="nav-link">Transporte</a>
         <a href="#catalogo" class="nav-link">Catálogo y Fuentes</a>
         <a href="#descargas" class="nav-link">📥 Descargas</a>
         <a href="#equipo" class="nav-link team-highlight">Equipo y Roles</a>
@@ -240,6 +242,7 @@
               <option value="elderly_alone_pct">Adultos Mayores Solos (%)</option>
               <option value="total_population">Población Total (Habitantes)</option>
               <option value="avg_housing_price">Precio Promedio de Vivienda (KRW)</option>
+              <option value="growth_pct">Crecimiento de Vivienda 2020→2025 (%) · F06</option>
               <option value="composite_index">Índice Compuesto de Prioridad Distrital (Sliders)</option>
             </select>
           </div>
@@ -335,6 +338,11 @@
                 <span class="d-val" id="detail-diff">-</span>
                 <span class="badge-source-mini">F03</span>
               </div>
+              <div class="detail-item" data-source="F06" title="Clic para ver procedencia F06">
+                <span class="d-label">Crecim. 20→25:</span>
+                <span class="d-val" id="detail-growth">-</span>
+                <span class="badge-source-mini">F06</span>
+              </div>
             </div>
             <div class="detail-footer">
               <span class="badge-source" data-source="F01" title="Ver procedencia F01 / F03">Trazabilidad a 1 clic: F01 (Demografía) · F03 (KOSIS)</span>
@@ -401,6 +409,56 @@
       <div class="realtime-grid" id="realtime-zones-container">
         <!-- Renderizado dinámico desde app.js -->
         <div class="loading-state">Cargando datos en tiempo real de Seúl...</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCIÓN 3B: Indicadores Económicos Clave (F03) -->
+  <section class="section-econ" id="economia">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Economía y Empleo (F03 · KOSIS)</span>
+        <h3>Indicadores Económicos Metropolitanos</h3>
+        <p>Cifras macro de Seúl: producto regional, turismo internacional, empleo y vivienda. <span class="badge-source" data-source="F03" title="Ver procedencia">Fuente: F03</span></p>
+      </div>
+      <div class="econ-grid" id="indicadores-econ-container">
+        <div class="loading-state">Cargando indicadores económicos...</div>
+      </div>
+
+      <div class="section-subhead">
+        <h4>Contexto Macroeconómico Nacional</h4>
+        <p>Variables del Banco de Corea que condicionan el mercado de Seúl. <span class="badge-source" data-source="F05" title="Ver procedencia">Fuente: F05 · Bank of Korea ECOS</span></p>
+      </div>
+      <div class="econ-grid" id="macro-bok-container">
+        <div class="loading-state">Cargando indicadores del Banco de Corea...</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCIÓN 3C: Evolución del Precio de Vivienda (serie F03) -->
+  <section class="section-vivienda" id="vivienda-historico">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Serie Histórica (F03 · KOSIS)</span>
+        <h3>Evolución del Precio Promedio de Vivienda (2020–2025)</h3>
+        <p>Trayectoria del apartamento promedio en Seúl, en millones de wones (KRW). <span class="badge-source" data-source="F03" title="Ver procedencia">Fuente: F03</span></p>
+      </div>
+      <div class="chart-wrapper" id="evolucion-vivienda-chart">
+        <div class="loading-state">Cargando serie histórica...</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCIÓN 3D: Transporte Público (F01) -->
+  <section class="section-transporte" id="transporte">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Infraestructura de Movilidad (F01 · Seoul Open Data)</span>
+        <h3>Capacidad del Transporte Público por Estación</h3>
+        <p>Estaciones de metro monitoreadas y su capacidad vehicular agregada por distrito. <span class="badge-source" data-source="F01" title="Ver procedencia">Fuente: F01</span></p>
+      </div>
+      <div class="transit-grid" id="transporte-container">
+        <div class="loading-state">Cargando red de transporte...</div>
       </div>
     </div>
   </section>

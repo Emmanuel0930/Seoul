@@ -1,0 +1,45 @@
+{
+  "tema": "Indicadores Macroeconómicos de Corea (Bank of Korea · ECOS)",
+  "probado": "2026-10-27",
+  "fuentes": [
+    {
+      "id": "F05",
+      "nombre": "Bank of Korea · ECOS (Economic Statistics System)",
+      "url": "https://ecos.bok.or.kr/api/",
+      "estado": "vivo",
+      "licencia": "Uso libre (Open API del banco central)"
+    }
+  ],
+  "cifras": {
+    "base_rate": {
+      "valor": 2.75,
+      "unidad": "% (tasa base BOK)",
+      "vigencia": "2026-03",
+      "fuente": "F05",
+      "verificado": false
+    },
+    "cpi_inflation": {
+      "valor": 2.1,
+      "unidad": "% interanual (IPC)",
+      "vigencia": "2026-02",
+      "fuente": "F05",
+      "verificado": false
+    },
+    "exchange_rate_usd": {
+      "valor": 1348.5,
+      "unidad": "KRW por 1 USD",
+      "vigencia": "2026-03",
+      "fuente": "F05",
+      "verificado": false
+    },
+    "gdp_growth": {
+      "valor": 2.0,
+      "unidad": "% crecimiento PIB anual",
+      "vigencia": "2025",
+      "fuente": "F05",
+      "verificado": false
+    }
+  },
+  "series": {},
+  "registros": []
+}
