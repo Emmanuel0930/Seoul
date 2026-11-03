@@ -10,9 +10,15 @@ Usa únicamente la biblioteca estándar de Python (urllib.request, json, os).
 """
 
 import os
+import sys
 import json
 import urllib.request
 from datetime import datetime
+
+if hasattr(sys.stdout, 'reconfigure'):
+    sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+if hasattr(sys.stderr, 'reconfigure'):
+    sys.stderr.reconfigure(encoding='utf-8', errors='replace')
 
 FUENTE_F01 = {
     "id": "F01",

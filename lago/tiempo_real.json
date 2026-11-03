@@ -12,13 +12,13 @@
   ],
   "cifras": {
     "current_temperature": {
-      "valor": 16.6,
+      "valor": 8.9,
       "unidad": "Grados Celsius (°C)",
       "vigencia": "2026-10",
       "fuente": "F02"
     },
     "avg_road_speed": {
-      "valor": 14.0,
+      "valor": 27.0,
       "unidad": "km/h",
       "vigencia": "2026-10",
       "fuente": "F02"
@@ -30,7 +30,7 @@
       "fuente": "F02"
     },
     "congestion_level": {
-      "valor": "Slightly Congested",
+      "valor": "Relaxed",
       "unidad": "Nivel de Densidad Agregada",
       "vigencia": "2026-10",
       "fuente": "F02"
@@ -41,9 +41,9 @@
     {
       "area_name": "Gwanghwamun·Deoksugung",
       "area_nm": "광화문·덕수궁",
-      "congestion_level": "Slightly Congested",
-      "current_temperature": 16.6,
-      "avg_road_speed": 14.0,
+      "congestion_level": "Relaxed",
+      "current_temperature": 8.9,
+      "avg_road_speed": 27.0,
       "air_quality_index": "Normal",
       "time_slot": "Tiempo Real Agregado (5 min)",
       "privacy_note": "Agregado por zona y franja horaria. Sin geolocalización de personas."

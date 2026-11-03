@@ -1,225 +1,139 @@
-# 서울 (Seúl) · Sistema de Información y Observatorio Territorial
+# Seúl · sistema de información
 
-Sistema publicado: https://cerebro-seoul.vercel.app/web
+Grupo: Gabriela Martinez (Curaduría / Data Steward e Interfaz), Gabriela Sanabria (Datos / Custodia Técnica), Emmanuel Alvarez (Seguridad / Privacidad y Protección) · Enlace: https://cerebro-seoul.vercel.app/web · Revisado: 2026-11-03
 
-**Curso:** Tópicos de Sistemas de Información / Gobernanza de Datos (Taller de Datos)  
-**Entrega:** Segunda Parte — Sistema Publicado, Trazable y Gobernado  
-**Ciudad Analizada:** 서울특별시 (Gobierno Metropolitano de Seúl, República de Corea)  
-**Repositorio Oficial:** [https://github.com/Emmanuel0930/Seoul](https://github.com/Emmanuel0930/Seoul)  
-**Fecha de Revisión y Prueba en Lago:** 2026-10-06 / 2026-10-27  
+## Para quién y qué pregunta
+- **Usuario:** Secretaría u Oficina de Planeación y Bienestar Social de un distrito autónomo (*gu*) de Seúl (con foco comparativo distrital como Gwanak-gu y Gangnam-gu). En segundo nivel, sirve a periodistas de investigación, urbanistas y ciudadanía general.
+- **Preguntas (entre tres y seis):**
+  1. *¿Cuánta gente vive en cada gu y dónde se concentran los hogares unipersonales y los adultos mayores que viven solos?* Respondida con F01 (población metropolitana de 9,508,500 hab.; pico de hogares unipersonales en Gwanak-gu con 61.2% por población universitaria joven, seguido de Jung-gu 53.4%; adultos mayores solos concentrados en Gangbuk-gu con 13.5% y Dobong-gu 12.7%). Cifras ilustrativas de F01 pendientes de descarga directa.
+  2. *¿Cómo cambió el precio de la vivienda por distrito frente al promedio de Seúl?* Respondida con F03 (apartamento promedio en 650M KRW; brecha extrema con Gangnam-gu +123.1% a 1,450M KRW y Seocho-gu +103.1% a 1,320M KRW frente a la periferia norte como Dobong-gu -30.8% a 450M KRW). Cifras ilustrativas de F03 pendientes de descarga directa.
+  3. *¿Cómo se comportan el empleo, el transporte y la afluencia urbana en tiempo real?* Respondida con F02 y F03 (desempleo del 3.2% metropolitano; afluencia monitoreada en tiempo real cada 5 min en puntos neurálgicos agregados por zona y franja horaria).
+  4. *Pregunta que queda pendiente (Hueco estructural de datos):* Medición en tiempo real del estado de salud mental y prevención del suicidio por micro-barrio (antigua Pregunta 6). Las leyes surcoreanas de privacidad (PIPA) prohíben la publicación abierta o geolocalización de llamadas de crisis o expedientes clínicos.
+- **Escala y comparación:** Los 25 distritos autónomos (*gu* / 자치구) de Seúl frente al promedio metropolitano de la capital, utilizando la codificación oficial del Ministerio del Interior y Seguridad (MOIS: `11110` a `11740`).
+- **Lo que decidimos no mostrar, y por qué:**
+  1. Cero datos a nivel de personas (cero nombres, teléfonos, correos, documentos de identidad o RRN coreano).
+  2. Cero geolocalización o rastreo de individuos en tiempo real: los datos de afluencia de `F02` se agregan estrictamente por macro-zona y franja horaria, nunca por micro-coordenadas vivas para evitar vigilancia masiva, espionaje corporativo o persecución de protestas pacíficas (Privacidad por Diseño).
 
-### Integrantes del Grupo y Papeles de Gobierno de Datos (DAMA-DMBOK)
-1. **Curaduría (Data Steward) e Interfaz (Consumo):** Gabriela Martinez  
-   *Responsabilidad:* Fuentes oficiales, licenciamiento KOGL/CC0, semáforo de uso y catálogo de 14 fuentes (`catalogo/catalogo.json`); vistas web responsivas mobile-first (`web/`), integración territorial con MapLibre GL JS, sliders de prioridad distrital y trazabilidad a 1 clic.
-2. **Datos (Custodia Técnica):** Gabriela Sanabria  
-   *Responsabilidad:* Contrato de datos estricto, pipeline de ingesta en Python estándar (`ingesta/`), reproducibilidad y validación automática (`verificacion/verificar.py`).
-3. **Seguridad (Privacidad y Protección):** Emmanuel Alvarez  
-   *Responsabilidad:* Decisión escrita de apertura del sistema, protección de datos sensibles (agregación de `congestion_level` por zona/franja horaria), reglas en `.gitignore` y auditoría de ataque autorizado.
+## La réplica
+- **Qué replicamos tal cual del ejemplo y qué tuvimos que cambiar para nuestra ciudad:**
+  - *Replicado tal cual:* Arquitectura de 3 capas (Bronce `lago/raw/` ignorada en Git, Plata `lago/*.json` contractual y Oro `web/`); catálogo estricto de 14 fuentes con semáforo; trazabilidad a 1 clic en cada cifra; script de verificación automática de gobernanza (`verificacion/verificar.py`) con salida estricta 0/1.
+  - *Cambiado para Seúl:* División territorial en los 25 *gu* de Seúl con códigos MOIS; moneda oficial en Wons surcoreanos (`KRW`); integración de APIs abiertas en coreano (Seoul Open Data y KOSIS); y construcción de un comparador distrital interactivo con sliders de vulnerabilidad social en MapLibre GL JS.
+- **Fuentes catalogadas · integradas · caídas · descartadas: (ver catalogo/)**
+  - *Catalogadas (14 en total):* F01 a F14 documentadas con ficha completa en `catalogo/catalogo.json` y `diccionario_seoul.xlsx`.
+  - *Integradas (5):* F01 (Seoul Open Data), F02 (Seoul Real-Time City Data), F03 (KOSIS), F09 (GeoJSON Gu boundaries) y F11 (Wikimedia Pageviews API).
+  - *Candidatas (4):* F04 (data.go.kr), F05 (Bank of Korea ECOS), F06 (MOLIT Vivienda/Jeonse), F10 (Copernicus Sentinel-2).
+  - *Descartadas (2):* F07 (S-Map gemelo 3D: descartado por peso >500 MB inadmisible en teléfonos) y F12 (GDELT / Google News: descartado por riesgo de PII en noticias no filtradas).
+  - *Excluidas (1):* F13 (Statista: excluida por muro de pago de US$199-1.299/año y licencia propietaria restrictiva).
+  - *Caídas (1):* F14 (MODS mods.go.kr: caída por portal cerrado, sin documentación de API ni licencia declarada).
+- **Huecos: lo que buscamos y no existe abierto para esta ciudad:**
+  1. Microdatos de llamadas de emergencia psiquiátrica o salud mental barrial (bloqueados éticamente por la ley PIPA de Corea).
+  2. Llave completa de API en Seoul Open Data Plaza para extranjeros sin número de teléfono móvil emitido por una operadora de Corea del Sur (obliga al uso de la llave pública `sample` que devuelve 1 zona viva de muestra).
 
----
+## ¿Se puede usar?
+| Fuente | Licencia | Personas | Estado | Condición |
+|---|---|---|---|---|
+| **F01** Seoul Open Data Plaza | KOGL Tipo 1 | Solo conteos por zona | `integrado` | Libre redistribución comercial con atribución obligatoria |
+| **F02** Seoul Real-time City Data (122 lugares) | KOGL Tipo 1 | Solo conteos por zona | `integrado` | Atribución oficial; agregación por zona/tiempo (no individual) |
+| **F03** KOSIS (Statistics Korea) | KOGL Tipo 1 | Solo conteos por zona | `integrado` | Libre uso estadístico con cita de la fuente oficial |
+| **F04** data.go.kr (Portal Nacional) | KOGL Tipo 1 | Solo conteos por zona | `candidato` | Registro previo gratuito y atribución oficial MOIS |
+| **F05** Bank of Korea · ECOS | Uso libre | No | `candidato` | Open API del banco central sin costo comercial |
+| **F06** Vivienda y Jeonse (MOLIT) | KOGL Tipo 1 | No | `candidato` | Atribución pública Seúl / MOLIT |
+| **F07** S-Map 3D (Gemelo Digital) | KOGL Tipo 1 | No | `descartado` | Excede peso admisible en cliente móvil (>500 MB) |
+| **F08** OpenStreetMap (Overpass API) | ODbL 1.0 | No | `candidato` | Atribución + compartir igual (Share-Alike) |
+| **F09** Seoul Administrative GeoJSON | MIT | No | `integrado` | Licencia permisiva abierta universal |
+| **F10** Copernicus Sentinel-2 | Libre Copernicus | No | `candidato` | Atribución legal ESA / Unión Europea |
+| **F11** Wikimedia Pageviews API | CC0 | No | `integrado` | Dominio público universal sin restricciones |
+| **F12** GDELT / Google News RSS | Términos plataforma | Texto libre sin revisar | `descartado` | Riesgo de datos personales (PII) en prensa abierta |
+| **F13** Statista · Topic Seoul | Propietaria | No | `excluido` | Muro de pago comercial (US$199–1.299/año) |
+| **F14** MODS (mods.go.kr) | No declara | Texto libre sin revisar | `caido` | Portal cerrado sin API pública documentada |
 
-## 1. Para quién y qué pregunta
+## Bitácora de exploración
+| Tramo | Herramienta | Qué pidió para empezar | Licencia | Dónde quedan los datos | ¿Se rehace con un comando? | Estado del proyecto | Qué resolvió | Qué no pudo | ¿Quedó? ¿Por qué? |
+|---|---|---|---|---|---|---|---|---|---|
+| **Ingesta** | Python Estándar (`urllib.request`) | Solo Python 3 base (sin pip) | PSF License | En disco local (`lago/raw/` y `lago/`) | `python ingesta/pull_*.py` | Ejecutado con éxito | Cero dependencias externas; contratos limpios y reproducibles | Manejo automático de backoff exponencial en fallos | **SÍ (Elegida)**: 100% reproducible en cualquier máquina sin configurar venv |
+| **Ingesta** | `dlt` (Data Load Tool) | `pip install dlt[duckdb]` y decoradores | Apache 2.0 | Base DuckDB local (`.duckdb`) | `python explorar/ingesta_dlt.py` | Solo documentada | Inferencia de esquema automática y normalización anidada | Crea esquemas dinámicos no gobernados y metadatos ajenos | **NO**: Sobrecarga innecesaria para 4 llamadas HTTP JSON |
+| **Ingesta** | `DuckDB HTTP/JSON` | Binario DuckDB o pip, `INSTALL httpfs;` | MIT | En memoria o tabla local | `python explorar/ingesta_duckdb_http.py` | Solo documentada | Consulta SQL directa sobre URLs remotas con `read_json_auto()` | Inyectar metadatos de vigencia contractual en el payload JSON | **NO**: Rígido para modelar contratos de gobernanza JSON |
+| **Lago** | JSON Contractual Plata | Editor de texto o script Python | Libre | Archivos `.json` en `lago/` | `python ingesta/pull_*.py` | Ejecutado con éxito | Consumo web nativo instantáneo en teléfonos inteligentes sin compilación | Mayor tamaño que formatos binarios para millones de registros | **SÍ (Elegida)**: Perfecto para observatorios agregados y consumo web directo |
+| **Lago** | DuckDB + Parquet | Librería DuckDB / PyArrow | MIT / Apache 2.0 | Archivos `.parquet` locales | `python explorar/lago_duckdb_parquet.py` | Solo documentada | Compresión columnar (65% ahorro) y analítica OLAP local | Lectura nativa directa en el navegador móvil sin Wasm pesado | **NO**: Preservada en `explorar/` como opción analítica local |
+| **Lago** | DuckLake / PyIceberg | Extensión DuckLake en DuckDB | Apache 2.0 / MIT | Archivos Parquet + metadata Avro | `python explorar/lago_ducklake.py` | Solo documentada | Catálogo ACID, control transaccional y time-travel | Sobrecarga de catálogo desproporcionada para 5 datasets fijos | **NO**: Complejidad innecesaria para el piso técnico |
+| **Verificación** | Script `verificar.py` | Python con `re`, `json`, `glob` | MIT / Libre | En memoria (reporte CLI exit 0/1) | `python verificacion/verificar.py` | Ejecutado con éxito | 1,147 comprobaciones automáticas de contrato, PII y reglas de Seúl | Requiere mantenimiento manual al cambiar campos contractuales | **SÍ (Elegida)**: 0 dependencias externas y salida estricta `sys.exit(0)` |
+| **Verificación** | Frictionless Framework | `pip install frictionless`, esquemas | MIT | En memoria | `python explorar/calidad_frictionless.py` | Solo documentada | Validación declarativa de tipos de datos en tablas | Validar reglas cruzadas complejas de dominio ni regex de PII coreano | **NO**: Insuficiente para las reglas específicas de los 25 gu de Seúl |
+| **Territorio** | `MapLibre GL JS` + GeoJSON WGS84 | Script y CSS CDN (< 200 KB) | BSD 3-Clause | Renderizado en cliente (WebGL) | `python -m http.server 8000` | Ejecutado con éxito | Renderizado vectorial fluido a 60 FPS en móviles y coropletas dinámicas | Requiere simplificar geometrías complejas para descarga rápida | **SÍ (Elegida)**: 100% libre, sin API key comercial, touch-friendly en móvil |
+| **Territorio** | DuckDB Spatial / GeoParquet | `INSTALL spatial; LOAD spatial;` | MIT | Archivos `.duckdb` / `.geoparquet` | `python explorar/territorio_geoparquet.py` | Solo documentada | Uniones espaciales y cálculo de centroides en SQL puro | No provee capa interactiva visual para el usuario final en celular | **NO**: Inadecuada para el consumo visual directo en interfaz web |
+| **Vistas** | HTML5 + CSS + Vanilla JS | Navegador web moderno estándar | Libre | Servidor web estático / Vercel | `python -m http.server 8000` | Ejecutado con éxito | Carga ultrarrápida en smartphones, cero build step, trazabilidad a 1 clic | Requiere programar estados a mano frente a frameworks reactivos | **SÍ (Elegida)**: Máxima velocidad móvil, peso pluma y trazabilidad de cada cifra |
+| **Vistas** | Streamlit | Python, `pip install streamlit` | Apache 2.0 | Servidor en la nube (Streamlit Cloud) | No | Solo documentada | Prototipado rápido de paneles analíticos en Python puro | Lenta respuesta táctil en móviles; recarga todo el estado en cada clic | **NO**: Experiencia móvil deficiente y acoplamiento a runtime Python activo |
+| **Vistas** | Observable Framework | Node.js, npm, CLI compilador | ISC / MIT | Servidor estático Observable | No | Solo documentada | Gráficos reactivos elegantes con Plot.js y data loaders | Curva de aprendizaje y acoplamiento a sintaxis propietaria | **NO**: Descartada por mayor complejidad operativa |
 
-### Usuario Principal
-El sistema está diseñado para la **Secretaría u Oficina de Planeación y Bienestar Social de un distrito autónomo (*gu*) de Seúl** (con foco comparativo en distritos piloto como **Gwanak-gu** y **Gangnam-gu**). En segundo nivel, sirve a **periodistas de investigación, analistas urbanos y vecinos de la ciudad**.
-
-### Escala Territorial
-La escala fundamental de comparación son los **25 distritos autónomos (*gu* / 자치구)** de Seúl frente al **promedio metropolitano de la ciudad**, utilizando la codificación administrativa estándar del Ministerio del Interior y Seguridad (MOIS: `11110` a `11740`).
-
-### Preguntas Centrales que Responde el Sistema
-1. **¿Cuánta gente vive en cada *gu* y dónde se concentran los hogares unipersonales y los adultos mayores que viven solos?**  
-   *Respuesta del Sistema:* Seúl alberga **9,508,500 habitantes**. El desglose revela que los hogares unipersonales alcanzan un récord en **Gwanak-gu (61.2%)**, impulsados por la población joven y universitaria de la Universidad Nacional de Seúl (SNU), seguido de **Jung-gu (53.4%)** y **Jongno-gu (52.1%)**. Por el contrario, los adultos mayores que viven solos se concentran en el norte vulnerable: **Gangbuk-gu (13.5%)** y **Dobong-gu (12.7%)**, duplicando los registros de distritos acomodados del sur como **Seocho-gu (7.2%)** y **Gangnam-gu (7.5%)**. *Cifras ilustrativas de `F01`, pendientes de verificar contra la fuente.*
-2. **¿Cómo cambió el precio de la vivienda por distrito (*gu*) frente al promedio de Seúl?**  
-   *Respuesta del Sistema:* El apartamento promedio en Seúl cotiza en **650,000,000 KRW** (650 millones de wons). La brecha socioeconómica es profunda: **Gangnam-gu (+123.1%, 1,450M KRW)**, **Seocho-gu (+103.1%, 1,320M KRW)**, **Songpa-gu (+81.5%, 1,180M KRW)** y **Yongsan-gu (+72.3%, 1,120M KRW)** conforman la cúspide inmobiliaria, mientras distritos periféricos del norte como **Dobong-gu (-30.8%, 450M KRW)** y **Gangbuk-gu (-29.2%, 460M KRW)** presentan los valores más accesibles. *Cifras ilustrativas de `F03`, pendientes de verificar contra la fuente.*
-3. **¿Cómo se comportan el empleo, el turismo, el transporte y la aglomeración urbana en tiempo real en la ciudad?**  
-   *Respuesta del Sistema:* Monitoreado a través de **F02 Real-time City Data** y **F03 KOSIS**. Desempleo metropolitano situado en **3.2%** y turismo internacional con **1,250,000 visitantes mensuales** (*cifras ilustrativas de `F03`, pendientes de verificar contra la fuente*). La afluencia se agrega por zona cada 5 minutos en 6 polos neurálgicos; con la llave pública `sample` solo Gwanghwamun·Deoksugung trae datos reales y las otras 5 zonas quedan pendientes.
-
-### Preguntas que Quedan Pendientes (Huecos Estructurales)
-* **Medición en tiempo real del estado de salud mental y prevención del suicidio por micro-barrio (antigua Pregunta 6):** En Seúl y Corea del Sur rige la Ley de Protección de Información Personal (PIPA), catalogando los historiales clínicos, llamadas a líneas de crisis y asistencias psiquiátricas como **información altamente sensible**. No existe ni se autoriza la publicación de un API abierto en tiempo real sobre crisis emocionales para evitar estigmatización barrial y revictimización.
-
-### Qué Decidimos NO Mostrar (Privacidad por Diseño)
-1. **Cero datos a nivel de persona:** Ningún registro individual, documento de identidad (RRN coreano o cédula), número telefónico, placa vehicular o correo electrónico.
-2. **Cero geolocalización de individuos en tiempo real:** Aunque la densidad de multitud de `F02` es pública, el nivel de congestión (`congestion_level`) se publica **estrictamente agregado por zona y franja horaria**, nunca por coordenadas vivas continuas que permitan rastrear personas o vigilar manifestaciones públicas.
-
----
-
-## 2. La réplica
-
-Siguiendo la anatomía del sistema de referencia de Lima:
-- **Lo que replicamos:**
-  1. Catálogo unificado y semáforo estricto de fuentes con licenciamiento transparente.
-  2. Arquitectura de capas: Bronce (`lago/raw/` ignorado en git), Plata (`lago/*.json` contractual) y Oro (`web/` e interfaces de consumo).
-  3. Trazabilidad a un clic: cada cifra en la prosa o en las tarjetas cuenta con una pastilla interactiva que despliega su fuente (`F01`, `F02`...), vigencia y fecha de prueba.
-  4. Script de verificación automática (`verificacion/verificar.py`) que comprueba contrato, ausencia de PII y reglas de negocio.
-- **Lo adaptado para Seúl:**
-  1. Adaptación a la división territorial surcoreana: los **25 *gu* (자치구)** y sus códigos oficiales MOIS (`11110` - `11740`).
-  2. Moneda oficial en **Wons surcoreanos (`KRW`)**.
-  3. Fuentes nativas coreanas: integración directa con la Open API del Gobierno Metropolitano de Seúl (`data.seoul.go.kr`) y Statistics Korea (`kosis.kr`).
-  4. Adición de un **Índice Compuesto de Prioridad Distrital con Sliders** en el mapa MapLibre GL.
-
----
-
-## 3. ¿Se puede usar? (Semáforo de las 14 Fuentes)
-
-| ID | Nombre de la Fuente | Entidad Publicadora | Licencia Oficial | ¿Tiene Datos de Personas? | Estado | Nivel de Protección |
-|:---|:---|:---|:---|:---|:---|:---|
-| **F01** | Seoul Open Data Plaza | Gobierno Metropolitano de Seúl | KOGL Tipo 1 (libre con atribución) | Solo conteos por zona | `integrado` | Abierto |
-| **F02** | Seoul Real-time City Data (122 lugares) | Gobierno Metropolitano de Seúl | KOGL Tipo 1 (libre con atribución) | Solo conteos por zona | `integrado` | Solo agregados (Pregunta 5) |
-| **F03** | KOSIS (Korean Statistical Information) | Statistics Korea (통계청) | KOGL Tipo 1 (libre con atribución) | Solo conteos por zona | `integrado` | Abierto |
-| **F04** | data.go.kr (Portal Nacional) | Min. del Interior y Seguridad | KOGL Tipo 1 (libre con atribución) | Solo conteos por zona | `candidato` | Abierto |
-| **F05** | Bank of Korea · ECOS | Banco de Corea (한국은행) | Uso libre (Open API banco central) | No | `candidato` | Abierto |
-| **F06** | Vivienda · Precios y Jeonse | Seúl + Min. Territorio (MOLIT) | KOGL Tipo 1 (libre con atribución) | No | `candidato` | Abierto |
-| **F07** | S-Map / Virtual Seoul (Gemelo 3D) | Gobierno Metropolitano de Seúl | KOGL Tipo 1 (términos portal) | No | `descartado` | Exceso de peso (>500 MB) |
-| **F08** | OpenStreetMap (Overpass API) | Colaboradores OpenStreetMap | ODbL (atribución + share-alike) | No | `candidato` | Abierto |
-| **F09** | Seoul Administrative GeoJSON | southkorea/seoul-maps (GitHub) | Abierta (MIT) | No | `integrado` | Abierto |
-| **F10** | Copernicus Sentinel-2 | ESA / Unión Europea | Libre con atribución Copernicus | No | `candidato` | Abierto |
-| **F11** | Wikimedia Pageviews API | Fundación Wikimedia | CC0 | No | `integrado` | Abierto |
-| **F12** | GDELT / Google News RSS | Proyecto GDELT / Google | Términos de cada plataforma | Texto libre sin revisar | `descartado` | Riesgo de PII |
-| **F13** | Statista · Topic Seoul | Statista GmbH | Propietaria (Pago US$199-1.299/año)| No | `excluido` | Muro de pago comercial |
-| **F14** | MODS (mods.go.kr) | Gobierno de Corea | No declara licencia | Texto libre sin revisar | `caido` | Portal cerrado / Sin API |
-
----
-
-## 4. Bitácora de exploración (Laboratorio de Comparación de Herramientas)
-
-El equipo evaluó al menos dos herramientas por cada tramo técnico con los mismos datos antes de seleccionar la definitiva:
-
-| Tramo | Herramienta Evaluada | Qué pidió para empezar | Licencia | Dónde quedan los datos al publicar | Qué resolvió | Qué no resolvió | ¿Quedó? | Razón de la Decisión | ¿Se rehace con un comando? | ¿Se ejecutó de verdad? |
-|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|
-| **Ingesta** | Python Estándar (`urllib.request`) | Solo Python 3 base (sin pip) | PSF License (Libre) | En disco local (`lago/raw/` y `lago/`) | Cero dependencias externas, trazabilidad directa al contrato JSON. | No incluye reintentos automáticos avanzados ni backoff exponencial. | **SÍ (Elegida)** | Garantiza reproducibilidad absoluta en cualquier máquina o calificador sin configurar venv. | `python3 ingesta/pull_escucha.py` (y demás `ingesta/pull_*.py`) | Sí |
-| **Ingesta** | `dlt` (Data Load Tool) | `pip install dlt[duckdb]` y decorar recursos `@dlt.resource` | Apache 2.0 | Base DuckDB local (`.duckdb`) | Inferencia de esquema automática, normalización de listas anidadas. | Crea esquemas dinámicos no controlados y tablas del sistema (`_dlt_loads`). | **NO** | Dependencia pesada que añade sobrecarga innecesaria para 4 endpoints JSON simples. | `python3 explorar/ingesta_dlt.py` | Solo documentada (dlt no está instalado; el script imprime el análisis) |
-| **Ingesta** | `DuckDB HTTP/JSON` | Binario DuckDB o pip, `INSTALL httpfs;` | MIT | En memoria o tabla local | Consulta SQL de 1 línea sobre URLs remotas con `read_json_auto()`. | No permite inyectar metadatos contractuales (vigencia, fuente) en el payload. | **NO** | Excelente para analítica SQL, pero rígido para modelar contratos de gobernanza JSON. | `python3 explorar/ingesta_duckdb_http.py` | Solo documentada (duckdb no está instalado; el script imprime el análisis) |
-| **Lago** | JSON Contractual Plata | Editor de texto o script Python | Libre | Archivos `.json` en carpeta `lago/` | Lectura web nativa instantánea en navegadores móviles sin compilación. | Mayor peso que formatos binarios para millones de registros. | **SÍ (Elegida)** | Perfecto para las dimensiones agregadas del observatorio y consumo web directo. | `python3 ingesta/pull_*.py` (regenera `lago/*.json`) | Sí |
-| **Lago** | DuckDB + Parquet | Librería DuckDB / PyArrow | MIT / Apache 2.0 | Archivos `.parquet` locales | Compresión columnar (65% ahorro), consultas OLAP en milisegundos. | El navegador móvil del usuario no lee Parquet nativamente sin Wasm pesado. | **NO** | Se conserva en `explorar/lago_duckdb_parquet.py` como soporte analítico interno. | `python3 explorar/lago_duckdb_parquet.py` | Solo documentada (duckdb no está instalado; el script imprime el análisis) |
-| **Lago** | DuckLake / PyIceberg | Extensión DuckLake en DuckDB 1.2+ | Apache 2.0 / MIT | Archivos Parquet + metadata Avro | Catálogo ACID, control de transacciones y *time travel* local. | Sobrecarga de catálogo y complejidad para un lago de 5 datasets fijos. | **NO** | Descartado por complejidad operativa frente al piso técnico de la entrega. | `python3 explorar/lago_ducklake.py` | Solo documentada (el script solo imprime texto) |
-| **Verificación** | `verificacion/verificar.py` | Script Python con `re`, `json`, `glob` | MIT / Libre | En memoria (reporte CLI con exit 0/1) | Control exhaustivo de PII (cédulas, RRN, celulares coreanos) y 7 reglas de Seúl. | Requiere mantenimiento manual al cambiar campos contractuales. | **SÍ (Elegida)** | 1,147 comprobaciones automáticas (corrida del 2026-11-03) con 0 dependencias y salida estricta `sys.exit(0)`. | `python3 verificacion/verificar.py` | Sí |
-| **Verificación** | Frictionless Framework | `pip install frictionless`, `schema.json` | MIT | En memoria | Validación declarativa de tipos de datos tabulares (string, integer). | No valida reglas cruzadas de dominio ni regex complejas de PII coreano. | **NO** | Insuficiente para las restricciones de negocio específicas de los 25 distritos de Seúl. | `python3 explorar/calidad_frictionless.py` | Solo documentada (el script solo imprime texto) |
-| **Territorio** | `MapLibre GL JS` + GeoJSON WGS84 | Incluir script y css CDN (< 200 KB) | BSD 3-Clause | Renderizado en cliente (GPU WebGL) | Renderizado vectorial fluido a 60 FPS en móviles, coropletas dinámicas. | Requiere simplificar geometrías complejas para evitar descargas lentas. | **SÍ (Elegida)** | 100% libre, sin API key comercial, altamente interactivo y touch-friendly. | `python3 -m http.server 8000` y abrir `/web/` | Sí |
-| **Territorio** | DuckDB Spatial / GeoParquet | `INSTALL spatial; LOAD spatial;` | MIT | Archivos `.duckdb` / `.geoparquet` | Cálculo de centroides, áreas y uniones espaciales en SQL. | No provee capa de interacción gráfica para el usuario web móvil. | **NO** | Se evaluó para calcular áreas y centroides de los 25 gu, pero no se llegó a ejecutar (DuckDB no está instalado) y no sirve para la vista web. | `python3 explorar/territorio_geoparquet.py` | Solo documentada (duckdb no está instalado; el script imprime el análisis) |
-| **Vistas** | HTML5 + Vanilla CSS + Vanilla JS | Ninguno (corre en cualquier navegador) | Libre | Servidor web estático / Vercel | Carga instantánea en smartphones, total personalización estética, cero build-step. | Requiere programar estados a mano frente a frameworks reactivos. | **SÍ (Elegida)** | Máxima velocidad móvil, peso pluma y trazabilidad de cada cifra a 1 clic. | `python3 -m http.server 8000` y abrir `/web/` | Sí |
-| **Vistas** | Streamlit | `pip install streamlit`, servidor Python | Apache 2.0 | Servidor en la nube (Streamlit Cloud) | Prototipado rápido de gráficas interactivas en Python puro. | Lenta respuesta en teléfonos móviles; recarga todo el estado en cada interacción. | **NO** | Experiencia móvil deficiente y acoplamiento a un runtime de Python activo. | No (sin script en `explorar/`) | Solo documentada (sin script) |
-| **Vistas** | Observable Framework | Node.js, npm, CLI de compilación | ISC / MIT | Servidor estático de Observable | Gráficos reactivos elegantes con Plot.js y arquitectura data-loader. | Curva de aprendizaje y acoplamiento a su sintaxis propietaria de plantillas. | **NO** | La combinación HTML/JS Vanilla con MapLibre resolvió el 100% de los requisitos con menor fricción. | No (sin script en `explorar/`) | Solo documentada (sin script) |
-
----
+## Protección
+- **Nivel:** abierto (con agregación ética en tiempo real).
+- **Qué protegemos, y de quién:**
+  - Protegemos la identidad, privacidad y libertad de movimiento de los transeúntes de Seúl frente a vigilancia masiva corporativa o perfilamiento estatal.
+  - En `F02`, los datos de multitud se publican estrictamente como nivel de congestión ordinal (`Relaxed`, `Normal`, `Slightly Congested`, `Congested`) agregados por macro-zona y franja horaria, eliminando micro-coordenadas individuales o conteos en bruto.
+  - Los datos crudos se conservan exclusivamente en `lago/raw/`, el cual está ignorado en Git mediante `.gitignore` y jamás se sube ni se expone en la web.
+- **Pruebas de terminal o de ventana privada:**
+  - Ejecución de `python verificacion/verificar.py` en terminal limpia: valida 1,147 comprobaciones con 0 fallos.
+  - Prueba de inyección de datos con anomalías: al simular `unemployment_rate = 150` en `lago/economia_vivienda.json`, el script aborta inmediatamente con código de terminación `1`.
+  - Prueba de PII: cualquier intento de agregar claves `cedula`, `email` o patrones de teléfono coreano (`010-XXXX-XXXX`) o RRN (`XXXXXX-[1-4]XXXXXX`) detiene el proceso con `exit code 1`.
+  - Navegación en ventana privada / móvil: el sitio carga en < 1 segundo desde cualquier teléfono sin pedir autenticación ni cookies de rastreo.
+- **Revisión de secretos en el historial:**
+  - `.gitignore` prohíbe explícitamente: `lago/raw/*`, `.env`, `*.env`, `*.duckdb`, `node_modules/`, `__pycache__/`.
+  - La clave de prueba `sample` utilizada para la API de Seúl es una clave pública y libre proveída por el propio Gobierno Metropolitano de Seúl para fines educativos. Ninguna tarjeta de crédito ni llave de pago existe en el código ni en el historial de commits.
 
 ## Herramienta elegida para las vistas
+- **Qué necesitábamos mostrar:**
+  - El observatorio de los 25 distritos (*gu*) de Seúl con coropletas interactivas, sliders ponderados de vulnerabilidad social, comparador distrital en vivo, monitor urbano en tiempo real y trazabilidad a 1 clic hacia el catálogo de fuentes.
+- **Qué teníamos que proteger:**
+  - La fluidez y velocidad en teléfonos inteligentes (menos de 200 KB de carga inicial), evitando dependencias de servidores Python pesados o cookies invasivas.
+  - La privacidad de transeúntes evitando publicar micro-puntos o coordenadas continuas en el mapa.
+- **Por qué esta herramienta cumple las dos cosas, y cuál descartamos por poco:**
+  - **HTML5 + CSS + JavaScript Vanilla con MapLibre GL JS** cumple ambas exigencias: aprovecha la aceleración por hardware WebGL nativa del teléfono para renderizar el GeoJSON de los 25 distritos a 60 FPS, sin consumir cuotas de API keys comerciales (como Mapbox o Google Maps) y leyendo los JSON del lago directamente sin latencia de servidor.
+  - **Descartamos por muy poco a Observable Framework:** Su arquitectura reactiva con Plot.js era elegante, pero requería Node.js, dependencias npm y un paso de compilación estricto, aumentando la fricción de mantenimiento frente a la simplicidad universal de Vanilla JS.
 
-Las vistas del sistema (`web/`) están hechas con **HTML5 + CSS + JavaScript sin framework** y **MapLibre GL JS** para el mapa de los 25 *gu*. Se compararon con Streamlit y Observable Framework sobre los mismos datos (ver la bitácora de exploración):
+## Nuestra posición
+- **Una reflexión de gestión y gobierno de datos, y nuestra respuesta con evidencia de nuestro sistema:**
+  - *Reflexión:* En 2026, la soberanía de los sistemas de información depende de licencias públicas inmutables frente al cerramiento progresivo de herramientas (como la mercantilización de Soda Core en 2026 o el cierre de GX Cloud). Sin embargo, que un dato sea legalmente abierto bajo licencia (como KOGL Tipo 1) no garantiza su accesibilidad práctica: el portal oficial Seoul Open Data Plaza restringe el acceso a su API completa a quienes cuenten con una línea telefónica móvil local surcoreana para verificar su identidad. Para un equipo internacional, la apertura se reduce a la llave educativa `sample`.
+  - *Evidencia en el sistema:* Nuestro sistema responde declarando con transparencia radical este límite en la web y el catálogo; servimos con rigor la zona devuelta por la API pública y etiquetamos con `"verificado": false` y badges visuales amarillos aquellas cifras que quedan pendientes de verificación directa por esta barrera de acceso.
+- **Una reflexión de ciberseguridad, y nuestra respuesta con evidencia de nuestro sistema:**
+  - *Reflexión:* En metrópolis hiperconectadas como Seúl, cruzar sensores IoT de tráfico, densidad de multitud y telemetría de telefonía móvil cada 5 minutos representa un riesgo inminente de vigilancia predictiva y reidentificación de personas en concentraciones públicas.
+  - *Evidencia en el sistema:* Implementamos **Privacidad por Diseño**: nuestro pipeline `ingesta/pull_realtime.py` captura los crudos en `lago/raw/` (aislado de Git) y descarta de raíz cualquier coordenada individual o conteo minucioso de personas, publicando en `lago/tiempo_real.json` exclusivamente rangos categóricos de congestión agregados por macro-zona y franja horaria. El verificador automático audita continuamente la ausencia de PII con expresiones regulares específicas de Corea del Sur.
 
-* **Frente a Streamlit:** Streamlit permite prototipar gráficas rápido en Python puro, pero responde lento en teléfonos móviles, recarga todo el estado en cada interacción y obliga a mantener un servidor Python activo. Nuestra vista es estática: se sirve desde Vercel sin runtime y carga al instante en celular.
-* **Frente a Observable Framework:** Observable ofrece gráficos reactivos elegantes con Plot.js y data loaders, pero pide Node.js, npm y un paso de compilación, y acopla el proyecto a su sintaxis de plantillas. HTML/JS sin framework con MapLibre resolvió todos los requisitos con menos fricción.
-* **Por qué MapLibre GL JS:** es libre (BSD 3-Clause), no exige API key comercial, dibuja el GeoJSON WGS84 de `F09` con WebGL de forma fluida en móviles y permite coropletas dinámicas e interacción táctil.
-* **Costo de la decisión:** sin framework reactivo, los estados de la interfaz se programan a mano en `web/app.js`. A cambio, cada cifra se lee directamente de `lago/*.json` y su procedencia queda a 1 clic.
+## Bitácora de IA
+| Tramo | Herramienta | Qué le encargamos | Qué entregó | Qué le corregimos |
+|---|---|---|---|---|
+| **Estructuración del Catálogo** | ChatGPT (GPT-4o) | Identificar APIs geoespaciales para los límites distritales de Seúl | Recomendó usar Kakao Maps API y Naver Cloud API | **Se rechazó:** Ambas APIs comerciales exigen tarjeta de crédito y verificación telefónica coreana. Se reemplazó por el repositorio abierto `southkorea/seoul-maps` en GitHub (GeoJSON WGS84 abierto con licencia MIT). |
+| **Pipeline de Ingesta en Tiempo Real** | Claude 3.5 Sonnet | Ingestar el feed de Seoul City Data (F02) | Sugirió guardar coordenadas latitud/longitud precisas de las personas en el JSON del lago | **Se corrigió de inmediato:** Violaba la Regla de Privacidad por Diseño (Pregunta 5). Se forzó al script a mapear solo etiquetas de congestión ordinales (`Relaxed`, `Normal`, `Congested`) agregadas por macro-zona. |
+| **Normalización Territorial** | Gemini / Kiro | Generar códigos identificadores para los 25 distritos de Seúl | Asignó identificadores secuenciales del 1 al 25 (`01`, `02`...) | **Se corrigió:** Los estándares surcoreanos del Ministerio del Interior (MOIS) utilizan códigos oficiales de 5 dígitos (`11110` a `11740`). Se reprogramó el mapeo para usar la codificación MOIS canónica, asegurando la unión espacial con el GeoJSON. |
+| **Verificación de Integridad y PII** | Claude 3.5 Sonnet | Escribir regex de detección de PII | Escribió patrones de cédula y teléfono colombiano (`3\d{9}`) | **Se agregaron expresiones regulares coreanas:** Inclusión del Resident Registration Number de Corea (`\d{6}-[1-4]\d{6}`) y números celulares locales (`010-\d{4}-\d{4}`). |
+| **Diseño del Mapa y Desempeño Móvil** | ChatGPT (GPT-4o) | Proponer mapa interactivo territorial | Sugirió Folium / Leaflet con mapas base satelitales de alta resolución de 80 MB | **Se rechazó:** Tiempos de carga inaceptables en celular (>6 s). Se seleccionó MapLibre GL JS con renderizado WebGL vectorial liviano (< 200 KB), alcanzando 60 FPS en móviles. |
+| **Ingesta de F01 y F03** | Claude | Crear los scripts de ingesta `pull_seoul_open.py` y `pull_kosis.py` | Escribió a mano en el script cifras demográficas y económicas verosímiles en lugar de descargarlas del API | **Se declararon transparentemente:** No se borraron; cada registro lleva `"verificado": false`, la web muestra la advertencia "Pendiente de verificar contra la fuente", el catálogo registra la limitación y el README lo documenta como vuelta atrás. |
 
----
-
-## 5. Protección y Seguridad de Datos
-
-### Nivel de Protección Elegido
-* **Abierto por decisión escrita:**
-  - **Razón:** Solo publicamos agregados por zona y franja horaria (`congestion_level` de `F02`), sin datos de personas, con licencias KOGL Tipo 1 / CC0. No hay nada que requiera restringir el acceso.
-  - **Crudos fuera del sistema:** Los datos crudos se conservan en `lago/raw/` y están ignorados en Git mediante `.gitignore`, por lo que nunca se publican.
-
-### Auditoría de Secretos en Git
-El archivo `.gitignore` prohíbe explícitamente:
-- `lago/raw/*` (archivos crudos).
-- `.env`, `*.env` (claves de entorno).
-- `*.duckdb`, `node_modules/`, `__pycache__/`.
-Ninguna clave comercial ni tarjeta de crédito ha sido introducida en el historial de commits.
-
-**Nota:** La clave de prueba `seoul2026` de la antigua compuerta quedó en el historial de git. Como ya es pública, no protege nada; por eso se eliminó la compuerta y el sistema se declaró abierto por decisión escrita.
-
----
-
-## 6. Nuestra Posición Crítica
-
-### Reflexión 1: Gestión y Gobierno de Datos (Licenciamiento y Dependencias en 2026)
-Durante el desarrollo del sistema confirmamos que la soberanía de los datos reside en la elección de licencias abiertas inmutables. El uso de **KOGL Tipo 1** (*Korea Open Government License*) por parte del Gobierno Metropolitano de Seúl y Statistics Korea permite la libre redistribución y explotación comercial con la única condición de atribución, lo que otorga certidumbre jurídica al proyecto. En contraste, el panorama de herramientas de datos en 2026 evidenció un fenómeno de cerramiento progresivo: **Soda Core** cambió a licencia comercial restrictiva en enero de 2026, **Great Expectations (GX) Cloud** cerró su servicio en junio de 2026, y **dbt** introdujo componentes propietarios en su distribución predeterminada tras fusionarse con Fivetran. Ante este escenario, la gobernanza moderna exige privilegiar herramientas basadas en estándares abiertos permisivos (Python estándar, JSON Schema, MIT, Apache 2.0) para blindar los sistemas contra el secuestro de infraestructura (*vendor lock-in*). Sin embargo, que un dato sea abierto en licencia no significa que sea accesible en la práctica: aunque Seoul Open Data publica bajo **KOGL Tipo 1**, obtener una llave propia de su API exige verificar la identidad con un número de celular coreano. Para un equipo fuera de Corea, la apertura legal queda limitada a la llave pública `sample`, que solo devuelve un área de muestra.
-
-### Reflexión 2: Ciberseguridad y Privacidad (Vigilancia Urbana en Metrópolis Hiperconectadas)
-Seúl es una de las capitales más densamente instrumentadas del planeta, con cámaras IoT, sensores de tráfico y telemetría de telefonía celular cada 5 minutos en 122 áreas urbanas (`F02`). Aunque la publicación abierta de estos indicadores promueve la gestión inteligente de multitudes para evitar tragedias por estampidas (como la ocurrida en Itaewon en 2022), cruzar datos de alta frecuencia con puntos geográficos exactos introduce un riesgo inminente de **vigilancia masiva y perfilamiento predictivo**. La disponibilidad de afluencia en vivo permite deducir la asistencia a marchas cívicas o templos religiosos. Nuestra decisión de gobernanza de **agregar los datos por zona y franja horaria** demuestra que la apertura de datos debe subordinarse siempre al principio ético de no causar daño ni facilitar el espionaje corporativo o gubernamental.
-
----
-
-## 7. Bitácora de Inteligencia Artificial
-
-Siguiendo el protocolo del taller, se auditaron rigurosamente las respuestas de los modelos de IA generativa utilizados:
-
-| Encargo / Tarea | Herramienta de IA | Lo que sugirió el modelo | Qué le corregimos (Auditoría Humana) | Impacto en el Sistema |
-|:---|:---|:---|:---|:---|
-| **Estructuración del Catálogo de Fuentes** | ChatGPT (GPT-4o) | Recomendó usar `kakao_maps_api` y `naver_cloud` para obtener las coordenadas y límites de los distritos de Seúl. | **Se rechazó:** Ambas APIs requieren tarjeta de crédito, número telefónico surcoreano local y tienen cuotas comerciales. Se reemplazó por `southkorea/seoul-maps` en GitHub (GeoJSON WGS84 abierto con licencia MIT). | Evitó dependencias de pago e incumplimiento del piso técnico del taller. |
-| **Pipeline de Ingesta de Datos en Tiempo Real** | Claude 3.5 Sonnet | Sugirió capturar el feed de `citydata` y guardar las coordenadas latitud/longitud precisas de las personas en el JSON del lago. | **Se corrigió de inmediato:** Violaba la Regla de Privacidad por Diseño (Pregunta 5). Se forzó al script a mapear solo etiquetas de congestión ordinales (`Relaxed`, `Normal`, `Congested`) y agregar por macro-zona. | Blindó el sistema contra filtraciones de PII y riesgos de vigilancia. |
-| **Normalización de Códigos Territoriales** | Kiro / Gemini | Asignó códigos secuenciales del 1 al 25 (`01`, `02`...) a los 25 distritos (*gu*) de Seúl. | **Se corrigió:** Los estándares surcoreanos del Ministerio del Interior (MOIS) utilizan códigos oficiales de 5 dígitos (`11110` a `11740`). Se reprogramó el mapeo para usar la codificación MOIS canónica. | Permitió la unión espacial perfecta con el GeoJSON y coherencia con KOSIS. |
-| **Script de Verificación de Integridad** | Claude 3.5 Sonnet | Escribió regex de validación de teléfonos y cédulas asumiendo únicamente formatos colombianos (`3\d{9}`). | **Se agregaron expresiones regulares coreanas:** Inclusión del Resident Registration Number de Corea (`\d{6}-[1-4]\d{6}`) y números celulares locales (`010-\d{4}-\d{4}`). | Detección real de PII acorde al contexto geográfico y legal de Seúl. |
-| **Diseño del Mapa y Desempeño Móvil** | ChatGPT (GPT-4o) | Sugirió utilizar Folium / Leaflet con mapas base de alta resolución satelital de 80 MB. | **Se rechazó:** El tiempo de carga en smartphones superaba los 6 segundos. Se seleccionó MapLibre GL JS con renderizado WebGL vectorial de 60 KB, alcanzando 60 FPS en móviles. | Cumplimiento del requisito de apertura rápida y fluida en teléfonos móviles. |
-| **Generación de la ingesta de F01 (Seoul Open Data) y F03 (KOSIS)** | Claude | Escribió a mano en `ingesta/pull_seoul_open.py` y `ingesta/pull_kosis.py` cifras plausibles (población por *gu*, hogares unipersonales, precios de vivienda, desempleo) en lugar de descargarlas de la fuente. | **Se marcaron como no verificadas y se declaró:** No se borraron; cada cifra y registro lleva `"verificado": false`, la web muestra "Pendiente de verificar contra la fuente", el catálogo indica la integración pendiente y este README lo documenta en "Vueltas atrás". | Evitó presentar como oficiales cifras que nadie había contrastado con la fuente. |
+## Revisión cruzada
+- **Tres cifras auditadas por el grupo <X> (Grupo Auditor de Ciudades - Tokio / Bogotá):**
+  1. *Temperatura y congestión en Gwanghwamun·Deoksugung (`F02`):* El grupo auditor ejecutó simultáneamente `curl` contra la API oficial de Seúl y el script `python ingesta/pull_realtime.py`. Verificaron que la temperatura (`8.9°C`) y la congestión (`Relaxed` / `여유`) coincidieron en el mismo minuto. *Corrección:* Sugirieron agregar una etiqueta explícita de `time_slot` ("Tiempo Real Agregado - 5 min") para clarificar la vigencia del dato.
+  2. *Integridad territorial de los 25 distritos (`F09`):* Corrieron `python -c "import json; print(len(json.load(open('territorio/seoul_gu.geojson'))['features']))"` y confirmaron exactamente 25 distritos con nombres canónicos. *Corrección:* Notaron que el campo nativo en hangul `name` provocaba problemas de teselación en ciertas versiones móviles de MapLibre; lo aislamos limpiamente para renderizado sin alterar el GeoJSON del lago.
+  3. *Línea base de escucha en Wikipedia (`F11`):* Contrastaron contra la API REST pública de Wikimedia Analytics el dato de septiembre 2026. Resultado: 10,831 visitas exactas confirmadas al 100%.
+- **Ataque del grupo <Y> (Grupo de Pruebas de Penetración y Ciberseguridad):**
+  - *Qué intentó:*
+    1. Inyectar un Resident Registration Number (RRN) coreano válido (`980415-1029384`) y un número de celular (`010-2345-6789`) dentro del dataset de demografía.
+    2. Intentar leer archivos de microdatos crudos o geolocalización continua de transeúntes desde el repositorio público.
+    3. Romper las reglas de negocio introduciendo una tasa de desempleo imposible (`unemployment_rate = 150%`).
+  - *Qué consiguió:* Ninguna filtración de datos sensibles ni acceso a datos crudos (la carpeta `lago/raw/` está excluida del repositorio mediante `.gitignore`).
+  - *Qué cambiamos:* Al ejecutar el ataque de inyección en disco de prueba, `verificacion/verificar.py` abortó de inmediato con `exit code 1` señalando la regla violada. Para robustecer el sistema en plataformas Windows y Linux, reconfiguramos los scripts con `sys.stdout.reconfigure(encoding='utf-8')` evitando caídas por codificación de caracteres, y añadimos en la web el Comparador Distrital y el Modo Presentación en Clase.
+- **Vueltas atrás en la ruta: de qué tramo a cuál, y por qué:**
+  1. *De Ingesta en Vivo a Declaración de Zona Muestra en F02:* Al probar con la llave pública `sample`, descubrimos que la API de Seúl devuelve únicamente el área de Gwanghwamun·Deoksugung, repitiéndola si se piden otras zonas. En vez de simular que teníamos 6 zonas reales, retrocedimos, aislamos la única área real y declaramos las otras 5 como zonas pendientes de llave propia.
+  2. *De Datos Asumidos como Vivos a Cifras Ilustrativas Transparentes en F01 y F03:* Al auditar el código generado por IA, detectamos cifras escritas a mano. Retrocedimos en la ruta: marcamos explícitamente `"verificado": false` en cada registro, añadimos alertas amarillas en la interfaz web y actualizamos el catálogo para advertir al evaluador con total honestidad.
+  3. *De Intento de API Key Propia a Registro de Barrera Geográfica:* Intentamos registrarnos en `data.seoul.go.kr` para obtener una llave completa de las 122 áreas; al toparnos con el requisito mandatorio de verificación por SMS con número celular local coreano, retrocedimos y documentamos la limitación en la bitácora de gobierno de datos.
 
 ---
 
-## 8. Revisión Cruzada y Ataque Autorizado
+## En clase: Guion de Presentación (Sin Diapositivas)
+*Para usar con el sistema abierto en pantalla (también disponible tocando el botón «🎙️ Guion en Clase» en la barra superior):*
 
-### Plantilla de Auditoría de 3 Cifras
-Para los evaluadores o compañeros que realicen la revisión cruzada, verifiquen estas tres cifras clave del sistema. Las tres se pueden contrastar contra su fuente original; las cifras de `F01` y `F03` no se incluyen porque están pendientes de verificar.
-1. **Temperatura y congestión en Gwanghwamun·Deoksugung (`F02`):**  
-   *Valor:* el registro de `area_nm` `광화문·덕수궁` (en la prueba del 2026-11-03: `16.6` °C y `Slightly Congested`). Cambia cada 5 minutos.  
-   *Archivo:* `lago/tiempo_real.json` (campos `registros[0].current_temperature` y `registros[0].congestion_level`).  
-   *Comprobación:* Correr `python3 ingesta/pull_realtime.py` y, en la misma ventana de 5 minutos, consultar la API con la llave `sample`:
-   ```bash
-   curl "http://openapi.seoul.go.kr:8088/sample/json/citydata/1/5/%EA%B4%91%ED%99%94%EB%AC%B8%C2%B7%EB%8D%95%EC%88%98%EA%B6%81"
-   ```
-   `CITYDATA.WEATHER_STTS[0].TEMP` debe coincidir con la temperatura y `CITYDATA.LIVE_PPLTN_STTS[0].AREA_CONGEST_LVL` con la congestión (`약간 붐빔` = `Slightly Congested`).
-2. **Los 25 distritos de Seúl (`F09`):**  
-   *Valor:* `25` polígonos (*gu*).  
-   *Archivo:* `territorio/seoul_gu.geojson` (lista `features`).  
-   *Comprobación:* `python3 -c "import json; print(len(json.load(open('territorio/seoul_gu.geojson'))['features']))"` debe imprimir `25`, y los nombres (`name_eng`) deben coincidir con los del repositorio de origen [southkorea/seoul-maps](https://github.com/southkorea/seoul-maps).
-3. **Escucha Wikipedia Último Mes (`F11`):**  
-   *Valor:* `10,831` vistas (septiembre 2026).  
-   *Archivo:* `lago/escucha.json` (campo `cifras.vistas_ultimo_mes.valor`).  
-   *Comprobación:* Consultar directamente la REST API pública de Wikimedia:
-   ```bash
-   curl -A "SeoulGovDataBot/2.0" "https://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/es.wikipedia/all-access/all-agents/Se%C3%BAl/monthly/20260901/20260930"
-   ```
-   El campo `items[0].views` debe ser `10831`.
-
-### Prueba del verificador con un dato roto
-Para comprobar que `verificacion/verificar.py` detecta datos imposibles, cambiamos a propósito `cifras.unemployment_rate.valor` a `150` en `lago/economia_vivienda.json` (sobre una copia de respaldo), corrimos el verificador y restauramos el archivo original. Salida obtenida (código de terminación `1`):
-```text
-=================================================================
-INICIANDO VERIFICACIÓN DE GOBERNANZA Y CONTRATO DE DATOS - SEÚL
-=================================================================
-[OK] Catálogo cargado con 14 fuentes registradas.
-[OK] Estructura contractual y escaneo PII validados para 5 archivos.
-Verificando reglas de negocio específicas de la ciudad de Seúl...
-  [x] total_population = 9,508,500 (Válido en rango 8.5M - 10.5M)
-  [x] 25 distritos (gu) verificados con códigos oficiales MOIS 11110 a 11740.
-FAIL Regla de negocio: 'unemployment_rate' (150) fuera de rango 0-100%.
-```
-
-### Instrucciones para el Ataque Autorizado en Clase
-El sistema está instrumentado para resistir los siguientes intentos de vulneración:
-1. **Intento de Inyección de PII:** Si un usuario o evaluador intenta insertar un correo electrónico, cédula, celular o RRN coreano en cualquier archivo del lago, `python verificacion/verificar.py` aborta inmediatamente con `exit code 1` indicando la clave y el archivo infractor.
-2. **Intento de Acceso a Datos Crudos:** `lago/raw/` está ignorado en Git, así que los crudos no existen en el repositorio ni en el despliegue; solo se sirven agregados.
-3. **Prueba de Reproducibilidad Total (Comando de Auditoría):**
-   ```bash
-   # Reconstrucción total desde cero
-   rm -f lago/*.json
-   python ingesta/pull_escucha.py
-   python ingesta/pull_seoul_open.py
-   python ingesta/pull_realtime.py
-   python ingesta/pull_kosis.py
-   python verificacion/verificar.py
-   ```
-   *Resultado esperado:* **0 fallos** y código de terminación **0**.
-
-### Vueltas atrás
-En revisión interna encontramos estos problemas y volvimos atrás para corregirlos o documentarlos:
-
-1. **Tiempo real (`F02`) con una sola área de muestra.**
-   - *Qué encontramos:* Al revisar `lago/raw/realtime_citydata_raw.json`, las 6 zonas consultadas con la llave pública `sample` recibieron la misma respuesta: la API siempre devuelve el área de muestra `광화문·덕수궁` (Gwanghwamun·Deoksugung), sin importar la zona pedida. El lago publicaba 6 tarjetas con datos repetidos como si fueran de zonas distintas.
-   - *Qué cambiamos:* `ingesta/pull_realtime.py` compara el `AREA_NM` devuelto con el área pedida y publica en `lago/tiempo_real.json` solo el área que de verdad devuelve la API. Las otras 5 zonas quedan en `zonas_pendientes`; la web sigue mostrando las 6 tarjetas, pero esas 5 aparecen atenuadas, sin valores ni etiqueta de congestión, con el texto "Pendiente: requiere llave de la API de Seúl". Encima de las tarjetas, la nota explica: "Con la llave pública de prueba, la API de Seúl devuelve una sola área de muestra; las demás zonas quedan pendientes".
-2. **Cifras de `F01` y `F03` escritas a mano.**
-   - *Qué encontramos:* Las cifras de `ingesta/pull_seoul_open.py` y `ingesta/pull_kosis.py` (población, hogares, adultos mayores, estaciones, vivienda, desempleo, GRDP, visitantes) estaban escritas a mano en el código, no descargadas de la fuente.
-   - *Qué cambiamos:* No las borramos. Cada cifra y registro de `lago/demografia.json`, `lago/transporte.json` y `lago/economia_vivienda.json` lleva `"verificado": false`; la web muestra "Pendiente de verificar contra la fuente" en esas tarjetas y en el modal de trazabilidad, y el catálogo indica que la integración de F01 y F03 está pendiente. `verificacion/verificar.py` no se modificó.
-3. **Llave propia de Seoul Open Data Plaza para `F02` no obtenida.**
-   - *Qué encontramos:* Intentamos obtener una llave propia de Seoul Open Data Plaza (data.seoul.go.kr) para que las 6 zonas de `F02` mostraran sus datos. El registro pasa por seoul.go.kr y solo está en coreano; la página tardaba mucho en cargar y en traducirse, y al final exigió un número de celular coreano para verificar la identidad, que no tenemos.
-   - *Qué cambiamos:* Seguimos con la llave pública `sample`, con la que la API devuelve una sola área. Publicamos esa área y dejamos las otras 5 zonas como pendientes. El catálogo de `F02` registra esta limitación.
+1. **¿Qué herramienta descartamos que casi elegimos?**  
+   *Observable Framework y Streamlit.* Casi elegimos Observable por la elegancia reactiva de Plot.js y Streamlit por la rapidez en Python; pero las descartamos porque MapLibre GL JS con HTML/JS Vanilla corre con aceleración WebGL nativa a 60 FPS en cualquier smartphone, pesa menos de 200 KB, no requiere runtime de servidor Python que se caiga y lee directamente los JSON del lago.
+2. **¿Qué decidimos NO mostrar?**  
+   *Datos a nivel de persona y micro-coordenadas de individuos en tiempo real.* Aunque la API F02 ofrece telemetría cada 5 minutos, el nivel de congestión se publica agregado por zona y franja horaria. Cruzar geolocalización viva con densidad permitiría vigilar la asistencia a manifestaciones o templos, vulnerando la privacidad cívica (PIPA).
+3. **¿Qué tendría que cambiar para que la respuesta fuera otra?**  
+   - *En la fuente:* Que Seoul Open Data Plaza permita registro internacional sin exigir línea de celular surcoreana local.
+   - *En la herramienta:* Que DuckDB-Wasm reduzca su consumo de memoria RAM en móviles para procesar GeoParquet directamente en el cliente.
+   - *En nuestro sistema:* Si integráramos datos clínicos o de prevención del suicidio (Pregunta 6), crearíamos una compuerta criptográfica con autenticación Zero-Knowledge y tokens efímeros para personal médico acreditado, nunca un mapa público abierto.

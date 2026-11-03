@@ -11,6 +11,11 @@ import json
 import re
 import glob
 
+if hasattr(sys.stdout, 'reconfigure'):
+    sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+if hasattr(sys.stderr, 'reconfigure'):
+    sys.stderr.reconfigure(encoding='utf-8', errors='replace')
+
 PATRON_FECHA = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 PATRON_PII_KEYS = re.compile(r"^(cedula|documento_identidad|rrn|jumin_no|telefono|celular|correo|email)$", re.IGNORECASE)
 PATRON_EMAIL = re.compile(r"[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+")

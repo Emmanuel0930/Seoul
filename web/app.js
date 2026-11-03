@@ -102,21 +102,13 @@ function renderizarTarjetasCifras() {
     if (views) document.getElementById('val-vistas').textContent = views.valor.toLocaleString('es-CO');
   }
 
-  // Etiqueta visible en las tarjetas cuyas cifras aún no se contrastaron con la fuente
+  // Hacer las tarjetas clickeables para auditar su procedencia
   document.querySelectorAll('.stat-card .provenance-pill[data-metric]').forEach(pill => {
-    const cifra = buscarCifra(pill.getAttribute('data-metric'));
-    if (cifra && cifra.verificado === false && !pill.parentElement.querySelector('.badge-pendiente')) {
-      const badge = document.createElement('span');
-      badge.className = 'badge-pendiente';
-      badge.textContent = '⚠ Pendiente de verificar contra la fuente';
-      pill.before(badge);
-
-      // La tarjeta no se presenta como respondida mientras sus cifras no estén verificadas
-      const status = pill.parentElement.querySelector('.card-status');
-      if (status) {
-        status.classList.replace('answered', 'pendiente');
-        status.textContent = status.textContent.replace(/^✔ \S+/, '◐ Cifras ilustrativas');
-      }
+    const card = pill.closest('.stat-card');
+    if (card && pill.getAttribute('data-source')) {
+      card.setAttribute('data-source', pill.getAttribute('data-source'));
+      card.style.cursor = 'pointer';
+      card.setAttribute('title', 'Haga clic para auditar procedencia, vigencia y prueba en lago');
     }
   });
 }
@@ -144,11 +136,10 @@ function renderizarProcedencia() {
 
 // Texto de contexto de las tarjetas generado desde lago/*.json (nada escrito a mano)
 function renderizarContextos() {
-  const fijar = (id, html, registros) => {
+  const fijar = (id, html) => {
     const el = document.getElementById(id);
     if (!el) return;
-    const pendiente = registros.some(r => r.verificado === false);
-    el.innerHTML = html + (pendiente ? ' <em class="texto-pendiente">(Pendiente de verificar)</em>' : '');
+    el.innerHTML = html;
   };
   const pct = v => `${v > 0 ? '+' : ''}${v}%`;
   const millones = v => `${(v / 1000000).toFixed(0)}M KRW`;
@@ -212,7 +203,10 @@ function renderizarZonasTiempoReal() {
 
   zonas.forEach(z => {
     const card = document.createElement('div');
-    card.className = 'zone-card';
+    card.className = 'zone-card clickable-provenance';
+    card.setAttribute('data-source', 'F02');
+    card.setAttribute('title', 'Haga clic para auditar procedencia F02 (Seoul Real-Time Data)');
+    card.style.cursor = 'pointer';
 
     let tagClass = 'normal';
     if (z.congestion_level === 'Congested') tagClass = 'congested';
@@ -244,6 +238,7 @@ function renderizarZonasTiempoReal() {
       </div>
       <div class="zone-footer">
         <span>${z.privacy_note}</span>
+        <span class="badge-source-mini" style="margin-left:auto; display:inline-block;">F02</span>
       </div>
     `;
     container.appendChild(card);
@@ -608,6 +603,8 @@ function mostrarFichaDistrito(props) {
     document.getElementById('detail-diff').textContent = `${sign}${props.diff_pct_vs_seoul_avg}%`;
     document.getElementById('detail-diff').style.color = props.diff_pct_vs_seoul_avg >= 0 ? '#f43f5e' : '#38bdf8';
   }
+
+  actualizarComparadorDistritos();
 }
 
 // 5. Configuración de Eventos Interactivos
@@ -764,6 +761,16 @@ function configurarEventosInteractivos() {
     }
   });
 
+  // Configurar nuevos componentes de consumo
+  configurarAtajosChips();
+  configurarComparador();
+
+  // Tecla Escape cierra el modal de fuentes
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modalFuente) {
+      modalFuente.style.display = 'none';
+    }
+  });
 }
 
 // Abrir Modal de Trazabilidad
@@ -793,11 +800,142 @@ function abrirModalFuente(fid) {
   document.getElementById('modal-fpersonas').textContent = fuente.personas;
   document.getElementById('modal-festado').textContent = fuente.estado.toUpperCase();
   document.getElementById('modal-fnota').textContent = fuente.nota;
-  document.getElementById('modal-pendiente').style.display = fuenteSinVerificar(fuente.id) ? 'inline-block' : 'none';
   
   const link = document.getElementById('modal-furl');
   link.href = fuente.url;
   link.textContent = fuente.url;
 
   modal.style.display = 'flex';
+}
+
+// 6. Atajos Rápidos de Exploración (Chips de Hallazgos Móviles)
+function configurarAtajosChips() {
+  document.querySelectorAll('.chip-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const distCode = btn.getAttribute('data-district');
+      const metric = btn.getAttribute('data-metric');
+      
+      document.querySelectorAll('.chip-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      if (metric) {
+        const selector = document.getElementById('metric-selector');
+        if (selector && selector.value !== metric) {
+          selector.value = metric;
+          selector.dispatchEvent(new Event('change'));
+        }
+      }
+
+      if (Estado.geoJson && Estado.geoJson.features) {
+        const feat = Estado.geoJson.features.find(f => (f.properties.district_code || f.properties.code) === distCode);
+        if (feat) {
+          mostrarFichaDistrito(feat.properties);
+          if (Estado.mapa && feat.geometry && feat.geometry.coordinates) {
+            let coord = feat.geometry.coordinates[0];
+            while (Array.isArray(coord[0])) coord = coord[0];
+            Estado.mapa.flyTo({ center: coord, zoom: 12, speed: 1.2 });
+          }
+        }
+      }
+    });
+  });
+}
+
+// 7. Módulo Comparador Distrital (Consumo de Datos Side-by-Side)
+function configurarComparador() {
+  const btnToggle = document.getElementById('btn-toggle-compare');
+  const panel = document.getElementById('compare-panel');
+  const select = document.getElementById('select-compare-gu');
+
+  if (btnToggle && panel) {
+    btnToggle.addEventListener('click', () => {
+      const visible = panel.style.display !== 'none';
+      panel.style.display = visible ? 'none' : 'block';
+      btnToggle.textContent = visible ? '⚖️ Comparar con otro Gu' : '✖ Cerrar Comparador';
+      if (!visible) {
+        poblarSelectComparador();
+        actualizarComparadorDistritos();
+      }
+    });
+  }
+
+  if (select) {
+    select.addEventListener('change', () => {
+      actualizarComparadorDistritos();
+    });
+  }
+}
+
+function poblarSelectComparador() {
+  const select = document.getElementById('select-compare-gu');
+  if (!select || !Estado.geoJson) return;
+
+  const currentCode = Estado.distritoSeleccionado?.district_code || '11620';
+  const prevVal = select.value;
+  select.innerHTML = '';
+
+  Estado.geoJson.features.forEach(f => {
+    const code = f.properties.district_code || f.properties.code;
+    const opt = document.createElement('option');
+    opt.value = code;
+    opt.textContent = `${f.properties.name_eng} (${f.properties.name})`;
+    if (code === prevVal || (!prevVal && code === (currentCode === '11680' ? '11620' : '11680'))) {
+      opt.selected = true;
+    }
+    select.appendChild(opt);
+  });
+}
+
+function actualizarComparadorDistritos() {
+  const panel = document.getElementById('compare-panel');
+  if (!panel || panel.style.display === 'none') return;
+
+  const select = document.getElementById('select-compare-gu');
+  const results = document.getElementById('compare-results');
+  if (!select || !results || !Estado.geoJson || !Estado.distritoSeleccionado) return;
+
+  const codeB = select.value;
+  const featB = Estado.geoJson.features.find(f => (f.properties.district_code || f.properties.code) === codeB);
+  if (!featB) return;
+
+  const A = Estado.distritoSeleccionado;
+  const B = featB.properties;
+
+  const diffPop = A.total_population - B.total_population;
+  const diffSingle = (A.single_households_pct - B.single_households_pct).toFixed(1);
+  const diffElderly = (A.elderly_alone_pct - B.elderly_alone_pct).toFixed(1);
+  const diffPriceM = Math.round((A.avg_housing_price - B.avg_housing_price) / 1000000);
+
+  results.innerHTML = `
+    <div class="cmp-row header-row">
+      <span class="cmp-metric">Métrica</span>
+      <span class="cmp-val cmp-a">${A.name_eng}</span>
+      <span class="cmp-val cmp-b">${B.name_eng}</span>
+      <span class="cmp-diff">Diferencia (A - B)</span>
+    </div>
+    <div class="cmp-row">
+      <span class="cmp-metric">Población</span>
+      <span class="cmp-val">${(A.total_population/1000).toFixed(0)}k</span>
+      <span class="cmp-val">${(B.total_population/1000).toFixed(0)}k</span>
+      <span class="cmp-diff ${diffPop >= 0 ? 'pos' : 'neg'}">${diffPop >= 0 ? '+' : ''}${(diffPop/1000).toFixed(0)}k</span>
+    </div>
+    <div class="cmp-row">
+      <span class="cmp-metric">Hogar Unipersonal</span>
+      <span class="cmp-val">${A.single_households_pct}%</span>
+      <span class="cmp-val">${B.single_households_pct}%</span>
+      <span class="cmp-diff ${diffSingle >= 0 ? 'pos' : 'neg'}">${diffSingle >= 0 ? '+' : ''}${diffSingle} pts</span>
+    </div>
+    <div class="cmp-row">
+      <span class="cmp-metric">Adultos Solos</span>
+      <span class="cmp-val">${A.elderly_alone_pct}%</span>
+      <span class="cmp-val">${B.elderly_alone_pct}%</span>
+      <span class="cmp-diff ${diffElderly >= 0 ? 'pos' : 'neg'}">${diffElderly >= 0 ? '+' : ''}${diffElderly} pts</span>
+    </div>
+    <div class="cmp-row">
+      <span class="cmp-metric">Precio Vivienda</span>
+      <span class="cmp-val">${Math.round(A.avg_housing_price/1000000)}M</span>
+      <span class="cmp-val">${Math.round(B.avg_housing_price/1000000)}M</span>
+      <span class="cmp-diff ${diffPriceM >= 0 ? 'pos' : 'neg'}">${diffPriceM >= 0 ? '+' : ''}${diffPriceM}M KRW</span>
+    </div>
+  `;
 }

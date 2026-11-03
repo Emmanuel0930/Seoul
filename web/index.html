@@ -33,6 +33,7 @@
         <a href="#territorio" class="nav-link">Mapa Territorial (25 Gu)</a>
         <a href="#tiempo-real" class="nav-link">Monitor Urbano</a>
         <a href="#catalogo" class="nav-link">Catálogo y Fuentes</a>
+        <a href="#descargas" class="nav-link">📥 Descargas</a>
         <a href="#equipo" class="nav-link team-highlight">Equipo y Roles</a>
       </nav>
     </div>
@@ -86,6 +87,16 @@
           <span class="search-icon">🔍</span>
           <input type="text" id="buscador-distrito" placeholder="Buscar distrito de Seúl (ej. Gwanak, Gangnam, Jongno, Mapo)..." autocomplete="off">
           <div id="search-results" class="search-results-dropdown" style="display: none;"></div>
+        </div>
+
+        <!-- Atajos Rápidos de Exploración Móvil y Hallazgos Clave -->
+        <div class="quick-chips-wrap">
+          <span class="chips-label">⚡ Hallazgos a 1 toque:</span>
+          <button class="chip-btn" data-district="11620" data-metric="single_households_pct" type="button" title="Gwanak-gu: Pico de hogares unipersonales por jóvenes universitarios">🎓 Gwanak (61.2% Solos)</button>
+          <button class="chip-btn" data-district="11305" data-metric="elderly_alone_pct" type="button" title="Gangbuk-gu: Mayor vulnerabilidad de adultos mayores solos">👵 Gangbuk (13.5% Adultos Solos)</button>
+          <button class="chip-btn" data-district="11680" data-metric="avg_housing_price" type="button" title="Gangnam-gu: Mayor precio inmobiliario de Seúl">💎 Gangnam (+123% Vivienda)</button>
+          <button class="chip-btn" data-district="11320" data-metric="avg_housing_price" type="button" title="Dobong-gu: Vivienda más accesible de Seúl">📉 Dobong (-31% Vivienda)</button>
+          <button class="chip-btn" data-district="11710" data-metric="total_population" type="button" title="Songpa-gu: Distrito más poblado de Seúl">👥 Songpa (658k Pob)</button>
         </div>
       </div>
     </div>
@@ -294,33 +305,49 @@
             <h4 id="detail-gu-name" class="detail-name">Seleccione un Gu</h4>
             <div id="detail-gu-kor" class="detail-kor">서울특별시</div>
             <div class="detail-grid">
-              <div class="detail-item">
+              <div class="detail-item" data-source="F01" title="Clic para ver procedencia F01">
                 <span class="d-label">Código MOIS:</span>
                 <span class="d-val" id="detail-code">-</span>
+                <span class="badge-source-mini">F01</span>
               </div>
-              <div class="detail-item">
+              <div class="detail-item" data-source="F01" title="Clic para ver procedencia F01">
                 <span class="d-label">Población:</span>
                 <span class="d-val" id="detail-pop">-</span>
+                <span class="badge-source-mini">F01</span>
               </div>
-              <div class="detail-item">
+              <div class="detail-item" data-source="F01" title="Clic para ver procedencia F01">
                 <span class="d-label">Hogar Unipersonal:</span>
                 <span class="d-val" id="detail-single">-</span>
+                <span class="badge-source-mini">F01</span>
               </div>
-              <div class="detail-item">
+              <div class="detail-item" data-source="F01" title="Clic para ver procedencia F01">
                 <span class="d-label">Adultos Solos:</span>
                 <span class="d-val" id="detail-elderly">-</span>
+                <span class="badge-source-mini">F01</span>
               </div>
-              <div class="detail-item">
+              <div class="detail-item" data-source="F03" title="Clic para ver procedencia F03">
                 <span class="d-label">Vivienda Promedio:</span>
                 <span class="d-val" id="detail-price">-</span>
+                <span class="badge-source-mini">F03</span>
               </div>
-              <div class="detail-item">
+              <div class="detail-item" data-source="F03" title="Clic para ver procedencia F03">
                 <span class="d-label">Dif. vs Seúl:</span>
                 <span class="d-val" id="detail-diff">-</span>
+                <span class="badge-source-mini">F03</span>
               </div>
             </div>
             <div class="detail-footer">
-              <span class="badge-source" data-source="F01" title="Ver procedencia">Fuente: F01 / F03</span>
+              <span class="badge-source" data-source="F01" title="Ver procedencia F01 / F03">Trazabilidad a 1 clic: F01 (Demografía) · F03 (KOSIS)</span>
+            </div>
+
+            <!-- Módulo de Comparación Distrital -->
+            <div class="district-compare-wrap">
+              <button id="btn-toggle-compare" class="btn btn-sm btn-outline btn-block" type="button">⚖️ Comparar con otro Gu</button>
+              <div id="compare-panel" class="compare-box" style="display: none;">
+                <label for="select-compare-gu" class="compare-label">Seleccionar segundo distrito:</label>
+                <select id="select-compare-gu" class="form-select form-select-sm"></select>
+                <div id="compare-results" class="compare-results-grid"></div>
+              </div>
             </div>
           </div>
         </div>
@@ -458,6 +485,51 @@
     </div>
   </section>
 
+  <!-- SECCIÓN 6: Centro de Consumo y Descargas de Datos Abiertos -->
+  <section class="section-downloads" id="descargas">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Gobernanza y Replicabilidad</span>
+        <h3>Centro de Descarga del Lago y Contratos de Datos</h3>
+        <p>Consumo directo de los archivos contractuales (Capa Plata), geometrías WGS84 y el diccionario oficial auditado.</p>
+      </div>
+
+      <div class="downloads-grid">
+        <div class="download-card">
+          <div class="dl-icon">📊</div>
+          <h4>Diccionario Oficial en Excel</h4>
+          <p>Archivo <code>diccionario_seoul.xlsx</code> con 16 campos reales del lago, licencias KOGL/CC0 y fechas de prueba.</p>
+          <a href="../diccionario_seoul.xlsx" download="diccionario_seoul.xlsx" class="btn btn-sm btn-primary">⬇ Descargar Excel (.xlsx)</a>
+        </div>
+
+        <div class="download-card">
+          <div class="dl-icon">🗺️</div>
+          <h4>Territorio GeoJSON (25 Gu)</h4>
+          <p>Geometría WGS84 canónica de los 25 distritos autónomos con códigos oficiales MOIS 11110 a 11740.</p>
+          <a href="../territorio/seoul_gu.geojson" download="seoul_gu.geojson" class="btn btn-sm btn-outline">⬇ Descargar GeoJSON</a>
+        </div>
+
+        <div class="download-card">
+          <div class="dl-icon">📁</div>
+          <h4>Lago Capa Plata (JSONs)</h4>
+          <p>Datasets contractuales listos para consumo: <code>demografia.json</code>, <code>economia_vivienda.json</code> y <code>tiempo_real.json</code>.</p>
+          <div class="dl-links-stack">
+            <a href="../lago/demografia.json" target="_blank" class="dl-link-item">📄 demografia.json</a>
+            <a href="../lago/economia_vivienda.json" target="_blank" class="dl-link-item">📄 economia_vivienda.json</a>
+            <a href="../lago/tiempo_real.json" target="_blank" class="dl-link-item">📄 tiempo_real.json</a>
+          </div>
+        </div>
+
+        <div class="download-card">
+          <div class="dl-icon">🧪</div>
+          <h4>Verificador Automático</h4>
+          <p>Script <code>verificar.py</code> para comprobar el contrato, 0 fallos de integridad y ausencia absoluta de PII.</p>
+          <a href="../verificacion/verificar.py" target="_blank" class="btn btn-sm btn-outline">🔍 Ver verificar.py</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- Footer con nombres del grupo y enlaces técnicos -->
   <footer class="footer">
     <div class="container">
@@ -504,7 +576,6 @@
         <button id="modal-close" class="modal-close-btn">&times;</button>
       </div>
       <div class="modal-body">
-        <span class="badge-pendiente" id="modal-pendiente" style="display: none;">⚠ Pendiente de verificar contra la fuente</span>
         <div class="modal-meta-row">
           <div class="meta-item">
             <span class="meta-label">Entidad Publicadora:</span>

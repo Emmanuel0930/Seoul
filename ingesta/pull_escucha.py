@@ -6,10 +6,16 @@ Librería estándar de Python únicamente (urllib.request, json, os).
 """
 
 import os
+import sys
 import json
 import urllib.request
 import urllib.parse
 from datetime import datetime, date
+
+if hasattr(sys.stdout, 'reconfigure'):
+    sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+if hasattr(sys.stderr, 'reconfigure'):
+    sys.stderr.reconfigure(encoding='utf-8', errors='replace')
 
 FUENTE_F11 = {
     "id": "F11",

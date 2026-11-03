@@ -1328,3 +1328,217 @@ a:hover {
   line-height: 1.4;
   color: var(--text-muted, #94a3b8);
 }
+
+/* ==========================================================================
+   MEJORAS DE CONSUMO: CHIPS, COMPARADOR Y DESCARGAS
+   ========================================================================== */
+
+/* Chips de Hallazgos Rápidos (Hero) */
+.quick-chips-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.chips-label {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.chip-btn {
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  color: #cbd5e1;
+  padding: 0.35rem 0.75rem;
+  font-size: 0.78rem;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.chip-btn:hover,
+.chip-btn.active {
+  background: rgba(56, 189, 248, 0.2);
+  border-color: #38bdf8;
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+/* Mini Badges de Trazabilidad */
+.badge-source-mini {
+  font-size: 0.65rem;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  padding: 0.15rem 0.45rem;
+  background: rgba(56, 189, 248, 0.15);
+  color: #38bdf8;
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.badge-source-mini:hover {
+  background: #38bdf8;
+  color: #0f172a;
+}
+
+.detail-item[data-source] {
+  cursor: pointer;
+  transition: background 0.2s ease;
+  border-radius: var(--radius-sm);
+  padding: 0.25rem 0.4rem;
+}
+
+.detail-item[data-source]:hover {
+  background: rgba(56, 189, 248, 0.1);
+}
+
+/* Módulo de Comparación Distrital */
+.district-compare-wrap {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.btn-block {
+  width: 100%;
+}
+
+.compare-box {
+  margin-top: 0.85rem;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(56, 189, 248, 0.2);
+  border-radius: var(--radius-md);
+  padding: 0.85rem;
+}
+
+.compare-label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  display: block;
+  margin-bottom: 0.4rem;
+}
+
+.form-select-sm {
+  padding: 0.35rem 0.65rem;
+  font-size: 0.8rem;
+  margin-bottom: 0.75rem;
+}
+
+.compare-results-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.cmp-row {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 1fr 1fr;
+  align-items: center;
+  font-size: 0.75rem;
+  padding: 0.3rem 0.4rem;
+  border-radius: 4px;
+}
+
+.cmp-row:nth-child(even) {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.cmp-row.header-row {
+  font-weight: 700;
+  color: var(--text-dim);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding-bottom: 0.4rem;
+}
+
+.cmp-a {
+  color: #38bdf8;
+}
+
+.cmp-b {
+  color: #c084fc;
+}
+
+.cmp-diff {
+  font-weight: 700;
+}
+
+.cmp-diff.pos {
+  color: #f43f5e;
+}
+
+.cmp-diff.neg {
+  color: #38bdf8;
+}
+
+/* Sección de Descargas Abiertas */
+.section-downloads {
+  padding: 4rem 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(11, 15, 25, 0.5);
+}
+
+.downloads-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.download-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s ease;
+}
+
+.download-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(56, 189, 248, 0.4);
+  box-shadow: var(--shadow-glow);
+}
+
+.dl-icon {
+  font-size: 2rem;
+  margin-bottom: 0.75rem;
+}
+
+.download-card h4 {
+  font-size: 1.05rem;
+  margin-bottom: 0.5rem;
+}
+
+.download-card p {
+  font-size: 0.825rem;
+  color: var(--text-muted);
+  flex-grow: 1;
+  margin-bottom: 1.25rem;
+}
+
+.dl-links-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.dl-link-item {
+  font-size: 0.8rem;
+  font-family: var(--font-mono);
+  color: #38bdf8;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  background: rgba(56, 189, 248, 0.08);
+  transition: background 0.2s ease;
+}
+
+.dl-link-item:hover {
+  background: rgba(56, 189, 248, 0.2);
+  text-decoration: none;
+}
