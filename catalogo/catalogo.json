@@ -16,7 +16,7 @@
     "estado": "integrado",
     "proteccion": "abierto",
     "como_se_encontro": "Portal oficial de datos abiertos del Gobierno Metropolitano de Seúl",
-    "nota": "Aporta población por gu/dong, estaciones de metro y estacionamientos públicos."
+    "nota": "Aporta población por gu/dong, estaciones de metro y estacionamientos públicos. Integración pendiente: las cifras publicadas en lago/demografia.json y lago/transporte.json se escribieron a mano y están marcadas como no verificadas hasta descargarlas de la fuente."
   },
   {
     "id": "F02",
@@ -54,7 +54,7 @@
     "estado": "integrado",
     "proteccion": "abierto",
     "como_se_encontro": "Portal oficial del instituto de estadística nacional de Corea del Sur",
-    "nota": "Censo, proyecciones de población, desempleo, vivienda, PIB regional (GRDP) y turismo. Cruzar por código territorial, nunca por nombre."
+    "nota": "Censo, proyecciones de población, desempleo, vivienda, PIB regional (GRDP) y turismo. Cruzar por código territorial, nunca por nombre. Integración pendiente: las cifras publicadas en lago/economia_vivienda.json se escribieron a mano y están marcadas como no verificadas hasta descargarlas de la fuente."
   },
   {
     "id": "F04",

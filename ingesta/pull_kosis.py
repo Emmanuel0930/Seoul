@@ -67,6 +67,10 @@ SERIE_HISTORICA_VIVIENDA = [
     {"anio": "2025", "precio_krw": 650000000.0}
 ]
 
+# Las cifras de este script están escritas a mano, no descargadas de KOSIS.
+# Se marcan con "verificado": False hasta contrastarlas contra la fuente.
+VERIFICADO = False
+
 def main():
     os.makedirs("lago/raw", exist_ok=True)
     os.makedirs("lago", exist_ok=True)
@@ -90,7 +94,8 @@ def main():
             "district_name": d["name_eng"],
             "avg_housing_price": float(d["price_krw"]),
             "diff_pct_vs_seoul_avg": diff_pct,
-            "unemployment_rate": float(d["unemployment_rate"])
+            "unemployment_rate": float(d["unemployment_rate"]),
+            "verificado": VERIFICADO
         })
 
     lago_economia = {
@@ -102,29 +107,33 @@ def main():
                 "valor": 3.2,
                 "unidad": "%",
                 "vigencia": "2025-12",
-                "fuente": "F03"
+                "fuente": "F03",
+                "verificado": VERIFICADO
             },
             "avg_housing_price": {
                 "valor": float(PRECIO_VIVIENDA_SEUL_PROMEDIO),
                 "unidad": "Wons coreanos (KRW)",
                 "vigencia": "2025-12",
-                "fuente": "F03"
+                "fuente": "F03",
+                "verificado": VERIFICADO
             },
             "regional_gdp": {
                 "valor": 45000000.0,
                 "unidad": "Millones de KRW",
                 "vigencia": "2024",
-                "fuente": "F03"
+                "fuente": "F03",
+                "verificado": VERIFICADO
             },
             "foreign_visitors": {
                 "valor": 1250000,
                 "unidad": "Personas",
                 "vigencia": "2025-12",
-                "fuente": "F03"
+                "fuente": "F03",
+                "verificado": VERIFICADO
             }
         },
         "series": {
-            "evolucion_precio_vivienda": SERIE_HISTORICA_VIVIENDA
+            "evolucion_precio_vivienda": [dict(e, verificado=VERIFICADO) for e in SERIE_HISTORICA_VIVIENDA]
         },
         "registros": registros
     }

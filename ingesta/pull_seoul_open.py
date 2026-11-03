@@ -89,6 +89,10 @@ ESTACIONES_METRO_MUESTRA = [
     {"station_name": "Sindorim", "subway_line": "Line 1", "district_code": "11530", "total_capacity": 430}
 ]
 
+# Las cifras de este script están escritas a mano, no descargadas de F01/F03.
+# Se marcan con "verificado": False hasta contrastarlas contra la fuente.
+VERIFICADO = False
+
 def obtener_datos_metro_api():
     url = "http://openapi.seoul.go.kr:8088/sample/json/SearchSTNBySubwayLineInfo/1/15/"
     try:
@@ -126,7 +130,8 @@ def main():
             "single_households_pct": float(d["hogar_unipersonal_pct"]),
             "elderly_alone_pct": float(d["adultos_solos_pct"]),
             "area_km2": float(d["area_km2"]),
-            "density_hab_km2": round(d["poblacion"] / d["area_km2"], 1)
+            "density_hab_km2": round(d["poblacion"] / d["area_km2"], 1),
+            "verificado": VERIFICADO
         })
 
     lago_demografia = {
@@ -138,23 +143,26 @@ def main():
                 "valor": int(poblacion_total),
                 "unidad": "Personas",
                 "vigencia": "2025-12",
-                "fuente": "F01"
+                "fuente": "F01",
+                "verificado": VERIFICADO
             },
             "single_households_rate": {
                 "valor": float(tasa_unipersonal_media),
                 "unidad": "%",
                 "vigencia": "2025-12",
-                "fuente": "F01"
+                "fuente": "F01",
+                "verificado": VERIFICADO
             },
             "elderly_alone_rate": {
                 "valor": float(tasa_adultos_solos_media),
                 "unidad": "%",
                 "vigencia": "2025-12",
-                "fuente": "F01"
+                "fuente": "F01",
+                "verificado": VERIFICADO
             }
         },
         "series": {
-            "distribucion_etaria": DISTRIBUCION_EDAD
+            "distribucion_etaria": [dict(e, verificado=VERIFICADO) for e in DISTRIBUCION_EDAD]
         },
         "registros": registros_demografia
     }
@@ -175,13 +183,15 @@ def main():
                 "valor": int(capacidad_total_parqueaderos),
                 "unidad": "Vehículos",
                 "vigencia": "2025-12",
-                "fuente": "F01"
+                "fuente": "F01",
+                "verificado": VERIFICADO
             },
             "subway_stations_monitored": {
                 "valor": len(ESTACIONES_METRO_MUESTRA),
                 "unidad": "Estaciones",
                 "vigencia": "2025-12",
-                "fuente": "F01"
+                "fuente": "F01",
+                "verificado": VERIFICADO
             }
         },
         "series": {},
@@ -190,7 +200,8 @@ def main():
                 "station_name": st["station_name"],
                 "subway_line": st["subway_line"],
                 "district_code": st["district_code"],
-                "total_capacity": int(st["total_capacity"])
+                "total_capacity": int(st["total_capacity"]),
+                "verificado": VERIFICADO
             }
             for st in ESTACIONES_METRO_MUESTRA
         ]

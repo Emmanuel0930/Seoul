@@ -384,6 +384,11 @@
         </div>
       </div>
 
+      <!-- Aviso: la llave pública de prueba solo devuelve un área de muestra -->
+      <div class="sample-notice" id="realtime-muestra-nota" style="display: none;">
+        ⚠ Con la llave pública de prueba, la API de Seúl devuelve una sola área de muestra; las demás zonas quedan pendientes.
+      </div>
+
       <!-- Grid de Zonas en Tiempo Real -->
       <div class="realtime-grid" id="realtime-zones-container">
         <!-- Renderizado dinámico desde app.js -->
@@ -518,6 +523,7 @@
         <button id="modal-close" class="modal-close-btn">&times;</button>
       </div>
       <div class="modal-body">
+        <span class="badge-pendiente" id="modal-pendiente" style="display: none;">⚠ Pendiente de verificar contra la fuente</span>
         <div class="modal-meta-row">
           <div class="meta-item">
             <span class="meta-label">Entidad Publicadora:</span>

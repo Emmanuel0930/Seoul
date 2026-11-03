@@ -141,6 +141,7 @@ Siguiendo el protocolo del taller, se auditaron rigurosamente las respuestas de 
 | **Normalización de Códigos Territoriales** | Kiro / Gemini | Asignó códigos secuenciales del 1 al 25 (`01`, `02`...) a los 25 distritos (*gu*) de Seúl. | **Se corrigió:** Los estándares surcoreanos del Ministerio del Interior (MOIS) utilizan códigos oficiales de 5 dígitos (`11110` a `11740`). Se reprogramó el mapeo para usar la codificación MOIS canónica. | Permitió la unión espacial perfecta con el GeoJSON y coherencia con KOSIS. |
 | **Script de Verificación de Integridad** | Claude 3.5 Sonnet | Escribió regex de validación de teléfonos y cédulas asumiendo únicamente formatos colombianos (`3\d{9}`). | **Se agregaron expresiones regulares coreanas:** Inclusión del Resident Registration Number de Corea (`\d{6}-[1-4]\d{6}`) y números celulares locales (`010-\d{4}-\d{4}`). | Detección real de PII acorde al contexto geográfico y legal de Seúl. |
 | **Diseño del Mapa y Desempeño Móvil** | ChatGPT (GPT-4o) | Sugirió utilizar Folium / Leaflet con mapas base de alta resolución satelital de 80 MB. | **Se rechazó:** El tiempo de carga en smartphones superaba los 6 segundos. Se seleccionó MapLibre GL JS con renderizado WebGL vectorial de 60 KB, alcanzando 60 FPS en móviles. | Cumplimiento del requisito de apertura rápida y fluida en teléfonos móviles. |
+| **Ingesta de F01 (Seoul Open Data) y F03 (KOSIS)** | Agente de código (IA) | Escribió a mano en `ingesta/pull_seoul_open.py` y `ingesta/pull_kosis.py` cifras plausibles (población por *gu*, hogares unipersonales, precios de vivienda, desempleo) en lugar de descargarlas de la fuente. | **Se marcaron como no verificadas:** No se borraron; cada cifra y registro lleva `"verificado": false` y la web muestra la etiqueta "Pendiente de verificar contra la fuente". La integración real de F01 y F03 queda pendiente en el catálogo. | Evitó presentar como oficiales cifras que nadie había contrastado con la fuente. |
 
 ---
 
@@ -176,3 +177,13 @@ El sistema está instrumentado para resistir los siguientes intentos de vulnerac
    python verificacion/verificar.py
    ```
    *Resultado esperado:* **0 fallos** y código de terminación **0**.
+
+### Vueltas atrás
+Durante la revisión cruzada encontramos dos problemas en el lago y volvimos atrás para corregirlos:
+
+1. **Tiempo real (`F02`) con una sola área de muestra.**
+   - *Qué encontramos:* Al revisar `lago/raw/realtime_citydata_raw.json`, las 6 zonas consultadas con la llave pública `sample` recibieron la misma respuesta: la API siempre devuelve el área de muestra `광화문·덕수궁` (Gwanghwamun·Deoksugung), sin importar la zona pedida. El lago publicaba 6 tarjetas con datos repetidos como si fueran de zonas distintas.
+   - *Qué cambiamos:* `ingesta/pull_realtime.py` compara el `AREA_NM` devuelto con el área pedida y publica en `lago/tiempo_real.json` solo el área que de verdad devuelve la API. Las demás zonas quedan en `zonas_pendientes` y la web muestra la nota: "Con la llave pública de prueba, la API de Seúl devuelve una sola área de muestra; las demás zonas quedan pendientes".
+2. **Cifras de `F01` y `F03` escritas a mano.**
+   - *Qué encontramos:* Las cifras de `ingesta/pull_seoul_open.py` y `ingesta/pull_kosis.py` (población, hogares, adultos mayores, estaciones, vivienda, desempleo, GRDP, visitantes) estaban escritas a mano en el código, no descargadas de la fuente.
+   - *Qué cambiamos:* No las borramos. Cada cifra y registro de `lago/demografia.json`, `lago/transporte.json` y `lago/economia_vivienda.json` lleva `"verificado": false`; la web muestra "Pendiente de verificar contra la fuente" en esas tarjetas y en el modal de trazabilidad, y el catálogo indica que la integración de F01 y F03 está pendiente. `verificacion/verificar.py` no se modificó.

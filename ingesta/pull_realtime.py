@@ -71,12 +71,26 @@ def main():
 
     registros = []
     crudos_guardados = {}
+    areas_publicadas = set()
+    zonas_pendientes = []
+    nombre_eng = {a["kor"]: a["eng"] for a in AREAS_MONITOREO}
 
     for area in AREAS_MONITOREO:
         try:
             resp = consultar_area_api(area["kor"])
             crudos_guardados[area["eng"]] = resp
             cd = resp.get("CITYDATA", {})
+
+            # Con la llave "sample" la API devuelve siempre la misma área de muestra,
+            # sin importar el área pedida. Solo se publica el área que realmente devolvió
+            # (AREA_NM), una sola vez; las demás quedan pendientes.
+            area_nm = cd.get("AREA_NM", "")
+            if area_nm != area["kor"]:
+                zonas_pendientes.append(area["eng"])
+                print(f"[F02] {area['eng']}: la API devolvió '{area_nm}' en lugar de '{area['kor']}'. Zona pendiente.")
+            if not area_nm or area_nm in areas_publicadas:
+                continue
+            areas_publicadas.add(area_nm)
 
             # 1. Congestión
             ppltn = cd.get("LIVE_PPLTN_STTS", {})
@@ -97,7 +111,8 @@ def main():
             speed = float(road.get("ROAD_TRAFFIC_SPD", 22.5)) if road.get("ROAD_TRAFFIC_SPD") else 22.5
 
             registros.append({
-                "area_name": area["eng"],
+                "area_name": nombre_eng.get(area_nm, area_nm),
+                "area_nm": area_nm,
                 "congestion_level": lvl_eng,
                 "current_temperature": round(temp, 1),
                 "avg_road_speed": round(speed, 1),
@@ -105,7 +120,7 @@ def main():
                 "time_slot": "Tiempo Real Agregado (5 min)",
                 "privacy_note": "Agregado por zona y franja horaria. Sin geolocalización de personas."
             })
-            print(f"[F02] Obtenido {area['eng']}: {lvl_eng}, {temp}°C, {speed} km/h, Aire: {air_eng}")
+            print(f"[F02] Obtenido {area_nm}: {lvl_eng}, {temp}°C, {speed} km/h, Aire: {air_eng}")
         except Exception as err:
             print(f"[F02] Advertencia consultando {area['eng']} ({err}). Usando datos verificados.")
 
@@ -163,13 +178,14 @@ def main():
             }
         },
         "series": {},
-        "registros": registros
+        "registros": registros,
+        "zonas_pendientes": zonas_pendientes
     }
 
     with open("lago/tiempo_real.json", "w", encoding="utf-8") as f_out:
         json.dump(lago_tiempo_real, f_out, ensure_ascii=False, indent=2)
 
-    print(f"[OK] lago/tiempo_real.json generado con {len(registros)} zonas agregadas.")
+    print(f"[OK] lago/tiempo_real.json generado con {len(registros)} zonas agregadas ({len(zonas_pendientes)} pendientes).")
 
 if __name__ == "__main__":
     main()

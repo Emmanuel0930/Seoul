@@ -99,6 +99,30 @@ function renderizarTarjetasCifras() {
     const views = Estado.escucha.cifras.vistas_ultimo_mes;
     if (views) document.getElementById('val-vistas').textContent = views.valor.toLocaleString('es-CO');
   }
+
+  // Etiqueta visible en las tarjetas cuyas cifras aún no se contrastaron con la fuente
+  document.querySelectorAll('.stat-card .provenance-pill[data-metric]').forEach(pill => {
+    const cifra = buscarCifra(pill.getAttribute('data-metric'));
+    if (cifra && cifra.verificado === false && !pill.parentElement.querySelector('.badge-pendiente')) {
+      const badge = document.createElement('span');
+      badge.className = 'badge-pendiente';
+      badge.textContent = '⚠ Pendiente de verificar contra la fuente';
+      pill.before(badge);
+    }
+  });
+}
+
+function buscarCifra(metrica) {
+  for (const archivo of [Estado.demografia, Estado.economia, Estado.escucha]) {
+    if (archivo && archivo.cifras && archivo.cifras[metrica]) return archivo.cifras[metrica];
+  }
+  return null;
+}
+
+function fuenteSinVerificar(fid) {
+  return [Estado.demografia, Estado.economia].some(archivo =>
+    archivo && archivo.cifras && Object.values(archivo.cifras).some(c => c.fuente === fid && c.verificado === false)
+  );
 }
 
 // 2. Renderizado del Monitor Urbano en Tiempo Real (F02)
@@ -108,6 +132,10 @@ function renderizarZonasTiempoReal() {
 
   const zonas = Estado.tiempoReal.registros;
   container.innerHTML = '';
+
+  const pendientes = Estado.tiempoReal.zonas_pendientes || [];
+  const nota = document.getElementById('realtime-muestra-nota');
+  if (nota) nota.style.display = pendientes.length ? 'block' : 'none';
 
   zonas.forEach(z => {
     const card = document.createElement('div');
@@ -120,7 +148,7 @@ function renderizarZonasTiempoReal() {
 
     card.innerHTML = `
       <div class="zone-header">
-        <span class="zone-name">${z.area_name}</span>
+        <span class="zone-name">${z.area_name.replace(/·/g, "·<wbr>")}</span>
         <span class="zone-tag ${tagClass}">${z.congestion_level}</span>
       </div>
       <div class="zone-metrics">
@@ -138,7 +166,7 @@ function renderizarZonasTiempoReal() {
         </div>
         <div class="zm-item">
           <span class="zm-label">Franja Horaria</span>
-          <span class="zm-val">${z.time_slot ? z.time_slot.split(' ')[0] : 'Actual'}</span>
+          <span class="zm-val">${z.time_slot || 'Actual'}</span>
         </div>
       </div>
       <div class="zone-footer">
@@ -679,6 +707,7 @@ function abrirModalFuente(fid) {
   document.getElementById('modal-fpersonas').textContent = fuente.personas;
   document.getElementById('modal-festado').textContent = fuente.estado.toUpperCase();
   document.getElementById('modal-fnota').textContent = fuente.nota;
+  document.getElementById('modal-pendiente').style.display = fuenteSinVerificar(fuente.id) ? 'inline-block' : 'none';
   
   const link = document.getElementById('modal-furl');
   link.href = fuente.url;

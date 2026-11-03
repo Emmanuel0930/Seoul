@@ -15,13 +15,15 @@
       "valor": 6020,
       "unidad": "Vehículos",
       "vigencia": "2025-12",
-      "fuente": "F01"
+      "fuente": "F01",
+      "verificado": false
     },
     "subway_stations_monitored": {
       "valor": 15,
       "unidad": "Estaciones",
       "vigencia": "2025-12",
-      "fuente": "F01"
+      "fuente": "F01",
+      "verificado": false
     }
   },
   "series": {},
@@ -30,91 +32,106 @@
       "station_name": "Gangnam",
       "subway_line": "Line 2",
       "district_code": "11680",
-      "total_capacity": 420
+      "total_capacity": 420,
+      "verificado": false
     },
     {
       "station_name": "Gwanghwamun",
       "subway_line": "Line 5",
       "district_code": "11110",
-      "total_capacity": 280
+      "total_capacity": 280,
+      "verificado": false
     },
     {
       "station_name": "Jongno 3-ga",
       "subway_line": "Line 1",
       "district_code": "11110",
-      "total_capacity": 150
+      "total_capacity": 150,
+      "verificado": false
     },
     {
       "station_name": "Seoul Station",
       "subway_line": "Line 4",
       "district_code": "11140",
-      "total_capacity": 650
+      "total_capacity": 650,
+      "verificado": false
     },
     {
       "station_name": "Myeong-dong",
       "subway_line": "Line 4",
       "district_code": "11140",
-      "total_capacity": 190
+      "total_capacity": 190,
+      "verificado": false
     },
     {
       "station_name": "Hongik Univ",
       "subway_line": "Line 2",
       "district_code": "11440",
-      "total_capacity": 310
+      "total_capacity": 310,
+      "verificado": false
     },
     {
       "station_name": "Yeouido",
       "subway_line": "Line 5",
       "district_code": "11560",
-      "total_capacity": 520
+      "total_capacity": 520,
+      "verificado": false
     },
     {
       "station_name": "Jamsil",
       "subway_line": "Line 2",
       "district_code": "11710",
-      "total_capacity": 780
+      "total_capacity": 780,
+      "verificado": false
     },
     {
       "station_name": "Gwanak-gu Office (Seoul Nat Univ)",
       "subway_line": "Line 2",
       "district_code": "11620",
-      "total_capacity": 210
+      "total_capacity": 210,
+      "verificado": false
     },
     {
       "station_name": "Express Bus Terminal",
       "subway_line": "Line 3",
       "district_code": "11650",
-      "total_capacity": 850
+      "total_capacity": 850,
+      "verificado": false
     },
     {
       "station_name": "Wangsimni",
       "subway_line": "Line 2",
       "district_code": "11200",
-      "total_capacity": 340
+      "total_capacity": 340,
+      "verificado": false
     },
     {
       "station_name": "Cheongnyangni",
       "subway_line": "Line 1",
       "district_code": "11230",
-      "total_capacity": 390
+      "total_capacity": 390,
+      "verificado": false
     },
     {
       "station_name": "Nowon",
       "subway_line": "Line 4",
       "district_code": "11350",
-      "total_capacity": 260
+      "total_capacity": 260,
+      "verificado": false
     },
     {
       "station_name": "Mok-dong",
       "subway_line": "Line 5",
       "district_code": "11470",
-      "total_capacity": 240
+      "total_capacity": 240,
+      "verificado": false
     },
     {
       "station_name": "Sindorim",
       "subway_line": "Line 1",
       "district_code": "11530",
-      "total_capacity": 430
+      "total_capacity": 430,
+      "verificado": false
     }
   ]
 }

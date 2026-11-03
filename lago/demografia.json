@@ -22,19 +22,22 @@
       "valor": 9508500,
       "unidad": "Personas",
       "vigencia": "2025-12",
-      "fuente": "F01"
+      "fuente": "F01",
+      "verificado": false
     },
     "single_households_rate": {
       "valor": 43.8,
       "unidad": "%",
       "vigencia": "2025-12",
-      "fuente": "F01"
+      "fuente": "F01",
+      "verificado": false
     },
     "elderly_alone_rate": {
       "valor": 10.1,
       "unidad": "%",
       "vigencia": "2025-12",
-      "fuente": "F01"
+      "fuente": "F01",
+      "verificado": false
     }
   },
   "series": {
@@ -42,47 +45,56 @@
       {
         "age_group": "0-9",
         "personas": 562100,
-        "porcentaje": 6.0
+        "porcentaje": 6.0,
+        "verificado": false
       },
       {
         "age_group": "10-19",
         "personas": 745300,
-        "porcentaje": 7.9
+        "porcentaje": 7.9,
+        "verificado": false
       },
       {
         "age_group": "20-29",
         "personas": 1412000,
-        "porcentaje": 15.0
+        "porcentaje": 15.0,
+        "verificado": false
       },
       {
         "age_group": "30-39",
         "personas": 1515200,
-        "porcentaje": 16.1
+        "porcentaje": 16.1,
+        "verificado": false
       },
       {
         "age_group": "40-49",
         "personas": 1428300,
-        "porcentaje": 15.2
+        "porcentaje": 15.2,
+        "verificado": false
       },
       {
         "age_group": "50-59",
         "personas": 1476100,
-        "porcentaje": 15.7
+        "porcentaje": 15.7,
+        "verificado": false
       },
       {
         "age_group": "60-69",
         "personas": 1289500,
-        "porcentaje": 13.7
+        "porcentaje": 13.7,
+        "verificado": false
       },
       {
         "age_group": "70-79",
         "personas": 651200,
-        "porcentaje": 6.9
+        "porcentaje": 6.9,
+        "verificado": false
       },
       {
         "age_group": "80+",
         "personas": 304812,
-        "porcentaje": 3.2
+        "porcentaje": 3.2,
+        "verificado": false
       }
     ]
   },
@@ -95,7 +107,8 @@
       "single_households_pct": 52.1,
       "elderly_alone_pct": 11.8,
       "area_km2": 23.91,
-      "density_hab_km2": 6072.8
+      "density_hab_km2": 6072.8,
+      "verificado": false
     },
     {
       "district_code": "11140",
@@ -105,7 +118,8 @@
       "single_households_pct": 53.4,
       "elderly_alone_pct": 12.2,
       "area_km2": 9.96,
-      "density_hab_km2": 12329.3
+      "density_hab_km2": 12329.3,
+      "verificado": false
     },
     {
       "district_code": "11170",
@@ -115,7 +129,8 @@
       "single_households_pct": 48.2,
       "elderly_alone_pct": 9.6,
       "area_km2": 21.87,
-      "density_hab_km2": 10214.9
+      "density_hab_km2": 10214.9,
+      "verificado": false
     },
     {
       "district_code": "11200",
@@ -125,7 +140,8 @@
       "single_households_pct": 44.5,
       "elderly_alone_pct": 8.7,
       "area_km2": 16.86,
-      "density_hab_km2": 16696.3
+      "density_hab_km2": 16696.3,
+      "verificado": false
     },
     {
       "district_code": "11215",
@@ -135,7 +151,8 @@
       "single_households_pct": 47.8,
       "elderly_alone_pct": 8.1,
       "area_km2": 17.06,
-      "density_hab_km2": 20000.0
+      "density_hab_km2": 20000.0,
+      "verificado": false
     },
     {
       "district_code": "11230",
@@ -145,7 +162,8 @@
       "single_households_pct": 49.7,
       "elderly_alone_pct": 10.4,
       "area_km2": 14.22,
-      "density_hab_km2": 24535.9
+      "density_hab_km2": 24535.9,
+      "verificado": false
     },
     {
       "district_code": "11260",
@@ -155,7 +173,8 @@
       "single_households_pct": 43.1,
       "elderly_alone_pct": 11.9,
       "area_km2": 18.5,
-      "density_hab_km2": 20886.5
+      "density_hab_km2": 20886.5,
+      "verificado": false
     },
     {
       "district_code": "11290",
@@ -165,7 +184,8 @@
       "single_households_pct": 41.6,
       "elderly_alone_pct": 10.1,
       "area_km2": 24.58,
-      "density_hab_km2": 17579.3
+      "density_hab_km2": 17579.3,
+      "verificado": false
     },
     {
       "district_code": "11305",
@@ -175,7 +195,8 @@
       "single_households_pct": 42.3,
       "elderly_alone_pct": 13.5,
       "area_km2": 23.6,
-      "density_hab_km2": 12470.3
+      "density_hab_km2": 12470.3,
+      "verificado": false
     },
     {
       "district_code": "11320",
@@ -185,7 +206,8 @@
       "single_households_pct": 38.1,
       "elderly_alone_pct": 12.7,
       "area_km2": 20.66,
-      "density_hab_km2": 15087.1
+      "density_hab_km2": 15087.1,
+      "verificado": false
     },
     {
       "district_code": "11350",
@@ -195,7 +217,8 @@
       "single_households_pct": 35.4,
       "elderly_alone_pct": 11.5,
       "area_km2": 35.44,
-      "density_hab_km2": 14215.6
+      "density_hab_km2": 14215.6,
+      "verificado": false
     },
     {
       "district_code": "11380",
@@ -205,7 +228,8 @@
       "single_households_pct": 39.2,
       "elderly_alone_pct": 11.6,
       "area_km2": 29.71,
-      "density_hab_km2": 15759.0
+      "density_hab_km2": 15759.0,
+      "verificado": false
     },
     {
       "district_code": "11410",
@@ -215,7 +239,8 @@
       "single_households_pct": 48.9,
       "elderly_alone_pct": 9.8,
       "area_km2": 17.63,
-      "density_hab_km2": 17634.7
+      "density_hab_km2": 17634.7,
+      "verificado": false
     },
     {
       "district_code": "11440",
@@ -225,7 +250,8 @@
       "single_households_pct": 49.3,
       "elderly_alone_pct": 8.3,
       "area_km2": 23.85,
-      "density_hab_km2": 15434.0
+      "density_hab_km2": 15434.0,
+      "verificado": false
     },
     {
       "district_code": "11470",
@@ -235,7 +261,8 @@
       "single_households_pct": 32.1,
       "elderly_alone_pct": 8.9,
       "area_km2": 17.41,
-      "density_hab_km2": 25347.5
+      "density_hab_km2": 25347.5,
+      "verificado": false
     },
     {
       "district_code": "11500",
@@ -245,7 +272,8 @@
       "single_households_pct": 43.6,
       "elderly_alone_pct": 9.7,
       "area_km2": 41.44,
-      "density_hab_km2": 13668.0
+      "density_hab_km2": 13668.0,
+      "verificado": false
     },
     {
       "district_code": "11530",
@@ -255,7 +283,8 @@
       "single_households_pct": 39.8,
       "elderly_alone_pct": 10.2,
       "area_km2": 20.12,
-      "density_hab_km2": 19691.8
+      "density_hab_km2": 19691.8,
+      "verificado": false
     },
     {
       "district_code": "11545",
@@ -265,7 +294,8 @@
       "single_households_pct": 51.2,
       "elderly_alone_pct": 11.4,
       "area_km2": 13.02,
-      "density_hab_km2": 17649.8
+      "density_hab_km2": 17649.8,
+      "verificado": false
     },
     {
       "district_code": "11560",
@@ -275,7 +305,8 @@
       "single_households_pct": 47.6,
       "elderly_alone_pct": 9.1,
       "area_km2": 24.55,
-      "density_hab_km2": 15336.0
+      "density_hab_km2": 15336.0,
+      "verificado": false
     },
     {
       "district_code": "11590",
@@ -285,7 +316,8 @@
       "single_households_pct": 46.8,
       "elderly_alone_pct": 9.5,
       "area_km2": 16.35,
-      "density_hab_km2": 23798.2
+      "density_hab_km2": 23798.2,
+      "verificado": false
     },
     {
       "district_code": "11620",
@@ -295,7 +327,8 @@
       "single_households_pct": 61.2,
       "elderly_alone_pct": 10.9,
       "area_km2": 29.57,
-      "density_hab_km2": 16817.7
+      "density_hab_km2": 16817.7,
+      "verificado": false
     },
     {
       "district_code": "11650",
@@ -305,7 +338,8 @@
       "single_households_pct": 33.2,
       "elderly_alone_pct": 7.2,
       "area_km2": 46.98,
-      "density_hab_km2": 8695.2
+      "density_hab_km2": 8695.2,
+      "verificado": false
     },
     {
       "district_code": "11680",
@@ -315,7 +349,8 @@
       "single_households_pct": 36.8,
       "elderly_alone_pct": 7.5,
       "area_km2": 39.5,
-      "density_hab_km2": 13600.0
+      "density_hab_km2": 13600.0,
+      "verificado": false
     },
     {
       "district_code": "11710",
@@ -325,7 +360,8 @@
       "single_households_pct": 34.1,
       "elderly_alone_pct": 8.1,
       "area_km2": 33.87,
-      "density_hab_km2": 19439.0
+      "density_hab_km2": 19439.0,
+      "verificado": false
     },
     {
       "district_code": "11740",
@@ -335,7 +371,8 @@
       "single_households_pct": 34.9,
       "elderly_alone_pct": 9.3,
       "area_km2": 24.59,
-      "density_hab_km2": 19085.0
+      "density_hab_km2": 19085.0,
+      "verificado": false
     }
   ]
 }

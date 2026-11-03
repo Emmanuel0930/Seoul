@@ -12,13 +12,13 @@
   ],
   "cifras": {
     "current_temperature": {
-      "valor": 3.8,
+      "valor": 16.6,
       "unidad": "Grados Celsius (°C)",
       "vigencia": "2026-10",
       "fuente": "F02"
     },
     "avg_road_speed": {
-      "valor": 18.0,
+      "valor": 14.0,
       "unidad": "km/h",
       "vigencia": "2026-10",
       "fuente": "F02"
@@ -30,7 +30,7 @@
       "fuente": "F02"
     },
     "congestion_level": {
-      "valor": "Relaxed",
+      "valor": "Slightly Congested",
       "unidad": "Nivel de Densidad Agregada",
       "vigencia": "2026-10",
       "fuente": "F02"
@@ -40,57 +40,20 @@
   "registros": [
     {
       "area_name": "Gwanghwamun·Deoksugung",
-      "congestion_level": "Relaxed",
-      "current_temperature": 3.8,
-      "avg_road_speed": 18.0,
-      "air_quality_index": "Normal",
-      "time_slot": "Tiempo Real Agregado (5 min)",
-      "privacy_note": "Agregado por zona y franja horaria. Sin geolocalización de personas."
-    },
-    {
-      "area_name": "Myeong-dong",
-      "congestion_level": "Relaxed",
-      "current_temperature": 3.8,
-      "avg_road_speed": 18.0,
-      "air_quality_index": "Normal",
-      "time_slot": "Tiempo Real Agregado (5 min)",
-      "privacy_note": "Agregado por zona y franja horaria. Sin geolocalización de personas."
-    },
-    {
-      "area_name": "Gangnam MICE",
-      "congestion_level": "Relaxed",
-      "current_temperature": 3.8,
-      "avg_road_speed": 18.0,
-      "air_quality_index": "Normal",
-      "time_slot": "Tiempo Real Agregado (5 min)",
-      "privacy_note": "Agregado por zona y franja horaria. Sin geolocalización de personas."
-    },
-    {
-      "area_name": "Hongdae",
-      "congestion_level": "Relaxed",
-      "current_temperature": 3.8,
-      "avg_road_speed": 18.0,
-      "air_quality_index": "Normal",
-      "time_slot": "Tiempo Real Agregado (5 min)",
-      "privacy_note": "Agregado por zona y franja horaria. Sin geolocalización de personas."
-    },
-    {
-      "area_name": "Itaewon",
-      "congestion_level": "Relaxed",
-      "current_temperature": 3.8,
-      "avg_road_speed": 18.0,
-      "air_quality_index": "Normal",
-      "time_slot": "Tiempo Real Agregado (5 min)",
-      "privacy_note": "Agregado por zona y franja horaria. Sin geolocalización de personas."
-    },
-    {
-      "area_name": "Jamsil Sports Complex",
-      "congestion_level": "Relaxed",
-      "current_temperature": 3.8,
-      "avg_road_speed": 18.0,
+      "area_nm": "광화문·덕수궁",
+      "congestion_level": "Slightly Congested",
+      "current_temperature": 16.6,
+      "avg_road_speed": 14.0,
       "air_quality_index": "Normal",
       "time_slot": "Tiempo Real Agregado (5 min)",
       "privacy_note": "Agregado por zona y franja horaria. Sin geolocalización de personas."
     }
+  ],
+  "zonas_pendientes": [
+    "Myeong-dong",
+    "Gangnam MICE",
+    "Hongdae",
+    "Itaewon",
+    "Jamsil Sports Complex"
   ]
 }

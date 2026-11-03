@@ -805,6 +805,29 @@ a:hover {
   align-items: center;
 }
 
+/* Avisos de datos pendientes (muestra única F02, cifras no verificadas F01/F03) */
+.sample-notice {
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  border-radius: var(--radius-md);
+  color: #fcd34d;
+  font-size: 0.85rem;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.badge-pendiente {
+  align-self: flex-start;
+  background: rgba(245, 158, 11, 0.15);
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  border-radius: var(--radius-full);
+  color: var(--accent-amber);
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.2rem 0.6rem;
+  margin-bottom: 0.75rem;
+}
+
 .privacy-icon {
   font-size: 1.75rem;
   flex-shrink: 0;
@@ -840,7 +863,8 @@ a:hover {
 .zone-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
+  gap: 0.5rem;
   margin-bottom: 0.75rem;
 }
 
@@ -848,6 +872,8 @@ a:hover {
   font-size: 1.1rem;
   font-weight: 700;
   color: #fff;
+  min-width: 0;
+  overflow-wrap: break-word;
 }
 
 .zone-tag {
@@ -855,6 +881,8 @@ a:hover {
   font-weight: 700;
   padding: 0.2rem 0.5rem;
   border-radius: var(--radius-full);
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 
 .zone-tag.congested {
