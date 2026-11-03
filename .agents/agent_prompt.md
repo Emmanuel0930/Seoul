@@ -5,9 +5,8 @@
 - **Objetivo:** Replicar la anatomía y gobernanza del sistema de referencia ("Cerebro Lima") para la ciudad de **서울 (Seúl, Corea del Sur)** y construir el laboratorio de exploración comparando al menos 2 herramientas por tramo sobre los mismos datos.
 - **Repositorio:** `https://github.com/Emmanuel0930/Seoul`
 - **Integrantes del grupo y Roles de Gobierno de Datos (DAMA-DMBOK):**
-  - **Curaduría (Data Steward):** Gabriela Martinez (Fuentes, licencias, semáforo y catálogo).
+  - **Curaduría (Data Steward) e Interfaz (Consumo):** Gabriela Martinez (Fuentes, licencias, semáforo, catálogo, vistas, diseño móvil, mapas y trazabilidad de cifras a 1 clic).
   - **Datos (Custodia Técnica):** Gabriela Sanabria (Contrato de datos, ingesta reproducible y verificación).
-  - **Interfaz (Consumo):** Juan Ramon (Vistas, diseño móvil, mapas y trazabilidad de cifras a 1 clic).
   - **Seguridad (Privacidad y Protección):** Emmanuel Alvarez (Compuerta, control de datos sensibles, `.gitignore` y pruebas de ataque).
 - **Usuario principal del sistema:** Secretaría u oficina de planeación de un distrito (*gu*) de Seúl (ej. Gwanak-gu o Gangnam-gu), y en segundo plano vecinos o periodistas locales.
 - **Preguntas centrales que responde el sistema:**

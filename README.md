@@ -7,13 +7,11 @@
 **Fecha de Revisión y Prueba en Lago:** 2026-10-06 / 2026-10-27  
 
 ### Integrantes del Grupo y Papeles de Gobierno de Datos (DAMA-DMBOK)
-1. **Curaduría (Data Steward):** Gabriela Martinez  
-   *Responsabilidad:* Fuentes oficiales, licenciamiento KOGL/CC0, semáforo de uso y catálogo de 14 fuentes (`catalogo/catalogo.json`).
+1. **Curaduría (Data Steward) e Interfaz (Consumo):** Gabriela Martinez  
+   *Responsabilidad:* Fuentes oficiales, licenciamiento KOGL/CC0, semáforo de uso y catálogo de 14 fuentes (`catalogo/catalogo.json`); vistas web responsivas mobile-first (`web/`), integración territorial con MapLibre GL JS, sliders de prioridad distrital y trazabilidad a 1 clic.
 2. **Datos (Custodia Técnica):** Gabriela Sanabria  
    *Responsabilidad:* Contrato de datos estricto, pipeline de ingesta en Python estándar (`ingesta/`), reproducibilidad y validación automática (`verificacion/verificar.py`).
-3. **Interfaz (Consumo):** Juan Ramon  
-   *Responsabilidad:* Vistas web responsivas mobile-first (`web/`), integración territorial con MapLibre GL JS, cálculo dinámico de sliders de prioridad distrital y trazabilidad a 1 clic.
-4. **Seguridad (Privacidad y Protección):** Emmanuel Alvarez  
+3. **Seguridad (Privacidad y Protección):** Emmanuel Alvarez  
    *Responsabilidad:* Compuerta de acceso (`api/entrar.js`), protección de datos sensibles (agregación de `congestion_level` por zona/franja horaria), reglas en `.gitignore` y auditoría de ataque autorizado.
 
 ---
