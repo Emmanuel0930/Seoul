@@ -470,6 +470,10 @@ a:hover {
   color: var(--accent-emerald);
 }
 
+.card-status.pendiente {
+  color: var(--accent-amber);
+}
+
 .card-status.base {
   color: var(--accent-cyan);
 }

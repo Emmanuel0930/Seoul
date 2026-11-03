@@ -110,6 +110,13 @@ function renderizarTarjetasCifras() {
       badge.className = 'badge-pendiente';
       badge.textContent = '⚠ Pendiente de verificar contra la fuente';
       pill.before(badge);
+
+      // La tarjeta no se presenta como respondida mientras sus cifras no estén verificadas
+      const status = pill.parentElement.querySelector('.card-status');
+      if (status) {
+        status.classList.replace('answered', 'pendiente');
+        status.textContent = status.textContent.replace(/^✔ \S+/, '◐ Cifras ilustrativas');
+      }
     }
   });
 }
