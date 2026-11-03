@@ -828,6 +828,12 @@ a:hover {
   margin-bottom: 0.75rem;
 }
 
+.texto-pendiente {
+  color: var(--accent-amber);
+  font-style: normal;
+  font-weight: 600;
+}
+
 .privacy-icon {
   font-size: 1.75rem;
   flex-shrink: 0;

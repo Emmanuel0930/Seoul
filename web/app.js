@@ -43,6 +43,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   console.log('🚀 Inicializando Centro de Información Urbana de Seúl...');
   await cargarTodosLosDatos();
   renderizarTarjetasCifras();
+  renderizarContextos();
+  renderizarProcedencia();
   renderizarZonasTiempoReal();
   renderizarTablaCatalogo();
   inicializarMapaTerritorial();
@@ -112,11 +114,75 @@ function renderizarTarjetasCifras() {
   });
 }
 
+function buscarArchivo(metrica) {
+  return [Estado.demografia, Estado.economia, Estado.escucha]
+    .find(archivo => archivo && archivo.cifras && archivo.cifras[metrica]) || null;
+}
+
 function buscarCifra(metrica) {
-  for (const archivo of [Estado.demografia, Estado.economia, Estado.escucha]) {
-    if (archivo && archivo.cifras && archivo.cifras[metrica]) return archivo.cifras[metrica];
+  const archivo = buscarArchivo(metrica);
+  return archivo ? archivo.cifras[metrica] : null;
+}
+
+// Procedencia de cada tarjeta (fuente, vigencia y fecha de prueba) leída del lago
+function renderizarProcedencia() {
+  document.querySelectorAll('.provenance-pill[data-metric]').forEach(pill => {
+    const metrica = pill.getAttribute('data-metric');
+    const archivo = buscarArchivo(metrica);
+    if (!archivo) return;
+    const cifra = archivo.cifras[metrica];
+    pill.querySelector('.prov-text').textContent = `${cifra.fuente} · Vigencia: ${cifra.vigencia} · Probado: ${archivo.probado}`;
+  });
+}
+
+// Texto de contexto de las tarjetas generado desde lago/*.json (nada escrito a mano)
+function renderizarContextos() {
+  const fijar = (id, html, registros) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const pendiente = registros.some(r => r.verificado === false);
+    el.innerHTML = html + (pendiente ? ' <em class="texto-pendiente">(Pendiente de verificar)</em>' : '');
+  };
+  const pct = v => `${v > 0 ? '+' : ''}${v}%`;
+  const millones = v => `${(v / 1000000).toFixed(0)}M KRW`;
+  const ordenar = (regs, campo) => [...regs].sort((a, b) => b[campo] - a[campo]);
+
+  const demo = Estado.demografia && Estado.demografia.registros;
+  if (demo && demo.length) {
+    const pob = ordenar(demo, 'total_population');
+    const mayor = pob[0], menor = pob[pob.length - 1];
+    fijar('ctx-poblacion',
+      `Desglosada en los ${demo.length} distritos (<em>gu</em>). Mayor concentración en <strong>${mayor.district_name}</strong> (${mayor.total_population.toLocaleString('es-CO')}) y menor en <strong>${menor.district_name}</strong> (${menor.total_population.toLocaleString('es-CO')}).`,
+      demo);
+
+    const uni = ordenar(demo, 'single_households_pct');
+    fijar('ctx-unipersonales',
+      `Pico en <strong>${uni[0].district_name} (${uni[0].single_households_pct}%)</strong>, seguido por <strong>${uni[1].district_name} (${uni[1].single_households_pct}%)</strong>.`,
+      demo);
+
+    const ady = ordenar(demo, 'elderly_alone_pct');
+    const minAdy = ady[ady.length - 1];
+    fijar('ctx-adultos',
+      `Mayor proporción en <strong>${ady[0].district_name} (${ady[0].elderly_alone_pct}%)</strong> y <strong>${ady[1].district_name} (${ady[1].elderly_alone_pct}%)</strong>; menor en <strong>${minAdy.district_name} (${minAdy.elderly_alone_pct}%)</strong>.`,
+      demo);
   }
-  return null;
+
+  const econ = Estado.economia && Estado.economia.registros;
+  if (econ && econ.length) {
+    const viv = ordenar(econ, 'diff_pct_vs_seoul_avg');
+    const barato = viv[viv.length - 1];
+    const promedio = Estado.economia.cifras.avg_housing_price;
+    fijar('ctx-vivienda',
+      `Promedio Seúl: ${promedio ? millones(promedio.valor) : '-'}. <strong>${viv[0].district_name} (${pct(viv[0].diff_pct_vs_seoul_avg)})</strong> y <strong>${viv[1].district_name} (${pct(viv[1].diff_pct_vs_seoul_avg)})</strong> frente a <strong>${barato.district_name} (${pct(barato.diff_pct_vs_seoul_avg)})</strong>.`,
+      econ);
+
+    const ue = ordenar(econ, 'unemployment_rate');
+    const minUe = ue[ue.length - 1];
+    const tasa = Estado.economia.cifras.unemployment_rate;
+    fijar('ctx-desempleo',
+      `Tasa metropolitana: ${tasa ? tasa.valor : '-'}%. Menor desempleo distrital en <strong>${minUe.district_name} (${minUe.unemployment_rate}%)</strong>.`,
+      econ);
+  }
 }
 
 function fuenteSinVerificar(fid) {
