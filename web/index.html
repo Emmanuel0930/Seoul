@@ -17,6 +17,71 @@
 </head>
 <body>
 
+  <!-- Compuerta de Acceso Criptográfico / Futuristic Clean Gate -->
+  <div id="pantalla-compuerta" class="gate-overlay">
+    <div class="gate-bg-grid"></div>
+    <div class="gate-glow-orb gate-glow-1"></div>
+    <div class="gate-glow-orb gate-glow-2"></div>
+    
+    <div class="gate-card" id="gate-card">
+      <div class="gate-header">
+        <div class="gate-badge">
+          <span class="gate-pulse-dot"></span>
+          <span>서울특별시 · CONTROL DE ACCESO</span>
+        </div>
+        <div class="gate-icon-container">
+          <svg class="gate-cyber-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+          </svg>
+        </div>
+        <h2 class="gate-title">CEREBRO SEÚL</h2>
+        <p class="gate-subtitle">Sistema de Inteligencia Territorial Urbana · Taller de Datos 2026</p>
+      </div>
+
+      <form id="gate-form" class="gate-form" onsubmit="return false;">
+        <div class="gate-field">
+          <label for="gate-password-input" class="gate-label">CLAVE DE AUTORIZACIÓN</label>
+          <div class="gate-input-wrapper">
+            <span class="gate-input-prefix">🔑</span>
+            <input 
+              type="password" 
+              id="gate-password-input" 
+              class="gate-input" 
+              placeholder="Ingrese clave del sistema..." 
+              autocomplete="current-password" 
+              autofocus 
+              required
+            >
+            <button type="button" id="gate-toggle-visibility" class="gate-eye-btn" title="Mostrar u ocultar clave" aria-label="Mostrar u ocultar clave">
+              👁️
+            </button>
+          </div>
+        </div>
+
+        <div id="gate-error-msg" class="gate-error-box" style="display: none;">
+          <span class="gate-error-icon">⚠️</span>
+          <span class="gate-error-text">Clave incorrecta. Acceso denegado.</span>
+        </div>
+
+        <button type="submit" id="gate-submit-btn" class="gate-btn">
+          <span class="gate-btn-text">DESBLOQUEAR SISTEMA</span>
+          <span class="gate-btn-arrow">→</span>
+        </button>
+      </form>
+
+      <div class="gate-footer">
+        <div class="gate-security-badge">
+          <span class="gate-shield">🛡️</span>
+          <span>Validación Criptográfica SHA-256 · Sin secretos en JavaScript</span>
+        </div>
+        <div class="gate-hint">
+          <span>Clave entregada al profesor para la evaluación del taller</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Barra Superior / Header de Navegación -->
   <header class="navbar" id="barra-superior">
     <div class="nav-container">
@@ -34,9 +99,11 @@
         <a href="#tiempo-real" class="nav-link">Monitor Urbano</a>
         <a href="#economia" class="nav-link">Economía</a>
         <a href="#transporte" class="nav-link">Transporte</a>
+        <a href="#clima" class="nav-link">🌤️ Clima Seúl</a>
         <a href="#catalogo" class="nav-link">Catálogo y Fuentes</a>
         <a href="#descargas" class="nav-link">📥 Descargas</a>
         <a href="#equipo" class="nav-link team-highlight">Equipo y Roles</a>
+        <button id="btn-bloquear-cerebro" class="nav-lock-btn" title="Bloquear acceso al Cerebro">🔒 Bloquear</button>
       </nav>
     </div>
   </header>
@@ -463,6 +530,151 @@
     </div>
   </section>
 
+  <!-- SECCIÓN: Monitor Meteorológico de Seúl (Open-Meteo + KMA) -->
+  <section class="section-weather" id="clima">
+    <div class="container">
+      <div class="section-header">
+        <div class="tag-with-status">
+          <span class="section-tag">Meteorología en Vivo (F15 Open-Meteo + KMA)</span>
+          <span class="live-indicator"><span class="live-pulse"></span> Coordenadas 37.5665° N, 126.9780° E</span>
+        </div>
+        <h3>Monitor Meteorológico y Pronóstico de Seúl</h3>
+        <p>Condiciones en tiempo real, sensación térmica, viento, lluvia, pronósticos horarios a 24h y perspectiva a 7 días, comparando las 4 principales APIs climáticas.</p>
+      </div>
+
+      <!-- Tarjeta Principal de Clima Actual -->
+      <div class="weather-current-card" id="weather-current-box">
+        <div class="weather-main-panel">
+          <div class="weather-hero-row">
+            <span class="weather-main-icon" id="clima-hero-icon">🌤️</span>
+            <div class="weather-temp-wrap">
+              <span class="weather-hero-temp" id="clima-hero-temp">--.-</span>
+              <span class="weather-hero-unit">°C</span>
+            </div>
+            <div class="weather-condition-wrap">
+              <h4 id="clima-hero-desc">Cargando clima de Seúl...</h4>
+              <p class="weather-apparent">Sensación térmica: <strong id="clima-hero-sensacion">--.- °C</strong></p>
+              <div class="provenance-pill" data-source="F15" title="Haga clic para auditar procedencia F15 Open-Meteo">
+                <span class="prov-text">F15 Open-Meteo · CC-BY 4.0 · Sin Clave</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="weather-details-grid">
+          <div class="wdetail-item" data-source="F15">
+            <span class="wdetail-icon">💧</span>
+            <div class="wdetail-info">
+              <span class="wdetail-label">Humedad Relativa</span>
+              <span class="wdetail-val" id="clima-humedad">-- %</span>
+            </div>
+          </div>
+          <div class="wdetail-item" data-source="F15">
+            <span class="wdetail-icon">💨</span>
+            <div class="wdetail-info">
+              <span class="wdetail-label">Velocidad del Viento</span>
+              <span class="wdetail-val" id="clima-viento">-- km/h</span>
+            </div>
+          </div>
+          <div class="wdetail-item" data-source="F15">
+            <span class="wdetail-icon">🌧️</span>
+            <div class="wdetail-info">
+              <span class="wdetail-label">Precipitación Actual</span>
+              <span class="wdetail-val" id="clima-lluvia">-- mm</span>
+            </div>
+          </div>
+          <div class="wdetail-item" data-source="F15">
+            <span class="wdetail-icon">📍</span>
+            <div class="wdetail-info">
+              <span class="wdetail-label">Ubicación y Huso</span>
+              <span class="wdetail-val">Seúl (Asia/Seoul KST)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pronóstico Horario (Próximas 24 horas) -->
+      <div class="weather-hourly-section">
+        <div class="sub-header-flex">
+          <h4>⏱️ Pronóstico Horario (Próximas 24 Horas en Seúl)</h4>
+          <span class="scroll-hint">Deslice horizontalmente ↔</span>
+        </div>
+        <div class="hourly-scroll-container" id="clima-hourly-track">
+          <div class="loading-state">Cargando pronóstico horario...</div>
+        </div>
+      </div>
+
+      <!-- Pronóstico Semanal (7 Días) -->
+      <div class="weather-daily-section">
+        <div class="sub-header-flex">
+          <h4>📅 Perspectiva Semanal (Pronóstico a 7 Días)</h4>
+          <span class="sub-badge">Modelos Numéricos Globales</span>
+        </div>
+        <div class="daily-cards-grid" id="clima-daily-grid">
+          <div class="loading-state">Cargando pronóstico a 7 días...</div>
+        </div>
+      </div>
+
+      <!-- Cuadro Comparativo de las 4 APIs Meteorológicas para Seúl -->
+      <div class="weather-benchmarking-box">
+        <div class="benchmarking-header">
+          <span class="badge-bench">⚖️ Gobernanza de APIs Meteorológicas</span>
+          <h4>Evaluación y Benchmarking de las 4 APIs para Seúl</h4>
+          <p>Análisis técnico para justificar la herramienta elegida frente al piso técnico de gobernanza (cero llaves pagas, reproducibilidad y privacidad):</p>
+        </div>
+
+        <div class="table-responsive">
+          <table class="benchmark-table">
+            <thead>
+              <tr>
+                <th>API Evaluada</th>
+                <th>¿Requiere Clave?</th>
+                <th>Datos Históricos</th>
+                <th>Uso Gratuito</th>
+                <th>Cobertura / Precisión</th>
+                <th>Estado y Razón de Elección</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="highlight-row">
+                <td><strong>1. Open-Meteo</strong></td>
+                <td><code>NO</code> (Sin registro)</td>
+                <td>Sí (Desde 1940 a hoy)</td>
+                <td>100% Gratis (no comercial)</td>
+                <td>Global y Seúl (ECMWF, GFS, KMA)</td>
+                <td><span class="status-badge integrado">ELEGIDA (F15)</span><br><small>Cero fricción, JSON nativo, 0 tarjetas, lectura directa desde JS y Python.</small></td>
+              </tr>
+              <tr>
+                <td><strong>2. KMA (Korea Meteorological Admin)</strong></td>
+                <td>Sí (apihub.kma.go.kr)</td>
+                <td>Sí (Estaciones oficiales Seúl)</td>
+                <td>Gratis hasta 20.000 llamadas/día</td>
+                <td>Oficial institucional de Corea</td>
+                <td><span class="status-badge candidato">CANDIDATA OFICIAL</span><br><small>Máxima precisión en Corea, pero con registro gubernamental y portales en coreano.</small></td>
+              </tr>
+              <tr>
+                <td><strong>3. OpenWeather</strong></td>
+                <td>Sí (API Key individual)</td>
+                <td>Solo 5 días en nivel gratuito</td>
+                <td>Tier gratis con límites (1.000/día)</td>
+                <td>Satélites y estaciones globales</td>
+                <td><span class="status-badge descartado">DESCARTADA</span><br><small>Pide tarjeta para funciones avanzadas y corta el histórico en el plan libre.</small></td>
+              </tr>
+              <tr>
+                <td><strong>4. WeatherAPI.com</strong></td>
+                <td>Sí (Key obligatoria)</td>
+                <td>Solo 7 días en plan gratis</td>
+                <td>1.000.000 llamadas/mes con registro</td>
+                <td>Global pronóstico</td>
+                <td><span class="status-badge descartado">DESCARTADA</span><br><small>Mayor fricción operativa frente a la inmediatez reproducible de Open-Meteo.</small></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- SECCIÓN 4: «Lo que el Cerebro Seúl NO sabe, lo dice» (Transparencia) -->
   <section class="section-transparency">
     <div class="container">
@@ -575,6 +787,7 @@
             <a href="../lago/demografia.json" target="_blank" class="dl-link-item">📄 demografia.json</a>
             <a href="../lago/economia_vivienda.json" target="_blank" class="dl-link-item">📄 economia_vivienda.json</a>
             <a href="../lago/tiempo_real.json" target="_blank" class="dl-link-item">📄 tiempo_real.json</a>
+            <a href="../lago/clima.json" target="_blank" class="dl-link-item">📄 clima.json (Open-Meteo)</a>
           </div>
         </div>
 

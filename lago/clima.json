@@ -1,0 +1,332 @@
+{
+  "tema": "Clima y Pronóstico Meteorológico de Seúl",
+  "probado": "2026-11-03",
+  "fuentes": [
+    {
+      "id": "F15",
+      "nombre": "Open-Meteo Weather API",
+      "url": "https://open-meteo.com/en/docs",
+      "estado": "vivo",
+      "licencia": "CC-BY 4.0 / Open Data"
+    }
+  ],
+  "ciudad": "Seúl (Corea del Sur)",
+  "coordenadas": {
+    "latitud": 37.5665,
+    "longitud": 126.978
+  },
+  "zona_horaria": "Asia/Seoul",
+  "cifras": {
+    "current_temperature": {
+      "valor": 6.9,
+      "unidad": "°C",
+      "fuente": "F15",
+      "vigencia": "2026-11"
+    },
+    "apparent_temperature": {
+      "valor": 5.3,
+      "unidad": "°C",
+      "fuente": "F15",
+      "vigencia": "2026-11"
+    },
+    "relative_humidity": {
+      "valor": 97,
+      "unidad": "%",
+      "fuente": "F15",
+      "vigencia": "2026-11"
+    },
+    "wind_speed": {
+      "valor": 5.0,
+      "unidad": "km/h",
+      "fuente": "F15",
+      "vigencia": "2026-11"
+    },
+    "precipitation": {
+      "valor": 0.0,
+      "unidad": "mm",
+      "fuente": "F15",
+      "vigencia": "2026-11"
+    },
+    "weather_code": {
+      "valor": 2,
+      "unidad": "código WMO",
+      "descripcion": "Parcialmente Nublado",
+      "icono": "⛅",
+      "fuente": "F15",
+      "vigencia": "2026-11"
+    }
+  },
+  "pronostico_24h": [
+    {
+      "hora": "00:00",
+      "temperatura": 8.2,
+      "prob_lluvia": 0,
+      "icono": "🌤️",
+      "descripcion": "Mayormente Despejado"
+    },
+    {
+      "hora": "01:00",
+      "temperatura": 7.8,
+      "prob_lluvia": 0,
+      "icono": "⛅",
+      "descripcion": "Parcialmente Nublado"
+    },
+    {
+      "hora": "02:00",
+      "temperatura": 7.6,
+      "prob_lluvia": 0,
+      "icono": "⛅",
+      "descripcion": "Parcialmente Nublado"
+    },
+    {
+      "hora": "03:00",
+      "temperatura": 7.4,
+      "prob_lluvia": 0,
+      "icono": "🌤️",
+      "descripcion": "Mayormente Despejado"
+    },
+    {
+      "hora": "04:00",
+      "temperatura": 7.2,
+      "prob_lluvia": 0,
+      "icono": "🌤️",
+      "descripcion": "Mayormente Despejado"
+    },
+    {
+      "hora": "05:00",
+      "temperatura": 7.0,
+      "prob_lluvia": 0,
+      "icono": "⛅",
+      "descripcion": "Parcialmente Nublado"
+    },
+    {
+      "hora": "06:00",
+      "temperatura": 6.9,
+      "prob_lluvia": 0,
+      "icono": "⛅",
+      "descripcion": "Parcialmente Nublado"
+    },
+    {
+      "hora": "07:00",
+      "temperatura": 6.8,
+      "prob_lluvia": 0,
+      "icono": "⛅",
+      "descripcion": "Parcialmente Nublado"
+    },
+    {
+      "hora": "08:00",
+      "temperatura": 7.2,
+      "prob_lluvia": 0,
+      "icono": "⛅",
+      "descripcion": "Parcialmente Nublado"
+    },
+    {
+      "hora": "09:00",
+      "temperatura": 8.4,
+      "prob_lluvia": 0,
+      "icono": "⛅",
+      "descripcion": "Parcialmente Nublado"
+    },
+    {
+      "hora": "10:00",
+      "temperatura": 10.3,
+      "prob_lluvia": 0,
+      "icono": "⛅",
+      "descripcion": "Parcialmente Nublado"
+    },
+    {
+      "hora": "11:00",
+      "temperatura": 12.3,
+      "prob_lluvia": 0,
+      "icono": "⛅",
+      "descripcion": "Parcialmente Nublado"
+    },
+    {
+      "hora": "12:00",
+      "temperatura": 14.3,
+      "prob_lluvia": 0,
+      "icono": "⛅",
+      "descripcion": "Parcialmente Nublado"
+    },
+    {
+      "hora": "13:00",
+      "temperatura": 16.0,
+      "prob_lluvia": 0,
+      "icono": "⛅",
+      "descripcion": "Parcialmente Nublado"
+    },
+    {
+      "hora": "14:00",
+      "temperatura": 16.9,
+      "prob_lluvia": 0,
+      "icono": "☁️",
+      "descripcion": "Nublado"
+    },
+    {
+      "hora": "15:00",
+      "temperatura": 17.2,
+      "prob_lluvia": 0,
+      "icono": "⛅",
+      "descripcion": "Parcialmente Nublado"
+    },
+    {
+      "hora": "16:00",
+      "temperatura": 16.9,
+      "prob_lluvia": 0,
+      "icono": "⛅",
+      "descripcion": "Parcialmente Nublado"
+    },
+    {
+      "hora": "17:00",
+      "temperatura": 15.6,
+      "prob_lluvia": 0,
+      "icono": "🌤️",
+      "descripcion": "Mayormente Despejado"
+    },
+    {
+      "hora": "18:00",
+      "temperatura": 13.7,
+      "prob_lluvia": 0,
+      "icono": "⛅",
+      "descripcion": "Parcialmente Nublado"
+    },
+    {
+      "hora": "19:00",
+      "temperatura": 12.9,
+      "prob_lluvia": 0,
+      "icono": "🌤️",
+      "descripcion": "Mayormente Despejado"
+    },
+    {
+      "hora": "20:00",
+      "temperatura": 12.0,
+      "prob_lluvia": 0,
+      "icono": "🌤️",
+      "descripcion": "Mayormente Despejado"
+    },
+    {
+      "hora": "21:00",
+      "temperatura": 11.4,
+      "prob_lluvia": 0,
+      "icono": "🌤️",
+      "descripcion": "Mayormente Despejado"
+    },
+    {
+      "hora": "22:00",
+      "temperatura": 10.7,
+      "prob_lluvia": 0,
+      "icono": "🌤️",
+      "descripcion": "Mayormente Despejado"
+    },
+    {
+      "hora": "23:00",
+      "temperatura": 10.4,
+      "prob_lluvia": 0,
+      "icono": "🌤️",
+      "descripcion": "Mayormente Despejado"
+    }
+  ],
+  "pronostico_7d": [
+    {
+      "fecha": "2026-11-04",
+      "dia": "Mié",
+      "temp_max": 17.2,
+      "temp_min": 6.8,
+      "prob_lluvia_max": 0,
+      "icono": "☁️",
+      "descripcion": "Nublado"
+    },
+    {
+      "fecha": "2026-11-05",
+      "dia": "Jue",
+      "temp_max": 16.0,
+      "temp_min": 9.7,
+      "prob_lluvia_max": 35,
+      "icono": "🌦️",
+      "descripcion": "Llovizna Ligera"
+    },
+    {
+      "fecha": "2026-11-06",
+      "dia": "Vie",
+      "temp_max": 12.4,
+      "temp_min": 3.7,
+      "prob_lluvia_max": 41,
+      "icono": "☀️",
+      "descripcion": "Cielo Despejado"
+    },
+    {
+      "fecha": "2026-11-07",
+      "dia": "Sáb",
+      "temp_max": 6.8,
+      "temp_min": -1.5,
+      "prob_lluvia_max": 0,
+      "icono": "⛅",
+      "descripcion": "Parcialmente Nublado"
+    },
+    {
+      "fecha": "2026-11-08",
+      "dia": "Dom",
+      "temp_max": 5.3,
+      "temp_min": 0.4,
+      "prob_lluvia_max": 37,
+      "icono": "🌦️",
+      "descripcion": "Llovizna Ligera"
+    },
+    {
+      "fecha": "2026-11-09",
+      "dia": "Lun",
+      "temp_max": 9.1,
+      "temp_min": -0.8,
+      "prob_lluvia_max": 37,
+      "icono": "☀️",
+      "descripcion": "Cielo Despejado"
+    },
+    {
+      "fecha": "2026-11-10",
+      "dia": "Mar",
+      "temp_max": 11.1,
+      "temp_min": -0.5,
+      "prob_lluvia_max": 2,
+      "icono": "🌤️",
+      "descripcion": "Mayormente Despejado"
+    }
+  ],
+  "evaluacion_apis": [
+    {
+      "api": "Open-Meteo",
+      "requiere_clave": "No",
+      "datos_historicos": "Sí (Desde 1940 a hoy)",
+      "uso_gratuito": "100% Gratis para uso no comercial",
+      "cobertura": "Modelos numéricos globales (ECMWF, GFS, KMA)",
+      "estado_en_sistema": "Elegida e Integrada (F15)",
+      "razon": "Cero barreras de API key, cero tarjetas, formato JSON puro, sin cuotas que rompan el sistema."
+    },
+    {
+      "api": "Korea Meteorological Administration (KMA)",
+      "requiere_clave": "Sí (apihub.kma.go.kr)",
+      "datos_historicos": "Sí (estaciones oficiales surcoreanas)",
+      "uso_gratuito": "Hasta 20.000 llamadas/día gratuitas",
+      "cobertura": "Estaciones meteorológicas de superficie en Seúl",
+      "estado_en_sistema": "Candidata Oficial Nacional",
+      "razon": "Máxima precisión institucional, pero sufre la barrera de registro gubernamental y portales en coreano."
+    },
+    {
+      "api": "OpenWeather",
+      "requiere_clave": "Sí (Key personal requerida)",
+      "datos_historicos": "Limitado en capa gratuita (solo 5 días)",
+      "uso_gratuito": "Tier gratuito con límites (1.000 llamadas/día)",
+      "cobertura": "Global satelital",
+      "estado_en_sistema": "Descartada frente a Open-Meteo",
+      "razon": "Obliga a registrar tarjeta en ciertos endpoints avanzados y restringe el histórico a planes de pago."
+    },
+    {
+      "api": "WeatherAPI.com",
+      "requiere_clave": "Sí (Registro obligatorio)",
+      "datos_historicos": "Solo 7 días en plan gratuito",
+      "uso_gratuito": "1.000.000 llamadas/mes pero pide registro",
+      "cobertura": "Global pronóstico",
+      "estado_en_sistema": "Descartada",
+      "razon": "Mayor fricción operativa; el piso técnico del taller prioriza reproducibilidad inmediata sin registros."
+    }
+  ]
+}

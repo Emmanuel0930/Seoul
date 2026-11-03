@@ -19,8 +19,8 @@ Grupo: Gabriela Martinez (Curaduría / Data Steward e Interfaz), Gabriela Sanabr
   - *Replicado tal cual:* Arquitectura de 3 capas (Bronce `lago/raw/` ignorada en Git, Plata `lago/*.json` contractual y Oro `web/`); catálogo estricto de 14 fuentes con semáforo; trazabilidad a 1 clic en cada cifra; script de verificación automática de gobernanza (`verificacion/verificar.py`) con salida estricta 0/1.
   - *Cambiado para Seúl:* División territorial en los 25 *gu* de Seúl con códigos MOIS; moneda oficial en Wons surcoreanos (`KRW`); integración de APIs abiertas en coreano (Seoul Open Data y KOSIS); y construcción de un comparador distrital interactivo con sliders de vulnerabilidad social en MapLibre GL JS.
 - **Fuentes catalogadas · integradas · caídas · descartadas: (ver catalogo/)**
-  - *Catalogadas (14 en total):* F01 a F14 documentadas con ficha completa en `catalogo/catalogo.json` y `diccionario_seoul.xlsx`.
-  - *Integradas (5):* F01 (Seoul Open Data), F02 (Seoul Real-Time City Data), F03 (KOSIS), F09 (GeoJSON Gu boundaries) y F11 (Wikimedia Pageviews API).
+  - *Catalogadas (15 en total):* F01 a F15 documentadas con ficha completa en `catalogo/catalogo.json` y `diccionario_seoul.xlsx`.
+  - *Integradas (6):* F01 (Seoul Open Data), F02 (Seoul Real-Time City Data), F03 (KOSIS), F09 (GeoJSON Gu boundaries), F11 (Wikimedia Pageviews API) y F15 (Open-Meteo Weather API Seúl).
   - *Candidatas (4):* F04 (data.go.kr), F05 (Bank of Korea ECOS), F06 (MOLIT Vivienda/Jeonse), F10 (Copernicus Sentinel-2).
   - *Descartadas (2):* F07 (S-Map gemelo 3D: descartado por peso >500 MB inadmisible en teléfonos) y F12 (GDELT / Google News: descartado por riesgo de PII en noticias no filtradas).
   - *Excluidas (1):* F13 (Statista: excluida por muro de pago de US$199-1.299/año y licencia propietaria restrictiva).
@@ -46,6 +46,7 @@ Grupo: Gabriela Martinez (Curaduría / Data Steward e Interfaz), Gabriela Sanabr
 | **F12** GDELT / Google News RSS | Términos plataforma | Texto libre sin revisar | `descartado` | Riesgo de datos personales (PII) en prensa abierta |
 | **F13** Statista · Topic Seoul | Propietaria | No | `excluido` | Muro de pago comercial (US$199–1.299/año) |
 | **F14** MODS (mods.go.kr) | No declara | Texto libre sin revisar | `caido` | Portal cerrado sin API pública documentada |
+| **F15** Open-Meteo Weather API | CC-BY 4.0 / Open Data | No | `integrado` | Libre uso no comercial sin API key ni tarjetas; centro de Seúl (37.5665° N, 126.9780° E) |
 
 ## Bitácora de exploración
 | Tramo | Herramienta | Qué pidió para empezar | Licencia | Dónde quedan los datos | ¿Se rehace con un comando? | Estado del proyecto | Qué resolvió | Qué no pudo | ¿Quedó? ¿Por qué? |
@@ -56,25 +57,35 @@ Grupo: Gabriela Martinez (Curaduría / Data Steward e Interfaz), Gabriela Sanabr
 | **Lago** | JSON Contractual Plata | Editor de texto o script Python | Libre | Archivos `.json` en `lago/` | `python ingesta/pull_*.py` | Ejecutado con éxito | Consumo web nativo instantáneo en teléfonos inteligentes sin compilación | Mayor tamaño que formatos binarios para millones de registros | **SÍ (Elegida)**: Perfecto para observatorios agregados y consumo web directo |
 | **Lago** | DuckDB + Parquet | Librería DuckDB / PyArrow | MIT / Apache 2.0 | Archivos `.parquet` locales | `python explorar/lago_duckdb_parquet.py` | Solo documentada | Compresión columnar (65% ahorro) y analítica OLAP local | Lectura nativa directa en el navegador móvil sin Wasm pesado | **NO**: Preservada en `explorar/` como opción analítica local |
 | **Lago** | DuckLake / PyIceberg | Extensión DuckLake en DuckDB | Apache 2.0 / MIT | Archivos Parquet + metadata Avro | `python explorar/lago_ducklake.py` | Solo documentada | Catálogo ACID, control transaccional y time-travel | Sobrecarga de catálogo desproporcionada para 5 datasets fijos | **NO**: Complejidad innecesaria para el piso técnico |
-| **Verificación** | Script `verificar.py` | Python con `re`, `json`, `glob` | MIT / Libre | En memoria (reporte CLI exit 0/1) | `python verificacion/verificar.py` | Ejecutado con éxito | 1,147 comprobaciones automáticas de contrato, PII y reglas de Seúl | Requiere mantenimiento manual al cambiar campos contractuales | **SÍ (Elegida)**: 0 dependencias externas y salida estricta `sys.exit(0)` |
+| **Verificación** | Script `verificar.py` | Python con `re`, `json`, `glob` | MIT / Libre | En memoria (reporte CLI exit 0/1) | `python verificacion/verificar.py` | Ejecutado con éxito | 1,584 comprobaciones automáticas de contrato, PII y reglas de Seúl | Requiere mantenimiento manual al cambiar campos contractuales | **SÍ (Elegida)**: 0 dependencias externas y salida estricta `sys.exit(0)` |
 | **Verificación** | Frictionless Framework | `pip install frictionless`, esquemas | MIT | En memoria | `python explorar/calidad_frictionless.py` | Solo documentada | Validación declarativa de tipos de datos en tablas | Validar reglas cruzadas complejas de dominio ni regex de PII coreano | **NO**: Insuficiente para las reglas específicas de los 25 gu de Seúl |
 | **Territorio** | `MapLibre GL JS` + GeoJSON WGS84 | Script y CSS CDN (< 200 KB) | BSD 3-Clause | Renderizado en cliente (WebGL) | `python -m http.server 8000` | Ejecutado con éxito | Renderizado vectorial fluido a 60 FPS en móviles y coropletas dinámicas | Requiere simplificar geometrías complejas para descarga rápida | **SÍ (Elegida)**: 100% libre, sin API key comercial, touch-friendly en móvil |
 | **Territorio** | DuckDB Spatial / GeoParquet | `INSTALL spatial; LOAD spatial;` | MIT | Archivos `.duckdb` / `.geoparquet` | `python explorar/territorio_geoparquet.py` | Solo documentada | Uniones espaciales y cálculo de centroides en SQL puro | No provee capa interactiva visual para el usuario final en celular | **NO**: Inadecuada para el consumo visual directo en interfaz web |
+| **Meteorología** | Open-Meteo API | Petición HTTP directa (lat/lon) | CC-BY 4.0 | En disco local (`lago/clima.json`) | `python ingesta/pull_clima.py` | Ejecutado con éxito | Clima actual, sensación térmica, viento, lluvia y pronósticos 24h y 7d | Límites para uso comercial a gran escala | **SÍ (Elegida)**: Cero llaves, cero tarjetas, JSON nativo sin fricción |
+| **Meteorología** | KMA (Korea Meteorological Admin) | Clave en apihub.kma.go.kr | KOGL Tipo 1 | Endpoint remoto | No | Solo documentada | Fuente oficial institucional surcoreana | Registro gubernamental obligatorio y portales en coreano | **NO**: Catalogada como candidata institucional; Open-Meteo garantiza reproducibilidad inmediata |
+| **Meteorología** | OpenWeather / WeatherAPI | Registro y API Key de pago/freemium | Propietaria | Nube externa | No | Solo documentada | Widgets prehechos comerciales | Cuotas con tarjetas de crédito y restricciones en históricos | **NO**: Descartadas por riesgo de violar el piso técnico libre del taller |
 | **Vistas** | HTML5 + CSS + Vanilla JS | Navegador web moderno estándar | Libre | Servidor web estático / Vercel | `python -m http.server 8000` | Ejecutado con éxito | Carga ultrarrápida en smartphones, cero build step, trazabilidad a 1 clic | Requiere programar estados a mano frente a frameworks reactivos | **SÍ (Elegida)**: Máxima velocidad móvil, peso pluma y trazabilidad de cada cifra |
 | **Vistas** | Streamlit | Python, `pip install streamlit` | Apache 2.0 | Servidor en la nube (Streamlit Cloud) | No | Solo documentada | Prototipado rápido de paneles analíticos en Python puro | Lenta respuesta táctil en móviles; recarga todo el estado en cada clic | **NO**: Experiencia móvil deficiente y acoplamiento a runtime Python activo |
 | **Vistas** | Observable Framework | Node.js, npm, CLI compilador | ISC / MIT | Servidor estático Observable | No | Solo documentada | Gráficos reactivos elegantes con Plot.js y data loaders | Curva de aprendizaje y acoplamiento a sintaxis propietaria | **NO**: Descartada por mayor complejidad operativa |
 
 ## Protección
-- **Nivel:** abierto (con agregación ética en tiempo real).
+- **Nivel:** compuerta criptográfica SHA-256 (con agregación ética en tiempo real). Clave oficial entregada al profesor: `seoul2026`.
 - **Qué protegemos, y de quién:**
-  - Protegemos la identidad, privacidad y libertad de movimiento de los transeúntes de Seúl frente a vigilancia masiva corporativa o perfilamiento estatal.
+  - Protegemos el acceso al observatorio territorial y los datos agregados frente a indexación descontrolada o acceso no autorizado, requiriendo validación mediante compuerta de seguridad.
+  - Protegemos la identidad, privacidad y libertad de movimiento de los transeúntes de Seúl frente a vigilancia masiva corporativa o perfilamiento estatal (cumplimiento PIPA).
   - En `F02`, los datos de multitud se publican estrictamente como nivel de congestión ordinal (`Relaxed`, `Normal`, `Slightly Congested`, `Congested`) agregados por macro-zona y franja horaria, eliminando micro-coordenadas individuales o conteos en bruto.
   - Los datos crudos se conservan exclusivamente en `lago/raw/`, el cual está ignorado en Git mediante `.gitignore` y jamás se sube ni se expone en la web.
 - **Pruebas de terminal o de ventana privada:**
-  - Ejecución de `python verificacion/verificar.py` en terminal limpia: valida 1,147 comprobaciones con 0 fallos.
+  - **Prueba de terminal para la compuerta:** Validación criptográfica del hash SHA-256 de la clave:
+    `python -c "import hashlib; assert hashlib.sha256(b'seoul2026').hexdigest() == '495ac4b6f9a7332b52d1530bcd6a96219043e25bc6a389dc14f13c7128c5c944'; print('OK: Hash SHA-256 verificado')"`
+  - **Prueba en ventana privada / móvil:** Al ingresar a la web en ventana de incógnito o navegador móvil, se despliega de inmediato la compuerta futurista con orbes luminosos y grilla cibernética. El scroll del documento queda bloqueado (`body.cerebro-locked`).
+    - Al ingresar una clave errónea (ej. `clave123`), la tarjeta vibra con animación de rechazo y muestra `⚠️ Clave incorrecta. Acceso restringido al sistema`.
+    - Al ingresar la clave oficial `seoul2026`, la compuerta se desvanece suavemente con transición CSS, se desbloquea la interacción y se registra en `sessionStorage` para la sesión actual.
+    - Se incluye un botón `🔒 Bloquear` en la barra superior para restablecer el candado en cualquier momento y permitir pruebas repetidas.
+  - **Cero secretos en el código:** La clave `seoul2026` no se encuentra en texto plano dentro de `web/app.js` (evitando el antipatrón de «la clave en el JavaScript»); se evalúa a través de `crypto.subtle.digest('SHA-256', ...)`.
+  - Ejecución de `python verificacion/verificar.py` en terminal limpia: valida 1,584 comprobaciones con 0 fallos.
   - Prueba de inyección de datos con anomalías: al simular `unemployment_rate = 150` en `lago/economia_vivienda.json`, el script aborta inmediatamente con código de terminación `1`.
   - Prueba de PII: cualquier intento de agregar claves `cedula`, `email` o patrones de teléfono coreano (`010-XXXX-XXXX`) o RRN (`XXXXXX-[1-4]XXXXXX`) detiene el proceso con `exit code 1`.
-  - Navegación en ventana privada / móvil: el sitio carga en < 1 segundo desde cualquier teléfono sin pedir autenticación ni cookies de rastreo.
 - **Revisión de secretos en el historial:**
   - `.gitignore` prohíbe explícitamente: `lago/raw/*`, `.env`, `*.env`, `*.duckdb`, `node_modules/`, `__pycache__/`.
   - La clave de prueba `sample` utilizada para la API de Seúl es una clave pública y libre proveída por el propio Gobierno Metropolitano de Seúl para fines educativos. Ninguna tarjeta de crédito ni llave de pago existe en el código ni en el historial de commits.

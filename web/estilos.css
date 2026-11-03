@@ -1626,3 +1626,754 @@ a:hover {
   color: var(--text-muted, #94a3b8);
   margin: 0;
 }
+
+/* ==========================================================================
+   MÓDULO DE CLIMA Y PRONÓSTICO METEOROLÓGICO DE SEÚL (F15 OPEN-METEO + KMA)
+   ========================================================================== */
+.section-weather {
+  padding: 4.5rem 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  background: radial-gradient(circle at 80% 20%, rgba(6, 182, 212, 0.08) 0%, transparent 50%);
+}
+
+.weather-current-card {
+  background: var(--bg-card);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  margin-top: 1.75rem;
+  box-shadow: var(--shadow-glow);
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 2rem;
+  align-items: center;
+}
+
+.weather-hero-row {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.weather-main-icon {
+  font-size: 3.75rem;
+  line-height: 1;
+  filter: drop-shadow(0 0 12px rgba(56, 189, 248, 0.4));
+  animation: pulseIcon 3s infinite alternate ease-in-out;
+}
+
+@keyframes pulseIcon {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-4px) scale(1.05); }
+}
+
+.weather-temp-wrap {
+  display: flex;
+  align-items: flex-start;
+}
+
+.weather-hero-temp {
+  font-size: 3.5rem;
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1;
+  font-family: var(--font-mono);
+}
+
+.weather-hero-unit {
+  font-size: 1.5rem;
+  color: var(--accent-cyan);
+  font-weight: 600;
+  margin-left: 0.25rem;
+}
+
+.weather-condition-wrap h4 {
+  font-size: 1.25rem;
+  color: #f1f5f9;
+  margin-bottom: 0.25rem;
+}
+
+.weather-apparent {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 0.6rem;
+}
+
+.weather-details-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.wdetail-item {
+  background: rgba(15, 23, 42, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius-md);
+  padding: 0.85rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.wdetail-item:hover {
+  background: rgba(56, 189, 248, 0.12);
+  border-color: rgba(56, 189, 248, 0.35);
+  transform: translateY(-2px);
+}
+
+.wdetail-icon {
+  font-size: 1.5rem;
+}
+
+.wdetail-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.wdetail-label {
+  font-size: 0.72rem;
+  color: var(--text-dim);
+}
+
+.wdetail-val {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #ffffff;
+  font-family: var(--font-mono);
+}
+
+/* Pronóstico Horario (Carrusel 24h) */
+.weather-hourly-section {
+  margin-top: 2.5rem;
+}
+
+.sub-header-flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.sub-header-flex h4 {
+  font-size: 1.1rem;
+}
+
+.scroll-hint {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+}
+
+.sub-badge {
+  font-size: 0.72rem;
+  font-family: var(--font-mono);
+  background: rgba(56, 189, 248, 0.12);
+  color: var(--accent-cyan);
+  padding: 0.2rem 0.5rem;
+  border-radius: var(--radius-full);
+}
+
+.hourly-scroll-container {
+  display: flex;
+  gap: 0.85rem;
+  overflow-x: auto;
+  padding: 0.75rem 0.25rem 1rem;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+.hourly-scroll-container::-webkit-scrollbar {
+  height: 6px;
+}
+
+.hourly-scroll-container::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: var(--radius-full);
+}
+
+.hourly-scroll-container::-webkit-scrollbar-thumb {
+  background: rgba(56, 189, 248, 0.3);
+  border-radius: var(--radius-full);
+}
+
+.hourly-card {
+  min-width: 82px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 0.85rem 0.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.45rem;
+  text-align: center;
+  transition: all 0.2s ease;
+}
+
+.hourly-card:hover {
+  background: rgba(56, 189, 248, 0.15);
+  border-color: rgba(56, 189, 248, 0.4);
+  transform: translateY(-2px);
+}
+
+.h-time {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+}
+
+.h-icon {
+  font-size: 1.45rem;
+}
+
+.h-temp {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #ffffff;
+  font-family: var(--font-mono);
+}
+
+.h-rain {
+  font-size: 0.68rem;
+  color: #38bdf8;
+  font-weight: 600;
+}
+
+/* Pronóstico Semanal (7 días) */
+.weather-daily-section {
+  margin-top: 2.5rem;
+}
+
+.daily-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 1rem;
+}
+
+.daily-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 1rem 0.75rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  text-align: center;
+  transition: all 0.2s ease;
+}
+
+.daily-card:hover {
+  border-color: rgba(56, 189, 248, 0.35);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+}
+
+.daily-header {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.daily-day {
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: #f1f5f9;
+}
+
+.daily-date {
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+}
+
+.daily-icon {
+  font-size: 1.75rem;
+  margin: 0.2rem 0;
+}
+
+.daily-desc {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  min-height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.daily-temps {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+.d-max {
+  color: #f43f5e;
+}
+
+.d-separator {
+  color: var(--text-dim);
+}
+
+.d-min {
+  color: #38bdf8;
+}
+
+.daily-rain-wrap {
+  width: 100%;
+  margin-top: 0.4rem;
+}
+
+.daily-rain-bar {
+  height: 4px;
+  background: linear-gradient(90deg, #38bdf8, #6366f1);
+  border-radius: var(--radius-full);
+  margin-bottom: 0.2rem;
+}
+
+.daily-rain-text {
+  font-size: 0.65rem;
+  color: var(--text-dim);
+}
+
+/* Benchmarking de las 4 APIs */
+.weather-benchmarking-box {
+  margin-top: 3rem;
+  background: var(--bg-card);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-lg);
+  padding: 1.75rem;
+}
+
+.benchmarking-header {
+  margin-bottom: 1.25rem;
+}
+
+.badge-bench {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #38bdf8;
+  background: rgba(56, 189, 248, 0.12);
+  padding: 0.2rem 0.6rem;
+  border-radius: var(--radius-full);
+  display: inline-block;
+  margin-bottom: 0.5rem;
+}
+
+.benchmarking-header h4 {
+  font-size: 1.2rem;
+  margin-bottom: 0.35rem;
+}
+
+.benchmarking-header p {
+  font-size: 0.85rem;
+}
+
+.benchmark-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.825rem;
+}
+
+.benchmark-table th {
+  text-align: left;
+  padding: 0.75rem;
+  color: var(--text-dim);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  font-weight: 600;
+}
+
+.benchmark-table td {
+  padding: 0.85rem 0.75rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  vertical-align: middle;
+}
+
+.benchmark-table tr.highlight-row {
+  background: rgba(56, 189, 248, 0.08);
+}
+
+.benchmark-table tr:hover:not(.highlight-row) {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+@media (max-width: 768px) {
+  .weather-current-card {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    padding: 1.25rem;
+  }
+  .weather-hero-row {
+    justify-content: center;
+    text-align: center;
+  }
+  .weather-details-grid {
+    grid-template-columns: 1fr;
+  }
+  .daily-cards-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ==========================================================================
+   COMPUERTA DE ACCESO CRIPTOGRÁFICO (FUTURISTA Y LIMPIA)
+   ========================================================================== */
+body.cerebro-locked {
+  overflow: hidden !important;
+  height: 100vh !important;
+}
+
+.gate-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  background-color: #030712;
+  background-image: 
+    radial-gradient(circle at 50% 20%, rgba(30, 58, 138, 0.45) 0%, transparent 60%),
+    radial-gradient(circle at 80% 80%, rgba(99, 102, 241, 0.2) 0%, transparent 50%),
+    radial-gradient(circle at 20% 80%, rgba(14, 165, 233, 0.2) 0%, transparent 50%);
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.45s ease;
+}
+
+.gate-overlay.gate-unlocked {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* Grilla cibernética de fondo */
+.gate-bg-grid {
+  position: absolute;
+  inset: 0;
+  background-size: 40px 40px;
+  background-image: 
+    linear-gradient(to right, rgba(56, 189, 248, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(56, 189, 248, 0.05) 1px, transparent 1px);
+  pointer-events: none;
+  mask-image: radial-gradient(ellipse at center, black 40%, transparent 80%);
+  -webkit-mask-image: radial-gradient(ellipse at center, black 40%, transparent 80%);
+}
+
+/* Orbes luminosos futuristas */
+.gate-glow-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+  pointer-events: none;
+  opacity: 0.6;
+  animation: orbFloat 8s ease-in-out infinite alternate;
+}
+
+.gate-glow-1 {
+  width: 380px;
+  height: 380px;
+  top: 15%;
+  left: 20%;
+  background: radial-gradient(circle, rgba(56, 189, 248, 0.35), transparent 70%);
+}
+
+.gate-glow-2 {
+  width: 320px;
+  height: 320px;
+  bottom: 15%;
+  right: 20%;
+  background: radial-gradient(circle, rgba(129, 140, 248, 0.3), transparent 70%);
+  animation-delay: -4s;
+}
+
+@keyframes orbFloat {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(25px, -25px) scale(1.08); }
+}
+
+/* Tarjeta central de la compuerta */
+.gate-card {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 440px;
+  background: rgba(15, 23, 42, 0.88);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  border-radius: 20px;
+  padding: 2.25rem 2rem;
+  box-shadow: 
+    0 25px 60px -15px rgba(0, 0, 0, 0.8),
+    0 0 35px rgba(56, 189, 248, 0.15),
+    inset 0 1px 1px rgba(255, 255, 255, 0.1);
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.gate-card.gate-shake {
+  animation: gateShake 0.45s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+@keyframes gateShake {
+  10%, 90% { transform: translate3d(-3px, 0, 0); }
+  20%, 80% { transform: translate3d(5px, 0, 0); }
+  30%, 50%, 70% { transform: translate3d(-6px, 0, 0); }
+  40%, 60% { transform: translate3d(6px, 0, 0); }
+}
+
+.gate-header {
+  margin-bottom: 1.75rem;
+}
+
+.gate-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.85rem;
+  border-radius: 9999px;
+  background: rgba(56, 189, 248, 0.1);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  font-family: var(--font-mono, monospace);
+  font-size: 0.68rem;
+  color: #38bdf8;
+  letter-spacing: 0.06em;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.gate-pulse-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #38bdf8;
+  box-shadow: 0 0 8px #38bdf8;
+  animation: pulse-dot 1.8s infinite;
+}
+
+.gate-icon-container {
+  width: 58px;
+  height: 58px;
+  margin: 0 auto 1rem auto;
+  border-radius: 16px;
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.15), rgba(99, 102, 241, 0.2));
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #38bdf8;
+  box-shadow: 0 0 20px rgba(56, 189, 248, 0.2);
+}
+
+.gate-cyber-icon {
+  width: 28px;
+  height: 28px;
+}
+
+.gate-title {
+  font-size: 1.55rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  background: linear-gradient(135deg, #ffffff 30%, #38bdf8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 0.4rem;
+}
+
+.gate-subtitle {
+  font-size: 0.82rem;
+  color: #94a3b8;
+  line-height: 1.4;
+  margin: 0;
+}
+
+/* Formulario */
+.gate-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.15rem;
+  text-align: left;
+}
+
+.gate-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.gate-label {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: #94a3b8;
+  text-transform: uppercase;
+}
+
+.gate-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.gate-input-prefix {
+  position: absolute;
+  left: 0.95rem;
+  font-size: 0.95rem;
+  pointer-events: none;
+  opacity: 0.8;
+}
+
+.gate-input {
+  width: 100%;
+  padding: 0.85rem 2.75rem 0.85rem 2.65rem;
+  background: rgba(3, 7, 18, 0.7);
+  border: 1.5px solid rgba(56, 189, 248, 0.3);
+  border-radius: 12px;
+  color: #f8fafc;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.92rem;
+  letter-spacing: 0.05em;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.gate-input:focus {
+  border-color: #38bdf8;
+  box-shadow: 0 0 16px rgba(56, 189, 248, 0.35);
+  background: rgba(3, 7, 18, 0.9);
+}
+
+.gate-eye-btn {
+  position: absolute;
+  right: 0.8rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0.25rem;
+  font-size: 0.95rem;
+  opacity: 0.65;
+  transition: opacity 0.2s;
+  color: inherit;
+}
+
+.gate-eye-btn:hover {
+  opacity: 1;
+}
+
+/* Mensaje de error */
+.gate-error-box {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.65rem 0.85rem;
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  border-radius: 10px;
+  color: #fca5a5;
+  font-size: 0.78rem;
+}
+
+.gate-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 0.9rem 1.25rem;
+  background: linear-gradient(135deg, #0284c7 0%, #4f46e5 100%);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  color: #ffffff;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.84rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  box-shadow: 0 4px 18px rgba(2, 132, 199, 0.4);
+  transition: all 0.25s ease;
+  margin-top: 0.25rem;
+}
+
+.gate-btn:hover {
+  transform: translateY(-1.5px);
+  box-shadow: 0 6px 24px rgba(2, 132, 199, 0.55);
+  filter: brightness(1.1);
+}
+
+.gate-btn:active {
+  transform: translateY(0);
+}
+
+.gate-btn-arrow {
+  font-size: 1.05rem;
+  transition: transform 0.2s ease;
+}
+
+.gate-btn:hover .gate-btn-arrow {
+  transform: translateX(3px);
+}
+
+/* Pie de la compuerta */
+.gate-footer {
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.gate-security-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  font-size: 0.72rem;
+  color: #64748b;
+  font-family: var(--font-mono, monospace);
+}
+
+.gate-hint {
+  font-size: 0.7rem;
+  color: #475569;
+}
+
+/* Botón de bloqueo en Navbar */
+.nav-lock-btn {
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  color: #fca5a5;
+  font-size: 0.75rem;
+  padding: 0.38rem 0.75rem;
+  border-radius: 8px;
+  font-family: var(--font-mono, monospace);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  transition: all 0.2s ease;
+  margin-left: 0.25rem;
+}
+
+.nav-lock-btn:hover {
+  background: rgba(239, 68, 68, 0.25);
+  border-color: rgba(239, 68, 68, 0.55);
+  color: #fee2e2;
+  transform: translateY(-1px);
+}
+
+@media (max-width: 480px) {
+  .gate-card {
+    padding: 1.75rem 1.25rem;
+  }
+  .gate-title {
+    font-size: 1.35rem;
+  }
+}

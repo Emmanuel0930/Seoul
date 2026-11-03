@@ -14,6 +14,7 @@ const Estado = {
   transporte: null,
   viviendaCrecimiento: null,
   macroBok: null,
+  clima: null,
   geoJson: null,
   mapa: null,
   distritoSeleccionado: null,
@@ -36,6 +37,7 @@ const RUTAS = {
   transporte: '../lago/transporte.json',
   viviendaCrecimiento: '../lago/vivienda_crecimiento.json',
   macroBok: '../lago/macro_bok.json',
+  clima: '../lago/clima.json',
   geoJson: '../territorio/seoul_gu.geojson'
 };
 
@@ -48,11 +50,13 @@ const PALETA_COLOR = {
 
 document.addEventListener('DOMContentLoaded', async () => {
   console.log('🚀 Inicializando Centro de Información Urbana de Seúl...');
+  inicializarCompuertaSeguridad();
   await cargarTodosLosDatos();
   renderizarTarjetasCifras();
   renderizarContextos();
   renderizarProcedencia();
   renderizarZonasTiempoReal();
+  renderizarModuloClima();
   renderizarTablaCatalogo();
   renderizarEvolucionVivienda();
   renderizarTransporte();
@@ -65,7 +69,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 // Carga asíncrona de todos los archivos del lago
 async function cargarTodosLosDatos() {
   try {
-    const [resCat, resDemo, resEcon, resRT, resEsc, resTrans, resVivCrec, resMacro, resGeo] = await Promise.all([
+    const [resCat, resDemo, resEcon, resRT, resEsc, resTrans, resVivCrec, resMacro, resClima, resGeo] = await Promise.all([
       fetch(RUTAS.catalogo).then(r => r.json()).catch(() => []),
       fetch(RUTAS.demografia).then(r => r.json()).catch(() => null),
       fetch(RUTAS.economia).then(r => r.json()).catch(() => null),
@@ -74,6 +78,7 @@ async function cargarTodosLosDatos() {
       fetch(RUTAS.transporte).then(r => r.json()).catch(() => null),
       fetch(RUTAS.viviendaCrecimiento).then(r => r.json()).catch(() => null),
       fetch(RUTAS.macroBok).then(r => r.json()).catch(() => null),
+      fetch(RUTAS.clima).then(r => r.json()).catch(() => null),
       fetch(RUTAS.geoJson).then(r => r.json()).catch(() => null)
     ]);
 
@@ -85,6 +90,7 @@ async function cargarTodosLosDatos() {
     Estado.transporte = resTrans;
     Estado.viviendaCrecimiento = resVivCrec;
     Estado.macroBok = resMacro;
+    Estado.clima = resClima;
     Estado.geoJson = resGeo;
 
     console.log('✅ Datos del lago cargados exitosamente.');
@@ -275,7 +281,114 @@ function renderizarZonasTiempoReal() {
   });
 }
 
-// 3. Renderizado de Tabla de Catálogo (F01 - F14)
+// 2B. Renderizado del Módulo de Clima en Seúl (Open-Meteo + KMA)
+function renderizarModuloClima() {
+  if (!Estado.clima || !Estado.clima.cifras) return;
+
+  const c = Estado.clima.cifras;
+
+  // Condiciones actuales
+  const elTemp = document.getElementById('clima-hero-temp');
+  if (elTemp && c.current_temperature) elTemp.textContent = c.current_temperature.valor.toFixed(1);
+
+  const elApp = document.getElementById('clima-hero-sensacion');
+  if (elApp && c.apparent_temperature) elApp.textContent = `${c.apparent_temperature.valor.toFixed(1)} °C`;
+
+  const elDesc = document.getElementById('clima-hero-desc');
+  if (elDesc && c.weather_code) elDesc.textContent = c.weather_code.descripcion || 'Variable';
+
+  const elIcon = document.getElementById('clima-hero-icon');
+  if (elIcon && c.weather_code) elIcon.textContent = c.weather_code.icono || '🌤️';
+
+  const elHum = document.getElementById('clima-humedad');
+  if (elHum && c.relative_humidity) elHum.textContent = `${c.relative_humidity.valor} %`;
+
+  const elViento = document.getElementById('clima-viento');
+  if (elViento && c.wind_speed) elViento.textContent = `${c.wind_speed.valor} km/h`;
+
+  const elLluvia = document.getElementById('clima-lluvia');
+  if (elLluvia && c.precipitation) elLluvia.textContent = `${c.precipitation.valor} mm`;
+
+  // Pronóstico horario (24h)
+  const hourlyTrack = document.getElementById('clima-hourly-track');
+  if (hourlyTrack && Estado.clima.pronostico_24h && Estado.clima.pronostico_24h.length) {
+    hourlyTrack.innerHTML = '';
+    Estado.clima.pronostico_24h.forEach(h => {
+      const item = document.createElement('div');
+      item.className = 'hourly-card';
+      item.innerHTML = `
+        <span class="h-time">${h.hora}</span>
+        <span class="h-icon">${h.icono}</span>
+        <span class="h-temp">${h.temperatura}°C</span>
+        <span class="h-rain">${h.prob_lluvia > 0 ? '🌧️ ' + h.prob_lluvia + '%' : '☀️ Seco'}</span>
+      `;
+      hourlyTrack.appendChild(item);
+    });
+  }
+
+  // Pronóstico diario (7 días)
+  const dailyGrid = document.getElementById('clima-daily-grid');
+  if (dailyGrid && Estado.clima.pronostico_7d && Estado.clima.pronostico_7d.length) {
+    dailyGrid.innerHTML = '';
+    Estado.clima.pronostico_7d.forEach(d => {
+      const item = document.createElement('div');
+      item.className = 'daily-card';
+      item.innerHTML = `
+        <div class="daily-header">
+          <span class="daily-day">${d.dia}</span>
+          <span class="daily-date">${d.fecha.slice(5)}</span>
+        </div>
+        <div class="daily-icon">${d.icono}</div>
+        <div class="daily-desc">${d.descripcion}</div>
+        <div class="daily-temps">
+          <span class="d-max">${d.temp_max}°</span>
+          <span class="d-separator">/</span>
+          <span class="d-min">${d.temp_min}°</span>
+        </div>
+        <div class="daily-rain-wrap">
+          <div class="daily-rain-bar" style="width: ${d.prob_lluvia_max}%"></div>
+          <span class="daily-rain-text">${d.prob_lluvia_max}% prob. lluvia</span>
+        </div>
+      `;
+      dailyGrid.appendChild(item);
+    });
+  }
+
+  // Intento de refresco en vivo desde Open-Meteo en cliente si hay conexión
+  refrescarClimaEnVivo();
+}
+
+async function refrescarClimaEnVivo() {
+  try {
+    const url = 'https://api.open-meteo.com/v1/forecast?latitude=37.5665&longitude=126.9780&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,wind_speed_10m,weather_code&hourly=temperature_2m,precipitation_probability,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=Asia%2FSeoul&forecast_days=7';
+    const resp = await fetch(url);
+    if (!resp.ok) return;
+    const data = await resp.json();
+    if (!data.current) return;
+
+    const cur = data.current;
+    if (document.getElementById('clima-hero-temp')) {
+      document.getElementById('clima-hero-temp').textContent = Number(cur.temperature_2m).toFixed(1);
+    }
+    if (document.getElementById('clima-hero-sensacion')) {
+      document.getElementById('clima-hero-sensacion').textContent = `${Number(cur.apparent_temperature).toFixed(1)} °C`;
+    }
+    if (document.getElementById('clima-humedad')) {
+      document.getElementById('clima-humedad').textContent = `${cur.relative_humidity_2m} %`;
+    }
+    if (document.getElementById('clima-viento')) {
+      document.getElementById('clima-viento').textContent = `${Number(cur.wind_speed_10m).toFixed(1)} km/h`;
+    }
+    if (document.getElementById('clima-lluvia')) {
+      document.getElementById('clima-lluvia').textContent = `${Number(cur.precipitation).toFixed(1)} mm`;
+    }
+    console.log('🌤️ Clima de Seúl actualizado en vivo desde Open-Meteo.');
+  } catch (_) {
+    // Si falla o no hay conexión, se mantiene el dato contractual de lago/clima.json
+  }
+}
+
+// 3. Renderizado de Tabla de Catálogo (F01 - F15)
 function renderizarTablaCatalogo() {
   const tbody = document.getElementById('catalogo-tbody');
   if (!tbody || !Estado.catalogo || Estado.catalogo.length === 0) return;
@@ -1121,4 +1234,107 @@ function renderizarMacroBok() {
       </div>
     </div>
   `).join('');
+}
+
+// ============================================================================
+// COMPUERTA DE SEGURIDAD CRIPTOGRÁFICA (SHA-256)
+// ============================================================================
+// La clave NO se almacena en texto plano en el código JavaScript.
+// Se valida comparando el resumen criptográfico SHA-256 usando Web Crypto API.
+// Hash SHA-256 correspondiente a la clave oficial entregada al profesor:
+const HASH_COMPUERTA_OFICIAL = '495ac4b6f9a7332b52d1530bcd6a96219043e25bc6a389dc14f13c7128c5c944';
+
+async function calcularSHA256(texto) {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(texto);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+function inicializarCompuertaSeguridad() {
+  const overlay = document.getElementById('pantalla-compuerta');
+  const card = document.getElementById('gate-card');
+  const form = document.getElementById('gate-form');
+  const input = document.getElementById('gate-password-input');
+  const errorBox = document.getElementById('gate-error-msg');
+  const toggleBtn = document.getElementById('gate-toggle-visibility');
+  const lockBtn = document.getElementById('btn-bloquear-cerebro');
+
+  if (!overlay || !input) return;
+
+  // Verificar estado de sesión previo
+  const estadoSesion = sessionStorage.getItem('cerebro_seoul_auth');
+  if (estadoSesion === 'unlocked') {
+    overlay.classList.add('gate-unlocked');
+    document.body.classList.remove('cerebro-locked');
+  } else {
+    overlay.classList.remove('gate-unlocked');
+    document.body.classList.add('cerebro-locked');
+    setTimeout(() => input.focus(), 250);
+  }
+
+  // Alternar visibilidad de contraseña
+  if (toggleBtn) {
+    toggleBtn.addEventListener('click', () => {
+      const isPassword = input.type === 'password';
+      input.type = isPassword ? 'text' : 'password';
+      toggleBtn.textContent = isPassword ? '🔒' : '👁️';
+    });
+  }
+
+  // Validar clave en el envío
+  const procesarIntentoAcceso = async () => {
+    const claveIngresada = input.value.trim();
+    if (!claveIngresada) {
+      input.focus();
+      return;
+    }
+
+    try {
+      const hashIngresado = await calcularSHA256(claveIngresada);
+      if (hashIngresado === HASH_COMPUERTA_OFICIAL) {
+        // Acceso concedido
+        if (errorBox) errorBox.style.display = 'none';
+        sessionStorage.setItem('cerebro_seoul_auth', 'unlocked');
+        overlay.classList.add('gate-unlocked');
+        document.body.classList.remove('cerebro-locked');
+        input.value = '';
+      } else {
+        // Acceso denegado
+        if (errorBox) {
+          errorBox.style.display = 'flex';
+          const errText = errorBox.querySelector('.gate-error-text');
+          if (errText) errText.textContent = 'Clave incorrecta. Acceso restringido al sistema.';
+        }
+        if (card) {
+          card.classList.remove('gate-shake');
+          void card.offsetWidth; // Forzar reflow para reiniciar animación
+          card.classList.add('gate-shake');
+        }
+        input.select();
+      }
+    } catch (e) {
+      console.error('Error calculando hash SHA-256:', e);
+    }
+  };
+
+  if (form) {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      procesarIntentoAcceso();
+    });
+  }
+
+  // Botón en la barra superior para bloquear el sistema nuevamente
+  if (lockBtn) {
+    lockBtn.addEventListener('click', () => {
+      sessionStorage.removeItem('cerebro_seoul_auth');
+      overlay.classList.remove('gate-unlocked');
+      document.body.classList.add('cerebro-locked');
+      if (errorBox) errorBox.style.display = 'none';
+      input.value = '';
+      setTimeout(() => input.focus(), 200);
+    });
+  }
 }
